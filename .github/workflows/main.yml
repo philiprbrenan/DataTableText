@@ -1,6 +1,6 @@
 # Build and test CPAN module: DataTableText
 
-name: DataTableText
+name: Test
 
 on:
   push
