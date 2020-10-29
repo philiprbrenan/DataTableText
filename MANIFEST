@@ -1,0 +1,10 @@
+.directory
+Build.PL
+CONTRIBUTING.md
+lib/Data/Table/Text.pm
+MANIFEST      This list of files
+test.pl
+META.yml
+META.json
+CHANGES
+README
