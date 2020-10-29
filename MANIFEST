@@ -1,6 +1,6 @@
 .directory
 Build.PL
-CONTRIBUTING.md
+CONTRIBUTING
 lib/Data/Table/Text.pm
 MANIFEST      This list of files
 test.pl
