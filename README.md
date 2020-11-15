@@ -2,4 +2,6 @@
 
 Write data in tabular text format
 
-For documentation see: [CPAN](https://metacpan.org/pod/DataTableText
+
+
+For documentation see: [CPAN](https://metacpan.org/pod/Data::Table::Text)
