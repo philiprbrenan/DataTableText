@@ -31,9 +31,10 @@ jobs:
 
     - name: Install
       run: |
-        sudo apt update
-        sudo apt -y install build-essential tree
+        curl http://strawberryperl.com/download/5.32.0.1/strawberry-perl-5.32.0.1-64bit.msi --output perl.msi
+        msiexec /i perl.msi
         cpan install Data::Table::Text Module::Build Digest::SHA1 JSON
+
     - name: Test
       run: |
         perl Build.PL
