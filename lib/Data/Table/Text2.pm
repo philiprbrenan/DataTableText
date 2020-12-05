@@ -683,12 +683,13 @@ BEGIN{*temporaryDirectory=*temporaryFolder}
 
 #D2 Find                                                                        # Find files and folders below a folder.
 
-sub findAllFilesAndFolders($)                                                   #P Find all the files and folders under a folder.
- {my ($folder) = @_;                                                            # Folder to start the search with
+sub findAllFilesAndFolders($$)                                                  #P Find all the files and folders under a folder.
+ {my ($folder, $dirs) = @_;                                                     # Folder to start the search with, true if only folders are required
   my @files;                                                                    # Files
 
   if ($^O =~ m(win)i)                                                           # windows
-   {my $c = qq(powershell Get-ChildItem -Recurse -Name $folder);
+   {my $c = qq(powershell Get-ChildItem -Recurse -Name $folder ).
+     ($dirs ? '-Directory' : '-File');
     my $r = qx($c);
 say STDERR "BBBB\n$r\n";
        $r =~ s(\\) (/)g;
@@ -697,7 +698,7 @@ say STDERR "CCCC\n$r\n";
    }
 
   return undef unless confirmHasCommandLineCommand(q(find));                    # Confirm we have find
-  my $c   = qq(find "$folder" -print0);                                         # Use find command to find files
+  my $c   = qq(find "$folder" -print0 -type ).($dirs ? 'd' : 'f');              # Use find command to find files
   my $res = qx($c);                                                             # Execute find command
   defined($res) or confess "No result from find command below\n$c\n";           # Find failed for some reason
   utf8::decode($res);                                                           # Decode unicode file names
@@ -707,7 +708,7 @@ say STDERR "CCCC\n$r\n";
 sub findFiles($;$)                                                              # Find all the files under a B<$folder> and optionally B<$filter> the selected files with a regular expression.
  {my ($folder, $filter) = @_;                                                   # Folder to start the search with, optional regular expression to filter files
   my @files;                                                                    # Files
-  for(findAllFilesAndFolders($folder))                                          # All files and folders
+  for(findAllFilesAndFolders($folder, 0))                                       # All files and folders
    {next if -d $_;                                                              # Do not include folder names
     next if $filter and $filter and !m($filter)s;                               # Filter out files that do not match the regular expression
     push @files, $_;
@@ -718,7 +719,7 @@ sub findFiles($;$)                                                              
 sub findDirs($;$)                                                               # Find all the folders under a B<$folder> and optionally B<$filter> the selected folders with a regular expression.
  {my ($folder, $filter) = @_;                                                   # Folder to start the search with, optional regular expression to filter files
   my @dir;                                                                      # Directories
-  for(findAllFilesAndFolders($folder))                                          # All files and folders
+  for(findAllFilesAndFolders($folder, 1))                                       # All files and folders
    {next unless -d $_;                                                          # Include only folders
     next if $filter and $filter and !m($filter)s;                               # Filter out directories that do not match the regular expression
     push @dir, fpd($_);
@@ -746,7 +747,7 @@ sub searchDirectoryTreesForMatchingFiles(@)                                     
   for my $dir(@_)                                                               # Directories
    {next unless $dir && -d $dir;                                                # Do not include folder names
 
-    for my $d(findAllFilesAndFolders($dir))                                     # All files and folders beneath each folder
+    for my $d(findAllFilesAndFolders($dir, 0))                                  # All files and folders beneath each folder
      {next if -d $d;                                                            # Do not include folder names
       push @file, $d if !$ext or $d =~ m(($ext)\Z)is;                           # Filter by extension if requested.
      }
@@ -772,7 +773,7 @@ sub countFileExtensions(@)                                                      
   my %ext;
   for my $dir(@folders)                                                         # Directories
    {next unless -d $dir;
-    for my $file(findAllFilesAndFolders($dir))                                  # All files and folders under the current folder
+    for my $file(findAllFilesAndFolders($dir, 0))                               # All files and folders under the current folder
      {next if -d $file;                                                         # Do not include folder names
       $ext{fe $file}++;
      }
