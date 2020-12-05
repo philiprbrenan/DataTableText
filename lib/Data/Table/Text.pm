@@ -3536,6 +3536,17 @@ sub pad($$;$)                                                                   
   $string .= $padding x $p;
  }
 
+sub ppp($$;$)                                                                   # Pad the specified B<$string> to a multiple of the specified B<$length>  with blanks or the specified padding character to a multiple of a specified length.
+ {my ($length, $string, $padding) = @_;                                         # Tab width, string, padding string
+  defined($string) or confess "String required\n";
+  $string =~ s/\s+\Z//;
+  $padding //= q( );
+  my $l = length($string);
+  return $string if $l % $length == 0;
+  my $p = $length - $l % $length;
+  $string .= $padding x $p;
+ }
+
 sub firstNChars($$)                                                             # First N characters of a string.
  {my ($string, $length) = @_;                                                   # String, length
   return $string if !$length or length($string) < $length;
@@ -6035,7 +6046,11 @@ END
 
 sub wellKnownUrls                                                               #P Short names for some well known urls
  {genHash(q(Short_Names_For_Well_Known_Urls),                                   #  Short names for some well known urls
+    alde            => [q(Aldebaran),                                           "https://en.wikipedia.org/wiki/Aldebaran"                                                                                         ], #
+    alva            => [q(Rio Alva),                                            "https://duckduckgo.com/?t=canonical&q=rio+alva&iax=images&ia=images"                                                             ], #
     apache          => [q(Apache Web Server),                                   "https://en.wikipedia.org/wiki/Apache_HTTP_Server"                                                                                ], #
+    appaapps        => [q(AppaApps),                                            "http://www.appaaps.com"                                                                                                          ], #
+    arena           => [q(arena),                                               "https://en.wikipedia.org/wiki/Region-based_memory_management"                                                                    ], #
     ascii           => [q(Ascii),                                               "https://en.wikipedia.org/wiki/ASCII"                                                                                             ], #
     awsami          => [q(Amazon Web Services - Amazon Machine Image),          "https://en.wikipedia.org/wiki/Amazon_Machine_Image"                                                                              ], #
     awscli          => [q(Amazon Web Services Command Line Interface),          "https://aws.amazon.com/cli/"                                                                                                     ], #
@@ -6046,15 +6061,21 @@ sub wellKnownUrls                                                               
     cgi             => [q(Common Gateway Interface),                            "https://en.wikipedia.org/wiki/Common_Gateway_Interface"                                                                          ], #
     chmod           => [q(chmod),                                               "https://linux.die.net/man/1/chmod"                                                                                               ], #
     chown           => [q(chown),                                               "https://linux.die.net/man/1/chown"                                                                                               ], #
+    cicero          => [q("The sinews of war are an infinite supply of money"), "https://en.wikipedia.org/wiki/Cicero#Legacy"                                                                                     ], #
+    computer        => [q(computer),                                            "https://en.wikipedia.org/wiki/Computer"                                                                            ], #
     commandline     => [q(command line),                                        "https://en.wikipedia.org/wiki/Command-line_interface"                                                                            ], #
-    concept         => [q(Dita Concept),                                        "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/langRef/technicalContent/concept.html#concept"], #
+    concept         => [q(concept),                                             "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/langRef/technicalContent/concept.html#concept"], #
     confess         => [q(confess),                                             "http://perldoc.perl.org/Carp.html#SYNOPSIS/"                                                                                     ], #
     conref          => [q(conref),                                              "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/archSpec/base/conref.html#conref"             ], #
+    cookie          => [q(cookie),                                              "https://en.wikipedia.org/wiki/Cookie"                                                                                       ], #
     corpus          => [q(corpus),                                              "https://en.wikipedia.org/wiki/Text_corpus"                                                                                       ], #
     cpan            => [q(CPAN),                                                "https://metacpan.org/author/PRBRENAN"                                                                                            ], #
     cpu             => [q(Cpu),                                                 "https://en.wikipedia.org/wiki/Central_processing_unit"                                                                           ], #
+    c               => [q(C),                                                   "https://en.wikipedia.org/wiki/C_(programming_language)"                                                                          ], #
     csv             => [q(csv),                                                 "https://en.wikipedia.org/wiki/Comma-separated_values"                                                                            ], #
     curl            => [q(curl),                                                "https://linux.die.net/man/1/curl"                                                                                                ], #
+    dataStructure   => [q(data structure),                                      "https://en.wikipedia.org/wiki/Data_structure"                                                                                    ], #
+    dependencies    => [q(dependencies),                                        "https://en.wikipedia.org/wiki/Coupling_(computer_programming)"                                                                   ], #
     dexl            => [q(Data::Edit::Xml::Lint),                               "https://metacpan.org/release/Data-Edit-Xml-Lint"                                                                                 ], #
     dex             => [q(Data::Edit::Xml),                                     "https://metacpan.org/pod/Data::Edit::Xml"                                                                                        ], #
     dexr            => [q(Data::Edit::Xml::Reuse),                              "https://metacpan.org/release/Data-Edit-Xml-Reuse"                                                                                ], #
@@ -6064,6 +6085,7 @@ sub wellKnownUrls                                                               
     ditaot          => [q(DITA Open ToolKit),                                   "http://www.dita-ot.org/download"                                                                                                 ], #
     dita            => [q(Dita),                                                "http://docs.oasis-open.org/dita/dita/v1.3/os/part2-tech-content/dita-v1.3-os-part2-tech-content.html"                            ], #
     docbook         => [q(DocBook),                                             "https://tdg.docbook.org/tdg/5.1/"                                                                                                ], #
+    documentation   => [q(documentation),                                       "https://en.wikipedia.org/wiki/Software_documentation"                                                                            ], #
     domain          => [q(domain name),                                         "https://en.wikipedia.org/wiki/Domain_name"                                                                                       ], #
     dtd             => [q(DTD),                                                 "https://en.wikipedia.org/wiki/Document_type_definition"                                                                          ], #
     dtt             => [q(Data::Table::Text),                                   "https://metacpan.org/pod/Data::Table::Text"                                                                                      ], #
@@ -6071,6 +6093,7 @@ sub wellKnownUrls                                                               
     ec2             => [q(EC2),                                                 "https://aws.amazon.com/ec2/"                                                                                                     ], #
     eval            => [q(eval),                                                "http://perldoc.perl.org/functions/eval.html"                                                                                     ], #
     extensions      => [q(file name extensions),                                "https://en.wikipedia.org/wiki/List_of_filename_extensions"                                                                       ], #
+    fail            => [q(fail),                                                "https://1lib.eu/book/2468851/544b50"                                                                                             ], #
     file            => [q(file),                                                "https://en.wikipedia.org/wiki/Computer_file"                                                                                     ], #
     find            => [q(find),                                                "https://en.wikipedia.org/wiki/Find_(Unix)"                                                                                       ], #
     folder          => [q(folder),                                              "https://en.wikipedia.org/wiki/File_folder"                                                                                       ], #
@@ -6078,6 +6101,8 @@ sub wellKnownUrls                                                               
     gbstandard      => [q(GB Standard),                                         "http://metacpan.org/pod/Dita::GB::Standard"                                                                                      ], #
     geany           => [q(Geany),                                               "https://www.geany.org"                                                                                                           ], #
     ghc             => [q(Github Automation),                                   "https://metacpan.org/release/GitHub-Crud"                                                                                        ], #
+    githubAction    => [q(GitHub Action),                                       "https://docs.github.com/en/free-pro-team\@latest/actions/quickstart"                                                             ], #
+    githubCrud      => [q(GitHub::Crud),                                        "https://metacpan.org/pod/GitHub::Crud"                                                                                           ], #
     github          => [q(GitHub),                                              "https://github.com"                                                                                                              ], #
     gmt             => [q(Greenwich Mean Time),                                 "https://en.wikipedia.org/wiki/Greenwich_Mean_Time"                                                                               ], #
     gnufdl          => [q(GNU Free Documentation License),                      "https://en.wikipedia.org/wiki/Wikipedia:Text_of_the_GNU_Free_Documentation_License"                                              ], #
@@ -6095,6 +6120,7 @@ sub wellKnownUrls                                                               
     ide             => [q(Integrated Development Environment),                  "https://en.wikipedia.org/wiki/Integrated_development_environment"                                                                ], #
     ietf            => [q(Internet Engineering Task Force),                     "https://en.wikipedia.org/wiki/Internet_Engineering_Task_Force"                                                                   ], #
     imagemagick     => [q(Imagemagick),                                         "https://www.imagemagick.org/script/index.php"                                                                                    ], #
+    install         => [q(install),                                             "https://en.wikipedia.org/wiki/Installation_(computer_programs)"                                                                  ], #
     inTakeForm      => [q(In-Take Form),                                        "https://philiprbrenan.github.io/c_MigrationAssessmentSalesforce2.html"                                                           ], #
     ipaddress       => [q(IP address),                                          "https://en.wikipedia.org/wiki/IP_address"                                                                                        ], #
     javascript      => [q(JavaScript),                                          "https://en.wikipedia.org/wiki/JavaScript"                                                                                        ], #
@@ -6104,35 +6130,62 @@ sub wellKnownUrls                                                               
     lint            => [q(lint),                                                "http://xmlsoft.org/xmllint.html"                                                                                                 ], #
     linux           => [q(Linux),                                               "https://en.wikipedia.org/wiki/Linux"                                                                                             ], #
     liseMeitner     => [q(Lise Meitner),                                        "https://en.wikipedia.org/wiki/Lise_Meitner"                                                                                      ], #
+    list            => [q(list),                                                "https://en.wikipedia.org/wiki/Linked_list"                                                                                       ], #
+    log             => [q(log),                                                 "https://en.wikipedia.org/wiki/Log_file"                                                                                          ], #
     lvaluemethod    => [q(lvalue method),                                       "http://perldoc.perl.org/perlsub.html#Lvalue-subroutines"                                                                         ], #
-    md              => [q(Mark Down),                                           "https://en.wikipedia.org/wiki/Markdown"                                                                                          ], #
     md5             => [q(md5 sum),                                             "https://en.wikipedia.org/wiki/MD5"                                                                                               ], #
+    md              => [q(Mark Down),                                           "https://en.wikipedia.org/wiki/Markdown"                                                                                          ], #
     mentor          => [q(mentor),                                              "https://en.wikipedia.org/wiki/Mentorship"                                                                                        ], #
-    mysql           => [q(MySql),                                               "https://en.wikipedia.org/wiki/MySQL"                                                                                             ], #
+    metadata        => [q(meta data),                                           "https://en.wikipedia.org/wiki/Metadata"                                                                                          ], #
+    mod_shib        => [q(mod_shib),                                            "https://wiki.shibboleth.net/confluence/display/SP3/Apache"                                                                       ], #
+    module          => [q(module),                                              "https://en.wikipedia.org/wiki/Modular_programming"                                                                               ], #
+    mopc            => [q(mop-c),                                               "https://metacpan.org/pod/Preprocess::Ops"                                                                                        ], #
     mysqlMan        => [q(MySql manual),                                        "https://dev.mysql.com/doc/refman/8.0/en/"                                                                                        ], #
+    mysql           => [q(MySql),                                               "https://en.wikipedia.org/wiki/MySQL"                                                                                             ], #
     nfa             => [q(NFA),                                                 "https://metacpan.org/pod/Data::NFA"                                                                                              ], #
     oauth           => [q(oauth),                                               "https://en.wikipedia.org/wiki/OAuth"                                                                                             ], #
     othermeta       => [q(othermeta),                                           "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/contentmodels/cmlto.html#cmlto__othermeta"    ], #
     our             => [q(our),                                                 "https://perldoc.perl.org/functions/our.html"                                                                                     ], #
     oxygenformat    => [q(Oxygen Format),                                       "https://www.oxygenxml.com/doc/versions/20.1/ug-author/topics/linked-output-messages-of-external-engine.html"                     ], #
     oxygenworkshop  => [q(Oxygen Workshop),                                     "http://github.com/philiprbrenan/oxygenWorkShop"                                                                                  ], #
+    pairprogram     => [q(pair program),                                        "https://en.wikipedia.org/wiki/Pair_programming"                                                                                  ], #
+    parkinson       => [q(Parkinson's law: work expands to fill the time available), "https://en.wikipedia.org/wiki/Parkinson%27s_law"                                                                            ], #
     parse           => [q(parse),                                               "https://en.wikipedia.org/wiki/Parsing"                                                                                           ], #
     pcdInstall      => [q(PCD installation),                                    "https://github.com/philiprbrenan/philiprbrenan.github.io/blob/master/pcd_installation.md"                                        ], #
     pcdLang         => [q(PCD),                                                 "https://philiprbrenan.github.io/data_edit_xml_edit_commands.html"                                                                ], #
     pcd             => [q(Dita::Pcd),                                           "https://metacpan.org/pod/Dita::PCD"                                                                                              ], #
     pdf             => [q(Pdf),                                                 "https://en.wikipedia.org/wiki/PDF"                                                                                               ], #
+    people          => [q(people),                                              "https://en.wikipedia.org/wiki/Person"                                                                                            ], #
     perlal          => [q(Perl Artistic Licence),                               "https://dev.perl.org/licenses/artistic.html"                                                                                     ], #
     perl            => [q(Perl),                                                "http://www.perl.org/"                                                                                                            ], #
+    php             => [q(php),                                                 "https://en.wikipedia.org/wiki/PHP"                                                                                               ], #
+    philCpan        => [q(CPAN),                                                "https://metacpan.org/author/PRBRENAN"                                                                                            ], #
+    pl              => [q(programming language),                                "https://en.wikipedia.org/wiki/Programming_language"                                                                              ], #
     pod             => [q(POD),                                                 "https://perldoc.perl.org/perlpod.html"                                                                                           ], #
+    preprocessor    => [q(preprocessor),                                        "https://en.wikipedia.org/wiki/Preprocessor"                                                                                      ], #
+    prb             => [q(prb),                                                 "http://philiprbrenan.appaapps.com/"                                                                                              ], #
+    process         => [q(process),                                             "https://en.wikipedia.org/wiki/Process_management_(computing)"                                                                    ], #
+    rackspace       => [q(rackspace),                                           "https://www.rackspace.com/"                                                                                                      ], #
+    recursive       => [q(recursive),                                           "https://en.wikipedia.org/wiki/Recursion"                                                                                         ], #
+    recursively     => [q(recursively),                                         "https://en.wikipedia.org/wiki/Recursion"                                                                                         ], #
+    relocatable     => [q(relocatable),                                         "https://en.wikipedia.org/wiki/Relocation_%28computing%29"                                                                        ], #
+    route53         => [q(Route 53),                                            "https://console.aws.amazon.com/route53"                                                                                          ], #
+    rsa             => [q(rsa),                                                 "https://en.wikipedia.org/wiki/RSA_(cryptosystem)"                                                                                ], #
     rsync           => [q(rsync),                                               "https://linux.die.net/man/1/rsync"                                                                                               ], #
     ryffine         => [q(Ryffine),                                             "http://www,ryffine.com"                                                                                                          ], #
     s3Console       => [q(S3 Console),                                          "https://s3.console.aws.amazon.com/s3/home"                                                                                       ], #
     s3              => [q(S3),                                                  "https://aws.amazon.com/s3/"                                                                                                      ], #
+    saml            => [q(Security Assertion Markup Language),                  "https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language"                                                                ], #
+    samltest        => [q(SAML test),                                           "https://samltest.id/"                                                                                                            ], #
+    samltools       => [q(SAML tools),                                          "https://www.samltool.com/sp_metadata.php"                                                                                        ], #
+    securityGroup   => [q(security group),                                      "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/working-with-security-groups.html"                                           ], #
+    selfaware       => [q(self aware),                                          "https://en.wikipedia.org/wiki/Self-awareness"                                                                                    ], #
     sha             => [q(sha),                                                 "https://en.wikipedia.org/wiki/SHA-1"                                                                                             ], #
     shell           => [q(shell),                                               "https://en.wikipedia.org/wiki/Shell_(computing)"                                                                                 ], #
+    shib            => [q(Shibboleth),                                          "https://www.shibboleth.net/"                                                                                                     ], #
     smartmatch      => [q(smartmatch),                                          "https://perldoc.perl.org/perlop.html#Smartmatch-Operator"                                                                        ], #
-    sql             => [q(Structure Query Language),                            "https://en.wikipedia.org/wiki/SQL"                                                                                               ], #
     spot            => [q(spot),                                                "https://aws.amazon.com/ec2/spot/"                                                                                                ], #
+    sql             => [q(Structure Query Language),                            "https://en.wikipedia.org/wiki/SQL"                                                                                               ], #
     ssh             => [q(Secure Shell),                                        "https://www.ssh.com/ssh"                                                                                                         ], #
     ssxr            => [q(Self Xref),                                           "https://philiprbrenan.github.io/selfServiceXref.pdf"                                                                             ], #
     step            => [q(step),                                                "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/contentmodels/cmlts.html#cmlts__step"         ], #
@@ -6141,24 +6194,30 @@ sub wellKnownUrls                                                               
     sub             => [q(sub),                                                 "https://perldoc.perl.org/perlsub.html"                                                                                           ], #
     substeps        => [q(substeps),                                            "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/contentmodels/cmlts.html#cmlts__substeps"     ], #
     sws             => [q(Sir Walter Scott),                                    "https://en.wikipedia.org/wiki/Walter_Scott"                                                                                      ], #
-    tab             => [q(tab),                                                 "https://en.wikipedia.org/wiki/Tab_key"                                                                                           ], #
     table           => [q(table of information),                                "https://en.wikipedia.org/wiki/Table_(information)"                                                                               ], #
+    tab             => [q(tab),                                                 "https://en.wikipedia.org/wiki/Tab_key"                                                                                           ], #
     taocp           => [q(The Art of Computer Programming),                     "https://en.wikipedia.org/wiki/The_Art_of_Computer_Programming"                                                                   ], #
-    task            => [q(Dita Task),                                           "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/langRef/technicalContent/task.html#task"      ], #
-    ubuntu          => [q(Ubuntu 18),                                           "https://ubuntu.com/download/desktop"                                                                                             ], #
+    task            => [q(task),                                                "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/langRef/technicalContent/task.html#task"      ], #
+    test            => [q(test),                                                "https://en.wikipedia.org/wiki/Software_testing"                                                                                  ], #
+    tree            => [q(tree),                                                "https://en.wikipedia.org/wiki/Tree_(data_structure)"                                                                             ], #
+    ubuntu          => [q(Ubuntu),                                              "https://ubuntu.com/download/desktop"                                                                                             ], #
+    udel            => [q(University of Delaware),                              "https://www.udel.edu/"                                                                                                           ], #
     undef           => [q(undef),                                               "https://perldoc.perl.org/functions/undef.html"                                                                                   ], #
     unicode         => [q(Unicode),                                             "https://en.wikipedia.org/wiki/Unicode"                                                                                           ], #
     unoconv         => [q(unoconv),                                             "https://github.com/unoconv/unoconv"                                                                                              ], #
     url             => [q(url),                                                 "https://en.wikipedia.org/wiki/URL"                                                                                               ], #
     user            => [q(user),                                                "https://en.wikipedia.org/wiki/User_(computing)"                                                                                  ], #
     utf8            => [q(utf8),                                                "https://en.wikipedia.org/wiki/UTF-8"                                                                                             ], #
+    verify          => [q(verify),                                              "https://en.wikipedia.org/wiki/Software_verification_and_validation"                                                              ], #
+    vetstar         => [q(Vetstar),                                             "https://vetstar.com/"                                                                                                            ], #
+    website         => [q(web site),                                            "https://en.wikipedia.org/wiki/Website"                                                                                           ], #
     whitespace      => [q(white space),                                         "https://en.wikipedia.org/wiki/Whitespace_character"                                                                              ], #
     whp             => [q(Whp),                                                 "https://www.whp.net/en/"                                                                                                         ], #
     widget          => [q(widget),                                              "https://en.wikipedia.org/wiki/Graphical_widget"                                                                                  ], #
     word            => [q(word),                                                "https://en.wikipedia.org/wiki/Doc_(computing)"                                                                                   ], #
+    xmllint         => [q(Xml Lint),                                            "http://xmlsoft.org/xmllint.html"                                                                                                 ], #
     xmlparser       => [q(Xml parser),                                          "https://metacpan.org/pod/XML::Parser/"                                                                                           ], #
     xml             => [q(Xml),                                                 "https://en.wikipedia.org/wiki/XML"                                                                                               ], #
-    xmllint         => [q(Xml Lint),                                            "http://xmlsoft.org/xmllint.html"                                                                                                 ], #
     xref            => [q(Xref),                                                "https://metacpan.org/pod/Data::Edit::Xml::Xref"                                                                                  ], #
     zerowidthspace  => [q(zero width space),                                    "https://en.wikipedia.org/wiki/Zero-width_space"                                                                                  ], #
     zip             => [q(zip),                                                 "https://linux.die.net/man/1/zip"                                                                                                 ], #
@@ -6199,7 +6258,24 @@ sub expandWellKnownUrlsInHtmlFormat($)                                          
     $string =~ s(L\[$w\]) (<a format="html" href="$u">$t</a>)gis;
    }
 
+  if (my @e = $string =~ m(L\[(\w+)\])gs)                                       # Check for expansion failures
+   {say STDERR "Failed to find url expansions for these words:\n", dump(\@e);
+   }
+
   $string                                                                       # Result
+ }
+
+sub expandWellKnownWordsAsUrlsInHtmlFormat($)                                   # Expand words found in a string using the html B<a> tag to supply a definition of that word.
+ {my ($string)  = @_;                                                           # String containing url names to expand
+  my $wellKnown = wellKnownUrls;                                                # Well known urls to expand
+
+  for my $w(sort keys %$wellKnown)                                              # Expand well known urls as html a links
+   {my ($t, $u) = @{$$wellKnown{$w}};
+    $string =~ s(\s$w\s) ( <a href="$u">$t</a> )gis;
+   }
+
+  $string =~ s(W\[(\w+)\]) (<code>$1</code>)gs;                                 # W[...] wraps words with definitions we wish to stress
+  $string =~ s(w\[(\w+)\]) ($1)gsr;                                             # w[...] wraps words with definitions we wish to keep as is
  }
 
 sub expandWellKnownUrlsInHtmlFromPerl($)                                        # Expand short L<url> names found in a string in the format L[url-name] using the html B<a> tag.
@@ -7323,7 +7399,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
  enclosedReversedString enclosedReversedStringUndo enclosedString
  enclosedStringUndo encodeBase64 encodeJson evalFile evalGZipFile
  execPerlOnRemote expandNewLinesInDocumentation expandWellKnownUrlsInDitaFormat
- expandWellKnownUrlsInHtmlFormat expandWellKnownUrlsInHtmlFromPerl expandWellKnownUrlsInPod2Html
+ expandWellKnownUrlsInHtmlFormat expandWellKnownWordsAsUrlsInHtmlFormat
+ expandWellKnownUrlsInHtmlFromPerl expandWellKnownUrlsInPod2Html
  expandWellKnownUrlsInPerlFormat extractCodeBlock extractPythonDocumentationFromFiles
  evalFileAsJson
  fe fff fileInWindowsFormat fileLargestSize fileList fileMd5Sum fileModTime
@@ -7362,7 +7439,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
  onAws onAwsPrimary onAwsSecondary overWriteBinaryFile overWriteFile
  overrideAndReabsorbMethods owf
  overWriteHtmlFile overWritePerlCgiFile
- pad parseCommandLineArguments parseDitaRef parseFileName
+ pad ppp parseCommandLineArguments parseDitaRef parseFileName
  parseIntoWordsAndStrings parseXmlDocType partitionStringsOnPrefixBySize
  powerOfTwo printQw processFilesInParallel processJavaFilesInParallel
  printPerlDataAsXml
@@ -19173,7 +19250,7 @@ my $localTest = ((caller(1))[0]//'Data::Table::Text') eq "Data::Table::Text";   
 Test::More->builder->output("/dev/null") if $localTest;                         # Reduce number of confirmation messages during testing
 
 if ($^O =~ m(bsd|linux)i)                                                       # Try removing freeBSD
- {plan tests    => 656
+ {plan tests    => 662
  }
 else
  {plan skip_all => 'Not supported'
@@ -19551,12 +19628,19 @@ ok  containingPowerOfTwo(4) == 2;                                               
 ok  containingPowerOfTwo(5) == 3;
 ok  containingPowerOfTwo(7) == 3;
 
-ok  pad('abc  ', 2).'='       eq "abc =";                                       #Tpad
-ok  pad('abc  ', 3).'='       eq "abc=";                                        #Tpad
-ok  pad('abc  ', 4, q(.)).'=' eq "abc.=";                                       #Tpad
-ok  pad('abc  ', 5).'='       eq "abc  =";
-ok  pad('abc  ', 6).'='       eq "abc   =";
+if (1) {                                                                        #Tpad #Tppp
+  ok  pad('abc  ', 2).'='       eq "abc =";
+  ok  pad('abc  ', 3).'='       eq "abc=";
+  ok  pad('abc  ', 4, q(.)).'=' eq "abc.=";
+  ok  pad('abc  ', 5).'='       eq "abc  =";
+  ok  pad('abc  ', 6).'='       eq "abc   =";
 
+  ok  ppp(2, 'abc  ').'='       eq "abc =";
+  ok  ppp(3, 'abc  ').'='       eq "abc=";
+  ok  ppp(4, 'abc  ', q(.)).'=' eq "abc.=";
+  ok  ppp(5, 'abc  ').'='       eq "abc  =";
+  ok  ppp(6, 'abc  ').'='       eq "abc   =";
+ }
 #ok containingFolder("/home/phil/test.data") eq "/home/phil/";
 #ok containingFolder("phil/test.data")       eq "phil/";
 #ok containingFolder("test.data")            eq "./";
@@ -21230,7 +21314,7 @@ if (0) {                                                                        
   confirmHasCommandLineCommand(q(find));
  }
 
-if (1) {                                                                        #TexpandWellKnownUrlsInHtmlFormat #TexpandWellKnownUrlsInDitaFormat #TexpandWellKnownUrlsInPerlFormat #TexpandWellKnownUrlsInHtmlFromPerl #TexpandWellKnownUrlsInPod2Html
+if (1) {                                                                        #TexpandWellKnownUrlsInHtmlFormat #TexpandWellKnownUrlsInDitaFormat #TexpandWellKnownUrlsInPerlFormat #TexpandWellKnownUrlsInHtmlFromPerl #TexpandWellKnownUrlsInPod2Html #TexpandWellKnownWordsAsUrlsInHtmlFormat
   ok expandWellKnownUrlsInDitaFormat(q(L[github])) eq
     q(<xref scope="external" format="html" href="https://github.com">GitHub</xref>);
 
@@ -21244,6 +21328,9 @@ if (1) {                                                                        
 
   ok expandWellKnownUrlsInHtmlFromPerl(q(L<github>)) eq
     q(<a format="html" href="https://github.com">GitHub</a>);
+
+  ok expandWellKnownWordsAsUrlsInHtmlFormat(q(go to github and press enter.)) eq
+    q(go to <a href="https://github.com">GitHub</a> and press enter.);
 
   ok expandWellKnownUrlsInPod2Html(<<END) eq eval '"aaa\n\n=begin HTML\n\n<aaaa format=\"html\" href=\"https://github.com\">GitHub</aaaa>\n\n=end   HTML\n\n\nbbb\n"';
 aaa L<github> bbb
