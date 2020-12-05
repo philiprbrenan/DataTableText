@@ -689,11 +689,11 @@ sub findAllFilesAndFolders($)                                                   
 
   if ($^O =~ m(win)i)                                                           # windows
    {my $c = qq(powershell Get-ChildItem -Recurse -Name $folder);
-    my @c = qx($c);
-say STDERR "AAAA ", dump(\@c);
-    my @d = map {s(\\) (/)gr} @c;
-say STDERR "BBBB ", dump(\@d);
-    return @d;
+    my $r = qx($c);
+say STDERR "BBBB\n$r\n";
+       $r =~ s(\\) (/)g;
+say STDERR "CCCC\n$r\n";
+    return split /\n/, $r;
    }
 
   return undef unless confirmHasCommandLineCommand(q(find));                    # Confirm we have find
