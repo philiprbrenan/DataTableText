@@ -6,7 +6,7 @@ on:
   push
 
 jobs:
-  test:
+  ubuntu:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,11 +17,24 @@ jobs:
         sudo apt update
         sudo apt -y install build-essential tree
         sudo cpan install Data::Table::Text Module::Build Digest::SHA1 JSON
-
-
-
     - name: Test
       run: |
         tree
+        perl Build.PL
+        perl Build test
+
+  windows:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install
+      run: |
+        sudo apt update
+        sudo apt -y install build-essential tree
+        cpan install Data::Table::Text Module::Build Digest::SHA1 JSON
+    - name: Test
+      run: |
         perl Build.PL
         perl Build test
