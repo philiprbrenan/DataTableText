@@ -407,7 +407,7 @@ sub denormalizeFolderName($)                                                    
 
 sub renormalizeFolderName($)                                                    #P Normalize a folder name by ensuring it has a single trailing directory separator.
  {my ($name) = @_;                                                              # Name
-  ($name =~ s([\/\\]+\Z) ()gsr).'/';                                            # Put a trailing / on the folder name
+  ($name =~ s([\/\\]+\Z) ()gsr).($^O =~ m(win) ? '\\' : '/');                   # Put a trailing / on the folder name
  }
 
 sub filePath(@)                                                                 # Create a file name from a list of  names. Identical to L<fpf|/fpf>.
@@ -691,9 +691,7 @@ sub findAllFilesAndFolders($$)                                                  
    {my $c = qq(powershell Get-ChildItem -Recurse -Name $folder ).
      ($dirs ? '-Directory' : '-File');
     my $r = qx($c);
-say STDERR "BBBB\n$r\n";
        $r =~ s(\\) (/)g;
-say STDERR "CCCC\n$r\n";
     return split /\n/, $r;
    }
 
