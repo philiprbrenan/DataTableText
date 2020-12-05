@@ -686,6 +686,13 @@ BEGIN{*temporaryDirectory=*temporaryFolder}
 sub findAllFilesAndFolders($)                                                   #P Find all the files and folders under a folder.
  {my ($folder) = @_;                                                            # Folder to start the search with
   my @files;                                                                    # Files
+
+  if ($^O =~ m(win)i)                                                           # windows
+   {my $c = qq(powershell Get-ChildItem -Recurse -Name $folder);
+    my @c = qx($c);
+    return @c;
+   }
+
   return undef unless confirmHasCommandLineCommand(q(find));                    # Confirm we have find
   my $c   = qq(find "$folder" -print0);                                         # Use find command to find files
   my $res = qx($c);                                                             # Execute find command
