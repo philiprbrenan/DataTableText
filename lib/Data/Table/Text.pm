@@ -2588,7 +2588,7 @@ Title for the table
 END
      head      => <<'END',
 Header text which will preceed the formatted table.
-DDDD will be replaced with the current date and time.
+DDDDDDD will be replaced with the current date and time.
 NNNN will be replaced with the number of rows in the table.
 TTTT will be replaced with the title from the title keyword
 END
@@ -19249,7 +19249,7 @@ my $localTest = ((caller(1))[0]//'Data::Table::Text') eq "Data::Table::Text";   
 
 Test::More->builder->output("/dev/null") if $localTest;                         # Reduce number of confirmation messages during testing
 
-if ($^O =~ m(bsd|linux)i)                                                       # Try removing freeBSD
+if ($^O =~ m(bsd|linux|windows)i)                                               # Supported systems
  {plan tests    => 662
  }
 else
@@ -20329,31 +20329,33 @@ END
  }
 
 if (1) {                                                                        #TformatTable
-  my $file = fpe(qw(report txt));                                               # Create a report
+  my $d = temporaryFolder;
+  my $f = fpe($d, qw(report txt));                                              # Create a report
   my $t = formatTable
    ([["a",undef], [undef, "b\x0ac"]],                                           # Data - please replace 0a with a new line
     [undef, "BC"],                                                              # Column titles
-    file=>$file,                                                                # Output file
+    file=>$f,                                                                   # Output file
     head=><<END);                                                               # Header
 Sample report.
 
 Table has NNNN rows.
 END
-  ok -e $file;
-  ok readFile($file) eq $t;
-  unlink $file;
-  ok nws($t) eq nws(<<END);
+  ok -e $f;
+
+  ok readFile($f) eq $t;
+  is_deeply nws($t), nws(<<END);
 Sample report.
 
 Table has 2 rows.
 
-This file: report.txt
+This file: ${d}report.txt
 
       BC
 1  a
 2     b
       c
 END
+  clearFolder($d, 2);
  }
 
 if (1)
@@ -22060,13 +22062,15 @@ if (1)                                                                          
      [qw (aa  bb  cc)],
     file => fpe($d, qw(report txt)));
 
-  ok readFile(fpe($d, qw(report csv))) eq <<END, 'ddd';
+  my $f = fpe($d, qw(report csv));
+  ok readFile($f) eq <<END, 'ddd';
 aa,bb,cc
 "A","B","C"
 "AA","BB","CC"
 "AAA","BBB","CCC"
 1,22,333
 END
+  clearFolder($d, 2);
  }
 
 if (0) {                                                                        #TexecPerlOnRemote
