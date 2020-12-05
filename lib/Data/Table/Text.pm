@@ -19249,11 +19249,11 @@ my $localTest = ((caller(1))[0]//'Data::Table::Text') eq "Data::Table::Text";   
 
 Test::More->builder->output("/dev/null") if $localTest;                         # Reduce number of confirmation messages during testing
 
-if ($^O =~ m(bsd|linux|windows)i)                                               # Supported systems
+if ($^O =~ m(bsd|linux|win)i)                                                   # Supported systems
  {plan tests    => 662
  }
 else
- {plan skip_all => 'Not supported'
+ {plan skip_all =>qq(Not supported on: $^O);
  }
 
 my $timeStart = time;
