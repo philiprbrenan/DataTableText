@@ -690,7 +690,7 @@ sub findAllFilesAndFolders($)                                                   
   if ($^O =~ m(win)i)                                                           # windows
    {my $c = qq(powershell Get-ChildItem -Recurse -Name $folder);
     my @c = qx($c);
-    return @c;
+    return map {s(\\) (/)g} @c;
    }
 
   return undef unless confirmHasCommandLineCommand(q(find));                    # Confirm we have find
