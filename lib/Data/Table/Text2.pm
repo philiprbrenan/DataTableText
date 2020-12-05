@@ -834,6 +834,7 @@ sub clearFolder($$;$)                                                           
   my @files = findFiles($folder);                                               # Find files to be removed
   if (@files > $limitCount)                                                     # Limit the number of files that can be deleted to limit potential opportunity for damage
    {my $f = @files;
+    say STDERR "AAAA\n", dump(@files);
     confess "Limit is $limitCount, but $f files under folder:\n$folder\n";
    }
   my @dirs = findDirs($folder);                                                 # These directories should be empty and thus removable after removing the files
