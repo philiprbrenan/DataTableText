@@ -6211,6 +6211,7 @@ sub wellKnownUrls                                                               
     philCpan        => [q(CPAN),                                                "https://metacpan.org/author/PRBRENAN"                                                                                            ], #
     pl              => [q(programming language),                                "https://en.wikipedia.org/wiki/Programming_language"                                                                              ], #
     pod             => [q(POD),                                                 "https://perldoc.perl.org/perlpod.html"                                                                                           ], #
+    poppler         => [q(Poppler),                                             "https://poppler.freedesktop.org/"                                                                                                ], #
     preprocessor    => [q(preprocessor),                                        "https://en.wikipedia.org/wiki/Preprocessor"                                                                                      ], #
     prb             => [q(prb),                                                 "http://philiprbrenan.appaapps.com/"                                                                                              ], #
     process         => [q(process),                                             "https://en.wikipedia.org/wiki/Process_management_(computing)"                                                                    ], #
@@ -6271,6 +6272,8 @@ sub wellKnownUrls                                                               
     zerowidthspace  => [q(zero width space),                                    "https://en.wikipedia.org/wiki/Zero-width_space"                                                                                  ], #
     zip             => [q(zip),                                                 "https://linux.die.net/man/1/zip"                                                                                                 ], #
     zoom            => [q(Zoom),                                                "https://zoom.us/"                                                                                                                ], #
+    uow             => [q(How to Install and Use Ubuntu on Windows),            "http://philiprbrenan.appaapps.com/howToInstallUbuntuOnWindows"                                                                   ], #
+    sevenZ          => [q(7z),                                                  "https://en.wikipedia.org/wiki/7z"                                                                                                ], #
    );
  } # wellKnownUrls
 
@@ -6320,7 +6323,8 @@ sub expandWellKnownWordsAsUrlsInHtmlFormat($)                                   
 
   for my $w(sort keys %$wellKnown)                                              # Expand well known urls as html a links
    {my ($t, $u) = @{$$wellKnown{$w}};
-    $string =~ s(\s$w\s) ( <a href="$u">$t</a> )gis;
+    $string =~ s(L\[$w\]) (<a href="$u">$t</a>)gis;                             # Explicit link
+    $string =~ s(\s$w\s) ( <a href="$u">$t</a> )gis;                            # Word that matches
    }
 
   $string =~ s(W\[(\w+)\]) (<code>$1</code>)gs;                                 # W[...] wraps words with definitions we wish to stress
