@@ -17,7 +17,7 @@
 # updateDocumentation - detect parameter type mismatch between prototype and specified parameter
 package Data::Table::Text;
 use v5.26;
-our $VERSION = 20210328;                                                        # Version
+our $VERSION = 20210518;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
@@ -94,7 +94,7 @@ sub fff($$@)                                                                    
 
   my $m = join ' ', @m;                                                         # Time stamp each message
   return unless $m =~ m(\S)s;
-  $m =~ s(\n) ( )gs;
+# $m =~ s(\n) ( )gs;
   $m .= " at $file line $line";
   confess "$m\n";                                                               # Confess
  }
@@ -796,6 +796,15 @@ sub searchDirectoryTreesForMatchingFiles(@)                                     
    }
   @file                                                                         # Return files
  } # searchDirectoryTreesForMatchingFiles
+
+sub searchDirectoryTreeForSubFolders($)                                         #I Search the specified directory under the specified folder for sub folders
+ {my ($folder) = @_;                                                            # The folder at which to start the search
+  my @f;                                                                        # Folders found
+  for my $d(findAllFilesAndFolders($folder, 0))                                 # All files and folders beneath the start folder
+   {push @f, $d if -d $d;                                                       # Do not include file names
+   }
+  @f                                                                            # Return folder names
+ } # searchDirectoryTreeForSubFolders
 
 sub hashifyFolderStructure(@)                                                   # Hashify a list of file names to get the corresponding folder structure.
  {my (@files) = @_;                                                             # File names
@@ -6198,7 +6207,7 @@ sub wellKnownUrls                                                               
     browser         => [q(web browser),                                         "https://en.wikipedia.org/wiki/Web_browser"                                                                                       ], #
     bulktreeg       => [q(Bulk Tree),                                           "https://github.com/philiprbrenan/TreeBulk"                                                                                       ], #
     button          => [q(Button),                                              "https://en.wikipedia.org/wiki/Button_(computing)"                                                                                ], #
-    code            => [q(programming code),                                    "https://en.wikipedia.org/wiki/Computer_program"                                                                                  ], #
+    code            => [q(code),                                                "https://en.wikipedia.org/wiki/Computer_program"                                                                                  ], #
     certbot         => [q(Certbot),                                             "https://certbot.eff.org/lets-encrypt/ubuntufocal-apache"                                                                         ], #
     cgi             => [q(Common Gateway Interface),                            "https://en.wikipedia.org/wiki/Common_Gateway_Interface"                                                                          ], #
     chmod           => [q(chmod),                                               "https://linux.die.net/man/1/chmod"                                                                                               ], #
@@ -6216,15 +6225,18 @@ sub wellKnownUrls                                                               
     conref          => [q(conref),                                              "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/archSpec/base/conref.html#conref"             ], #
     cookie          => [q(cookie),                                              "https://en.wikipedia.org/wiki/Cookie"                                                                                            ], #
     corpus          => [q(corpus),                                              "https://en.wikipedia.org/wiki/Text_corpus"                                                                                       ], #
+    coverage        => [q(coverage),                                            "https://en.wikipedia.org/wiki/Code_coverage"                                                                                     ], #
     cpan            => [q(CPAN),                                                "https://metacpan.org/author/PRBRENAN"                                                                                            ], #
     cpu             => [q(CPU),                                                 "https://en.wikipedia.org/wiki/Central_processing_unit"                                                                           ], #
     c               => [q(The C Programming Language),                          "https://1lib.eu/book/633119/db5c78"                                                                                              ], #
+    co2             => [q(Carbon Dioxide),                                      "https://en.wikipedia.org/wiki/Carbon_dioxide"                                                                                    ], #
     csv             => [q(csv),                                                 "https://en.wikipedia.org/wiki/Comma-separated_values"                                                                            ], #
     curl            => [q(curl),                                                "https://linux.die.net/man/1/curl"                                                                                                ], #
     dataStructure   => [q(data structure),                                      "https://en.wikipedia.org/wiki/Data_structure"                                                                                    ], #
     db2             => [q(DB2),                                                 "https://en.wikipedia.org/wiki/IBM_Db2_Family"                                                                                    ], #
     dbi             => [q(DBI),                                                 "https://dbi.perl.org/"                                                                                                           ], #
     dd              => [q(Daily Diary),                                         "http://philiprbrenan.appaapps.com.s3-website-eu-west-1.amazonaws.com/index.html"                                                 ], #
+    ddt             => [q(Data::Table::Text),                                   "https://metacpan.org/pod/Data::Table::Text"                                                                                      ], #
     dependencies    => [q(dependencies),                                        "https://en.wikipedia.org/wiki/Coupling_(computer_programming)"                                                                   ], #
     dexl            => [q(Data::Edit::Xml::Lint),                               "https://metacpan.org/release/Data-Edit-Xml-Lint"                                                                                 ], #
     dex             => [q(Data::Edit::Xml),                                     "https://metacpan.org/pod/Data::Edit::Xml"                                                                                        ], #
@@ -6311,6 +6323,7 @@ sub wellKnownUrls                                                               
     jet             => [q(Joint European Torus),                                "https://en.wikipedia.org/wiki/Joint_European_Torus"                                                                              ], #
     jetni           => [q(Physics design calculations for the JET neutral injectors),"https://www.sciencedirect.com/science/article/pii/B978008025697950052X"                                                     ], #
     javascript      => [q(JavaScript),                                          "https://en.wikipedia.org/wiki/JavaScript"                                                                                        ], #
+    jpg             => [q(JPG),                                                 "https://en.wikipedia.org/wiki/JPEG"                                                                                              ], #
     json            => [q(Json),                                                "https://en.wikipedia.org/wiki/JSON"                                                                                              ], #
     keyboard        => [q(keyboard),                                            "https://en.wikipedia.org/wiki/Computer_keyboard"                                                                                 ], #
     killarney       => [q(Killarney),                                           "https://en.wikipedia.org/wiki/Killarney"                                                                                         ], #
@@ -6320,6 +6333,7 @@ sub wellKnownUrls                                                               
     libpq           => [q(libpq),                                               "https://www.postgresql.org/docs/13/libpq.html"                                                                                   ], #
     libreoffice     => [q(LibreOffice),                                         "https://www.libreoffice.org/"                                                                                                    ], #
     lint            => [q(lint),                                                "http://xmlsoft.org/xmllint.html"                                                                                                 ], #
+    linting         => [q(linting),                                             "https://en.wikipedia.org/wiki/Lint_(software)"                                                                                   ], #
     linux           => [q(Linux),                                               "https://en.wikipedia.org/wiki/Linux"                                                                                             ], #
     liseMeitner     => [q(Lise Meitner),                                        "https://en.wikipedia.org/wiki/Lise_Meitner"                                                                                      ], #
     list            => [q(list),                                                "https://en.wikipedia.org/wiki/Linked_list"                                                                                       ], #
@@ -6339,6 +6353,7 @@ sub wellKnownUrls                                                               
     mod_shib        => [q(mod_shib),                                            "https://wiki.shibboleth.net/confluence/display/SP3/Apache"                                                                       ], #
     module          => [q(module),                                              "https://en.wikipedia.org/wiki/Modular_programming"                                                                               ], #
     mopc            => [q(mop-c),                                               "https://metacpan.org/pod/Preprocess::Ops"                                                                                        ], #
+    mvp             => [q(Minimal Viable Product),                              "https://en.wikipedia.org/wiki/Minimum_viable_product"                                                                            ], #
     murphyslaw      => [q(Murphy's Law),                                        "https://en.wikipedia.org/wiki/Murphy%27s_law"                                                                                    ], #
     mysqlMan        => [q(MySql manual),                                        "https://dev.mysql.com/doc/refman/8.0/en/"                                                                                        ], #
     mysql           => [q(MySql),                                               "https://en.wikipedia.org/wiki/MySQL"                                                                                             ], #
@@ -6414,9 +6429,12 @@ sub wellKnownUrls                                                               
     spot            => [q(spot),                                                "https://aws.amazon.com/ec2/spot/"                                                                                                ], #
     spreedsheet     => [q(Spreadsheet),                                         "https://en.wikipedia.org/wiki/Spreadsheet"                                                                                       ], #
     sql             => [q(Structured Query Language),                           "https://en.wikipedia.org/wiki/SQL"                                                                                               ], #
-    squareroot      => [q(Square Root),                                         "https://en.wikipedia.org/wiki/Square_root"                                                                                               ], #
+    squareroot      => [q(Square Root),                                         "https://en.wikipedia.org/wiki/Square_root"                                                                                       ], #
     ssh             => [q(Secure Shell),                                        "https://www.ssh.com/ssh"                                                                                                         ], #
     ssxr            => [q(Self Xref),                                           "https://philiprbrenan.github.io/selfServiceXref.pdf"                                                                             ], #
+    stdin           => [q(stdin),                                               "https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)"                                                           ], #
+    stderr          => [q(stderr),                                              "https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)"                                                           ], #
+    stdout          => [q(stdout),                                              "https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)"                                                           ], #
     step            => [q(step),                                                "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/contentmodels/cmlts.html#cmlts__step"         ], #
     steps           => [q(steps),                                               "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/contentmodels/cmlts.html#cmlts__steps"        ], #
     stopwords       => [q(stopwords),                                           "https://metacpan.org/pod/Storable"                                                                                               ], #
@@ -6425,10 +6443,12 @@ sub wellKnownUrls                                                               
     substeps        => [q(substeps),                                            "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/contentmodels/cmlts.html#cmlts__substeps"     ], #
     sws             => [q(Sir Walter Scott),                                    "https://en.wikipedia.org/wiki/Walter_Scott"                                                                                      ], #
     ta              => [q(Transamerica),                                        "https://en.wikipedia.org/wiki/Transamerica_Corporation"                                                                          ], #
+    transamerica    => [q(Transamerica),                                        "https://en.wikipedia.org/wiki/Transamerica_Corporation"                                                                          ], #
     table           => [q(table of information),                                "https://en.wikipedia.org/wiki/Table_(information)"                                                                               ], #
     tab             => [q(tab),                                                 "https://en.wikipedia.org/wiki/Tab_key"                                                                                           ], #
     taocp           => [q(The Art of Computer Programming),                     "https://en.wikipedia.org/wiki/The_Art_of_Computer_Programming"                                                                   ], #
     task            => [q(task),                                                "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/langRef/technicalContent/task.html#task"      ], #
+    tdd             => [q(test driven development),                             "https://en.wikipedia.org/wiki/Test-driven_development"                                                                           ], #
     test            => [q(test),                                                "https://en.wikipedia.org/wiki/Software_testing"                                                                                  ], #
     textmatch       => [q(text matching),                                       "https://metacpan.org/pod/Text::Match"                                                                                            ], #
     thp             => [q(Theoretical Computational Physics),                   "https://en.wikipedia.org/wiki/Theoretical_physics"                                                                               ], #
@@ -7359,7 +7379,7 @@ sub updatePerlModuleDocumentation($)                                            
 
   zzz("pod2html --infile=$perlModule --outfile=zzz.html && ".                   # View documentation
       " firefox file:zzz.html && ".
-      " (sleep 5 && rm zzz.html pod2htmd.tmp) &");
+      " (sleep 500 && rm zzz.html pod2htmd.tmp) &");
  }
 
 sub extractPythonDocumentationFromFiles(@)                                      #P Extract python documentation from the specified files
@@ -7693,7 +7713,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
  keyCount
  lll loadArrayArrayFromLines loadArrayFromLines loadArrayHashFromLines loadHash
  loadHashArrayFromLines loadHashFromLines loadHashHashFromLines
- lengthOfLongestSubArray
+ lengthOfLongestSubArray lpad
  makeDieConfess makePath makePathRemote matchPath mathematicalBoldItalicString
  mathematicalBoldItalicStringUndo mathematicalBoldString
  mathematicalBoldStringUndo mathematicalMonoSpaceString
@@ -7727,7 +7747,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
  s3DownloadFolder s3FileExists s3ListFilesAndSizes s3ReadFile s3ReadString
  s3WriteFile s3WriteString s3ZipFolder s3ZipFolders saveCodeToS3 saveSourceToS3
  saveAwsDomain saveAwsIp
- searchDirectoryTreesForMatchingFiles setFileExtension setIntersection
+ searchDirectoryTreesForMatchingFiles searchDirectoryTreeForSubFolders setFileExtension setIntersection
  setIntersectionOfArraysOfStrings setIntersectionOverUnion setPackageSearchOrder
  setPartitionOnIntersectionOverUnion
  setPartitionOnIntersectionOverUnionOfHashStringSets
@@ -19956,7 +19976,7 @@ my $localTest = ((caller(1))[0]//'Data::Table::Text') eq "Data::Table::Text";   
 
 Test::More->builder->output("/dev/null") if $localTest;                         # Reduce number of confirmation messages during testing
 
-if ($^O =~ m(bsd|linux)i) {plan tests    => 675}                                # Supported systems
+if ($^O =~ m(bsd|linux)i) {plan tests    => 676}                                # Supported systems
 #lsif (onWindows)         {plan tests    => 621}                                # Somewhat supported systems
 else
  {plan skip_all =>qq(Not supported on: $^O);
@@ -19964,7 +19984,7 @@ else
 
 my $timeStart = time;
 
-#goto latestTest;
+#goto latest;
 
 if (1)                                                                          # Unicode to local file
  {my $z = "𝝰 𝝱 𝝲";
@@ -20760,7 +20780,8 @@ if (1) {                                                                        
 is_deeply quoteFile(fpe(qw(a "b" c))), onWindows ? q("a\\\"b\".c") : q("a/\"b\".c"); #TquoteFile
 is_deeply       printQw(qw(a b c)),    q(qw(a b c));                            #TprintQw
 
-if (1) {                                                                        #TtemporaryFolder #Tfpd #TcreateEmptyFile #TfindFiles #TfindDirs #TsearchDirectoryTreesForMatchingFiles #TclearFolder #TfileList
+latest:;
+if (1) {                                                                        #TtemporaryFolder #Tfpd #TcreateEmptyFile #TfindFiles #TfindDirs #TsearchDirectoryTreesForMatchingFiles #TsearchDirectoryTreeForSubFolders #TclearFolder #TfileList
   my $D = temporaryFolder;
   ok  -d $D;
 
@@ -20782,6 +20803,8 @@ if (1) {                                                                        
             ["a.txt", "b.txt", "c.txt"];
 
   ok -e $_ for @f;
+
+  is_deeply scalar(searchDirectoryTreeForSubFolders $D), 2;
 
   my @g = fileList(qq($D/*/*.txt));
   ok @g == 3;
@@ -22989,8 +23012,6 @@ END
 
   unlink $i, $o;
  }
-
-latestTest:;
 
 if (1) {                                                                        #TprintPerlDataAsXml
 my $perlData = {a=>1, b=>[{c=>[3,4]}, {d=>[5,6]}, {e=>7}], f=>8};
