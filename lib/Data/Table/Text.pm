@@ -95,7 +95,7 @@ sub fff($$@)                                                                    
   my $m = join ' ', @m;                                                         # Time stamp each message
   return unless $m =~ m(\S)s;
 # $m =~ s(\n) ( )gs;
-  $m .= " at $file line $line";
+  $m .= " called at $file line $line";
   confess "$m\n";                                                               # Confess
  }
 
@@ -6978,7 +6978,7 @@ END
         $p == $l or fff $L, $perlModule, <<"END";
 Method:
 
-  $name($signature).
+  $name($signature)
 
 The comment describing the parameters for this
 method has descriptions for $p parameters but the signature suggests that there
@@ -7382,8 +7382,8 @@ sub updatePerlModuleDocumentation($)                                            
   updateDocumentation($perlModule);                                             # Update documentation
 
   zzz("pod2html --infile=$perlModule --outfile=zzz.html && ".                   # View documentation
-      " firefox file:zzz.html && ".
-      " (sleep 500 && rm zzz.html pod2htmd.tmp) &");
+      " opera zzz.html && ".
+      " (sleep 5 && rm zzz.html pod2htmd.tmp) &");
  }
 
 sub extractPythonDocumentationFromFiles(@)                                      #P Extract python documentation from the specified files
