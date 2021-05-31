@@ -17,7 +17,7 @@
 # updateDocumentation - detect parameter type mismatch between prototype and specified parameter
 package Data::Table::Text;
 use v5.26;
-our $VERSION = 20210519;                                                        # Version
+our $VERSION = 20210531;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
@@ -3710,6 +3710,26 @@ sub stringsAreNotEqual($$)                                                      
    {shift @a; push @c, shift @b;
    }
   (join(q(), @c), join(q(), @a), join(q(), @b))
+ }
+
+sub showGotVersusWanted($$)                                                     # Show the difference between the wanted string and the wanted string
+ {my ($g, $e) = @_;                                                             # First string, second string
+  my @s;
+  if ($g ne $e)
+   {my ($s, $G, $E) = stringsAreNotEqual($g, $e);
+    if (length($s))
+     {my $line = 1 + length($s =~ s([^\n])  ()gsr);
+      my $char = 1 + length($s =~ s(\A.*\n) ()sr);
+      push @s, "Comparing wanted with got failed at line: $line, character: $char";
+      push @s, "Start:\n$s";
+     }
+    my $b1 = '+' x 80;
+    my $b2 = '_' x 80;
+    push @s,  "Want $b1\n", firstNChars($E, 80);
+    push @s,  "Got  $b2\n", firstNChars($G, 80);
+    return join "\n", @s;
+   }
+  undef
  }
 
 sub printQw(@)                                                                  # Print an array of words in qw() format.
@@ -7758,6 +7778,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
  setPartitionOnIntersectionOverUnionOfHashStringSetsInParallel
  setPartitionOnIntersectionOverUnionOfSetsOfWords
  setPartitionOnIntersectionOverUnionOfStringSets setPermissionsForFile setUnion
+ showGotVersusWanted
  squareArray startProcess storeFile stringMd5Sum
  stringsAreNotEqual subScriptString subScriptStringUndo sumAbsAndRel
  summarizeColumn superScriptString superScriptStringUndo swapFilePrefix
@@ -20044,7 +20065,7 @@ my $localTest = ((caller(1))[0]//'Data::Table::Text') eq "Data::Table::Text";   
 
 Test::More->builder->output("/dev/null") if $localTest;                         # Reduce number of confirmation messages during testing
 
-if ($^O =~ m(bsd|linux)i) {plan tests    => 676}                                # Supported systems
+if ($^O =~ m(bsd|linux)i) {plan tests    => 677}                                # Supported systems
 #lsif (onWindows)         {plan tests    => 621}                                # Somewhat supported systems
 else
  {plan skip_all =>qq(Not supported on: $^O);
@@ -21338,11 +21359,28 @@ cc     333
 END
 }
 
-if (1) {                                                                        #TstringsAreNotEqual
+if (1) {                                                                        #TstringsAreNotEqual  #TshowGotVersusWanted
   ok        !stringsAreNotEqual(q(abc), q(abc));
   ok         stringsAreNotEqual(q(abc), q(abd));
   is_deeply [stringsAreNotEqual(q(abc), q(abd))], [qw(ab c d)];
   is_deeply [stringsAreNotEqual(q(ab),  q(abd))], [q(ab), '', q(d)];
+  is_deeply showGotVersusWanted("aaaa\nbbbb\ncccc\ndddd\n",
+                                "aaaa\nbbbb\nccee\nffff\n"), <<END;
+Comparing wanted with got failed at line: 3, character: 3
+Start:
+aaaa
+bbbb
+cc
+Want ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ee
+ffff
+
+Got  ________________________________________________________________________________
+
+cc
+dddd
+END
  }
 
 if (1) {                                                                        #TgenHash #TloadHash
