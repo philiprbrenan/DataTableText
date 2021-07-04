@@ -40,7 +40,7 @@ jobs:
         perl lib/Data/Table/Text.pm
 
   mac:
-    runs-on: macos-11
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
