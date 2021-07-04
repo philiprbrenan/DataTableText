@@ -38,3 +38,18 @@ jobs:
     - name: Test
       run: |
         perl lib/Data/Table/Text.pm
+
+  mac:
+    runs-on: macos-11
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install
+      run: |
+        sudo cpan install Data::Table::Text Module::Build Digest::SHA1 JSON
+    - name: Test
+      run: |
+        tree
+        perl Build.PL
+        perl Build test
