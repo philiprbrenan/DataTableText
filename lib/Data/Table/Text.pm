@@ -3158,7 +3158,7 @@ sub loadHashHashFromLines($)                                                    
   +{map{my ($a, @a) = split /\s+/; ($a=>{@a})} split "\n", $string}
  }
 
-sub checkKeys($$)                                                               # Check the keys in a B<hash> conform to those B<$permitted>.
+sub checkKeys($$)                                                               # Check the keys in a B<hash> confirm to those B<$permitted>.
  {my ($hash, $permitted) = @_;                                                  # The hash to test, a hash of the permitted keys and their meanings
 
   ref($hash)      =~ /hash/igs or                                               # Check parameters
@@ -6428,7 +6428,7 @@ sub wellKnownUrls                                                               
     poppler         => [q(Poppler),                                             "https://poppler.freedesktop.org/"                                                                                                ], #
     portugal        => [q(Portugal),                                            "https://en.wikipedia.org/wiki/Portugal"                                                                                          ], #
     postgres        => [q(Postgres),                                            "https://github.com/philiprbrenan/postgres"                                                                                       ], #
-    prb             => [q(prb),                                                 "http://philiprbrenan.appaapps.com/"                                                                                              ], #
+    prb             => [q(philip r brenan),                                     "https://philiprbrenan.neocities.org/"                                                                                            ], #
     preprocessor    => [q(preprocessor),                                        "https://en.wikipedia.org/wiki/Preprocessor"                                                                                      ], #
     process         => [q(process),                                             "https://en.wikipedia.org/wiki/Process_management_(computing)"                                                                    ], #
     procfs          => [q(Process File System),                                 "https://en.wikipedia.org/wiki/Procfs"                                                                                            ], #
@@ -6439,7 +6439,7 @@ sub wellKnownUrls                                                               
     recursively     => [q(recursively),                                         "https://en.wikipedia.org/wiki/Recursion"                                                                                         ], #
     recursive       => [q(recursive),                                           "https://en.wikipedia.org/wiki/Recursion"                                                                                         ], #
     relocatable     => [q(relocatable),                                         "https://en.wikipedia.org/wiki/Relocation_%28computing%29"                                                                        ], #
-    r               => [q(The R Programming Language),                          "https://en.wikipedia.org/wiki/R_(programming_language)"                                                                          ], #
+    rrr             => [q(The R Programming Language),                          "https://en.wikipedia.org/wiki/R_(programming_language)"                                                                          ], #
     riyadh          => [q(Riyadh),                                              "https://en.wikipedia.org/wiki/Riyadh"                                                                                            ], #
     rfp             => [q(Request For Proposal),                                "https://en.wikipedia.org/wiki/Request_for_proposal"                                                                              ], #
     r53             => [q(Route 53),                                            "https://console.aws.amazon.com/route53"                                                                                          ], #
@@ -6492,10 +6492,12 @@ sub wellKnownUrls                                                               
     thp             => [q(Theoretical Computational Physics),                   "https://en.wikipedia.org/wiki/Theoretical_physics"                                                                               ], #
     tls             => [q(TLS),                                                 "https://en.wikipedia.org/wiki/Transport_Layer_Security"                                                                          ], #
     tree            => [q(tree),                                                "https://en.wikipedia.org/wiki/Tree_(data_structure)"                                                                             ], #
+    tritium         => [q(tritium),                                             "https://en.wikipedia.org/wiki/Tritium"                                                                                           ], #
     ubuntu          => [q(Ubuntu),                                              "https://ubuntu.com/download/desktop"                                                                                             ], #
     ucla            => [q(University of California at Los Angeles),             "https://en.wikipedia.org/wiki/University_of_California,_Los_Angeles"                                                             ], #
     udel            => [q(University of Delaware),                              "https://www.udel.edu/"                                                                                                           ], #
     udp             => [q(User Datagram Protocol),                              "https://en.wikipedia.org/wiki/User_Datagram_Protocol"                                                                            ], #
+    ul              => [q(University of Lancaster),                             "https://en.wikipedia.org/wiki/Lancaster_University"                                                                              ], #
     undef           => [q(undef),                                               "https://perldoc.perl.org/functions/undef.html"                                                                                   ], #
     unicode         => [q(Unicode),                                             "https://en.wikipedia.org/wiki/Unicode"                                                                                           ], #
     unixHaters      => [q(Unix Haters Handbook),                                "https://1lib.eu/book/750790/8f3128"                                                                                              ], #
@@ -6509,6 +6511,8 @@ sub wellKnownUrls                                                               
     uk              => [q(United Kingdom),                                      "https://en.wikipedia.org/wiki/United_Kingdom"                                                                                    ], #
     unexaminedlife  => [q(Socrates: "The unexamined life is not worth living"), "https://en.wikipedia.org/wiki/The_unexamined_life_is_not_worth_living"                                                           ], #
     upload          => [q(upload),                                              "https://en.wikipedia.org/wiki/Upload"                                                                                            ], #
+    usa             => [q(United States),                                       "https://en.wikipedia.org/wiki/United_States"                                                                                     ], #
+    uk              => [q(United Kingdom),                                      "https://en.wikipedia.org/wiki/United_Kingdom"                                                                                    ], #
     uspto           => [q(United States Patent and Trademark Office),           "https://en.wikipedia.org/wiki/USPTO"                                                                                             ], #
     utf8            => [q(utf8),                                                "https://en.wikipedia.org/wiki/UTF-8"                                                                                             ], #
     v2              => [q(Vectors In Two Dimensions),                           "https://pypi.org/project/Vector2/"                                                                                               ], #
