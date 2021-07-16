@@ -23,6 +23,20 @@ jobs:
         perl Build.PL
         perl Build test
 
+  mac:
+    runs-on: macOS-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install
+      run: |
+        sudo cpan -T install Data::Table::Text Module::Build Digest::SHA1 JSON
+    - name: Test
+      run: |
+        perl Build.PL
+        perl Build test
+
   windows:
     runs-on: windows-latest
 
