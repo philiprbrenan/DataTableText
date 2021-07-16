@@ -6324,7 +6324,7 @@ sub wellKnownUrls                                                               
     coverage        => [q(coverage),                                            "https://en.wikipedia.org/wiki/Code_coverage"                                                                                     ], #
     cpan            => [q(CPAN),                                                "https://metacpan.org/author/PRBRENAN"                                                                                            ], #
     cpu             => [q(CPU),                                                 "https://en.wikipedia.org/wiki/Central_processing_unit"                                                                           ], #
-    c               => [q(The C Programming Language),                          "https://1lib.eu/book/633119/db5c78"                                                                                              ], #
+    c               => [q(the C programming language),                          "https://1lib.eu/book/633119/db5c78"                                                                                              ], #
     css             => [q(Cascading Style Sheets),                              "https://en.wikipedia.org/wiki/CSS"                                                                                               ], #
     csv             => [q(csv),                                                 "https://en.wikipedia.org/wiki/Comma-separated_values"                                                                            ], #
     curl            => [q(curl),                                                "https://linux.die.net/man/1/curl"                                                                                                ], #
@@ -6466,6 +6466,7 @@ sub wellKnownUrls                                                               
     ni              => [q(Neutral Beam Injection),                              "https://en.wikipedia.org/wiki/Neutral-beam_injection"                                                                            ], #
     nodejs          => [q(NodeJs),                                              "https://en.wikipedia.org/wiki/NodeJs"                                                                                            ], #
     oauth           => [q(Oauth),                                               "https://en.wikipedia.org/wiki/OAuth"                                                                                             ], #
+    oneliner        => [q(one line program),                                    "https://en.wikipedia.org/wiki/One-liner_program"                                                                                 ], #
     openoffice      => [q(Apache Open Office),                                  "https://www.openoffice.org/download/index.html"                                                                                  ], #
     openssl         => [q(Open SSL),                                            "https://www.openssl.org/"                                                                                                        ], #
     othermeta       => [q(othermeta),                                           "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/contentmodels/cmlto.html#cmlto__othermeta"    ], #
@@ -20356,8 +20357,8 @@ my $localTest = ((caller(1))[0]//'Data::Table::Text') eq "Data::Table::Text";   
 
 Test::More->builder->output("/dev/null") if $localTest;                         # Reduce number of confirmation messages during testing
 
-if ($^O =~ m(bsd|linux)i) {plan tests    => 691}                                # Supported systems
-#lsif (onWindows)         {plan tests    => 621}                                # Somewhat supported systems
+if ($^O =~ m(bsd|linux|darwin)i) {plan tests    => 691}                         # Supported systems
+#lsif (onWindows)                {plan tests    => 621}                         # Somewhat supported systems
 else
  {plan skip_all =>qq(Not supported on: $^O);
  }
