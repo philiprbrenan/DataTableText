@@ -406,6 +406,10 @@ sub onWindows                                                                   
  {$^O =~ m(MSWin32)
  }
 
+sub onMac                                                                       #P Are we on mac
+ {$^O =~ m(darwin)
+ }
+
 sub filePathSeparatorChar                                                       #P File path separator
  {onWindows ? '\\' : '/';
  }
@@ -20419,7 +20423,7 @@ if (1)                                                                          
   is_deeply [parseFileName "./../../a.b"],          [qw(./../../ a b)];
  }
 
-if (!onWindows) {
+if (!onWindows and !onMac) {
 
 if (1)                                                                          # Unicode
  {use utf8;
@@ -20467,6 +20471,8 @@ if (1)                                                                          
   ok !-d $T;
  }
 }
+else {ok 1 for 1..15}
+
 
 if (1) {                                                                        # Check files
   my $d = filePath   (my @d = qw(a b c d));                                     #TcheckFile #TmatchPath
@@ -21751,7 +21757,7 @@ if (1)                                                                          
   ok $a->[0]->ccc == 42;
  }
 
-if (!onWindows) {
+if (!onWindows and !onMac) {
 
 if (1) {                                                                        #TwriteFiles #TreadFiles #TcopyFile #TcopyFolder #TmergeFolder #TmoveFileNoClobber #TmoveFileWithClobber
   my $d = temporaryFolder;
@@ -21793,6 +21799,7 @@ if (1) {                                                                        
  }
 
 }
+else {ok 1 for 1..14}
 
 if (1)                                                                          #TsetPackageSearchOrder
  {if (1)
