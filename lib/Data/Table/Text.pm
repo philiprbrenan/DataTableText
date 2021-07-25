@@ -15,7 +15,7 @@
 # updateDocumentation - mark synopsis tests with #S an place in synopsis
 package Data::Table::Text;
 use v5.16;
-our $VERSION = 20210724;                                                        # Version
+our $VERSION = 20210725;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
