@@ -14,8 +14,8 @@
 # checkKeys information should be formatted so it can be referred to in sub descriptions
 # updateDocumentation - mark synopsis tests with #S an place in synopsis
 package Data::Table::Text;
-use v5.26;
-our $VERSION = 20210704;                                                        # Version
+use v5.16;
+our $VERSION = 20210724;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
@@ -20361,10 +20361,17 @@ my $localTest = ((caller(1))[0]//'Data::Table::Text') eq "Data::Table::Text";   
 
 Test::More->builder->output("/dev/null") if $localTest;                         # Reduce number of confirmation messages during testing
 
-if ($^O =~ m(bsd|linux|darwin)i) {plan tests    => 691}                         # Supported systems
-#lsif (onWindows)                {plan tests    => 621}                         # Somewhat supported systems
+if ($^V ge v5.26 or $^V =~ m(\Av5.16))                                          # Supported versions
+ {if ($^O =~ m(bsd|linux|darwin)i)                                              # Supported systems
+    {plan tests    => 691
+    }
+  #lsif (onWindows)                {plan tests    => 621}                       # Somewhat supported systems
+  else
+   {plan skip_all =>qq(Not supported on this operating system: $^O);
+   }
+ }
 else
- {plan skip_all =>qq(Not supported on: $^O);
+ {plan skip_all =>qq(Not supported on this version of Perl: $^V);
  }
 
 my $timeStart = time;
