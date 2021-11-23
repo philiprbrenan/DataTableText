@@ -6321,9 +6321,14 @@ sub wellKnownUrls                                                               
     appaapps        => [q(www.appaapps.com),                                    "http://www.appaaps.com"                                                                                                          ],
     aramco          => [q(Saudi Aramco),                                        "https://en.wikipedia.org/wiki/Saudi_Aramco"                                                                                      ],
     arena           => [q(arena),                                               "https://en.wikipedia.org/wiki/Region-based_memory_management"                                                                    ],
+    arenas          => [q(arenas),                                              "https://en.wikipedia.org/wiki/Region-based_memory_management"                                                                    ],
     array           => [q(array),                                               "https://en.wikipedia.org/wiki/Dynamic_array"                                                                                     ],
+    arrays          => [q(arrays),                                              "https://en.wikipedia.org/wiki/Dynamic_array"                                                                                     ],
     as400           => [q(as400),                                               "https://en.wikipedia.org/wiki/IBM_System_i"                                                                                      ],
     ascii           => [q(Ascii),                                               "https://en.wikipedia.org/wiki/ASCII"                                                                                             ],
+    assemble        => [q(assemble),                                            "https://en.wikipedia.org/wiki/Assembly_language#Assembler"                                                                       ],
+    assembler       => [q(assembler),                                           "https://en.wikipedia.org/wiki/Assembly_language#Assembler"                                                                       ],
+    assembly        => [q(assembly),                                            "https://en.wikipedia.org/wiki/Assembly_language"                                                                                 ],
     avx512          => [q(Advanced Vector Extensions),                          "https://en.wikipedia.org/wiki/AVX-512"                                                                                           ],
     avx             => [q(Advanced Vector Extensions),                          "https://en.wikipedia.org/wiki/AVX-512"                                                                                           ],
     awsami          => [q(Amazon Web Services - Amazon Machine Image),          "https://en.wikipedia.org/wiki/Amazon_Machine_Image"                                                                              ],
@@ -6337,6 +6342,7 @@ sub wellKnownUrls                                                               
     base64          => [q(base 64 encoding),                                    "https://en.wikipedia.org/wiki/Base64"                                                                                            ],
     bash            => [q(Bash),                                                "https://en.wikipedia.org/wiki/Bash_(Unix_shell)"                                                                                 ],
     binarysearch    => [q(Binary Search),                                       "https://metacpan.org/release/Binary-Heap-Search"                                                                                 ],
+    bit             => [q(bit),                                                 "https://en.wikipedia.org/wiki/Bit"                                                                                               ],
     bitterend       => [q(Bitter End),                                          "https://en.wikipedia.org/wiki/Knot#Bitter_end"                                                                                   ],
     blob            => [q(blob),                                                "https://en.wikipedia.org/wiki/Binary_large_object"                                                                               ],
     boson           => [q(Boson),                                               "https://en.wikipedia.org/wiki/Boson"                                                                                             ],
@@ -6461,6 +6467,7 @@ sub wellKnownUrls                                                               
     imagemagick     => [q(Imagemagick),                                         "https://www.imagemagick.org/script/index.php"                                                                                    ],
     infix           => [q(infix),                                               "https://en.wikipedia.org/wiki/Infix_notation"                                                                                    ],
     install         => [q(install),                                             "https://en.wikipedia.org/wiki/Installation_(computer_programs)"                                                                  ],
+    intel           => [q(Intel),                                               "https://en.wikipedia.org/wiki/Intel"                                                                                             ],
     intelsde        => [q(Intel Software Development Emulator),                 "https://software.intel.com/content/www/us/en/develop/articles/intel-software-development-emulator.html"                          ],
     internet        => [q(Internet),                                            "https://en.wikipedia.org/wiki/Internet"                                                                                          ],
     ip6             => [q(IPv6 address),                                        "https://en.wikipedia.org/wiki/IPv6"                                                                                              ],
@@ -6508,7 +6515,7 @@ sub wellKnownUrls                                                               
     mvp             => [q(Minimal Viable Product),                              "https://en.wikipedia.org/wiki/Minimum_viable_product"                                                                            ],
     mysqlMan        => [q(MySql manual),                                        "https://dev.mysql.com/doc/refman/8.0/en/"                                                                                        ],
     mysql           => [q(MySql),                                               "https://en.wikipedia.org/wiki/MySQL"                                                                                             ],
-    nasm            => [q(nasm),                                                "https://github.com/netwide-assembler/nasm"                                                                                       ],
+    nasm            => [q(NASM - the Netwide Assember),                         "https://github.com/netwide-assembler/nasm"                                                                                       ],
     nasmx86         => [q(NasmX86),                                             "https://github.com/philiprbrenan/NasmX86"                                                                                        ],
     nfa             => [q(NFA),                                                 "https://metacpan.org/pod/Data::NFA"                                                                                              ],
     ni              => [q(Neutral Beam Injection),                              "https://en.wikipedia.org/wiki/Neutral-beam_injection"                                                                            ],
@@ -6549,8 +6556,10 @@ sub wellKnownUrls                                                               
     prb             => [q(philip r brenan),                                     "https://philiprbrenan.neocities.org/"                                                                                            ],
     preprocessor    => [q(preprocessor),                                        "https://en.wikipedia.org/wiki/Preprocessor"                                                                                      ],
     process         => [q(process),                                             "https://en.wikipedia.org/wiki/Process_management_(computing)"                                                                    ],
+    processes       => [q(processes),                                           "https://en.wikipedia.org/wiki/Process_management_(computing)"                                                                    ],
     procfs          => [q(Process File System),                                 "https://en.wikipedia.org/wiki/Procfs"                                                                                            ],
     program         => [q(program),                                             "https://en.wikipedia.org/wiki/Computer_program"                                                                                  ],
+    programs        => [q(programs),                                            "https://en.wikipedia.org/wiki/Computer_program"                                                                                  ],
     python          => [q(Python),                                              "https://www.python.org/"                                                                                                         ],
     quicksort       => [q(Quick Sort),                                          "https://github.com/philiprbrenan/QuickSort"                                                                                      ],
     r53             => [q(Route 53),                                            "https://console.aws.amazon.com/route53"                                                                                          ],
@@ -6581,6 +6590,7 @@ sub wellKnownUrls                                                               
     simd            => [q(SIMD),                                                "https://www.officedaytime.com/simd512e/"                                                                                         ],
     smartmatch      => [q(smartmatch),                                          "https://perldoc.perl.org/perlop.html#Smartmatch-Operator"                                                                        ],
     snake_case      => [q(snake_case),                                          "https://en.wikipedia.org/wiki/Snake_case"                                                                                        ],
+    socket          => [q(socket),                                              "https://en.wikipedia.org/wiki/Network_socket"                                                                                    ],
     sow             => [q(Shibboleth on Windows),                               "http://philiprbrenan.appaapps.com/ShibbolethOnWindows"                                                                           ],
     spot            => [q(spot),                                                "https://aws.amazon.com/ec2/spot/"                                                                                                ],
     spreedsheet     => [q(Spreadsheet),                                         "https://en.wikipedia.org/wiki/Spreadsheet"                                                                                       ],
@@ -6597,6 +6607,7 @@ sub wellKnownUrls                                                               
     stopwords       => [q(stopwords),                                           "https://metacpan.org/pod/Storable"                                                                                               ],
     storable        => [q(Storable),                                            "https://metacpan.org/pod/Storable"                                                                                               ],
     string          => [q(string),                                              "https://en.wikipedia.org/wiki/String_(computer_science)"                                                                         ],
+    strings         => [q(strings),                                             "https://en.wikipedia.org/wiki/String_(computer_science)"                                                                         ],
     sub             => [q(sub),                                                 "https://perldoc.perl.org/perlsub.html"                                                                                           ],
     substeps        => [q(substeps),                                            "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/contentmodels/cmlts.html#cmlts__substeps"     ],
     sws             => [q(Sir Walter Scott),                                    "https://en.wikipedia.org/wiki/Walter_Scott"                                                                                      ],
@@ -6615,6 +6626,7 @@ sub wellKnownUrls                                                               
     tmm             => [q(The Mythical Man Month),                              "https://pt1lib.org/book/632726/63ef6f"                                                                                           ],
     transamerica    => [q(Transamerica),                                        "https://en.wikipedia.org/wiki/Transamerica_Corporation"                                                                          ],
     tree            => [q(tree),                                                "https://en.wikipedia.org/wiki/Tree_(data_structure)"                                                                             ],
+    trees           => [q(trees),                                               "https://en.wikipedia.org/wiki/Tree_(data_structure)"                                                                             ],
     tritium         => [q(tritium),                                             "https://en.wikipedia.org/wiki/Tritium"                                                                                           ],
     ubuntu          => [q(Ubuntu),                                              "https://ubuntu.com/download/desktop"                                                                                             ],
     ucla            => [q(University of California at Los Angeles),             "https://en.wikipedia.org/wiki/University_of_California,_Los_Angeles"                                                             ],
@@ -6651,7 +6663,7 @@ sub wellKnownUrls                                                               
     widget          => [q(widget),                                              "https://en.wikipedia.org/wiki/Graphical_widget"                                                                                  ],
     wikipedia       => [q(Wikipedia),                                           "https://en.wikipedia.org"                                                                                                        ],
     word            => [q(word),                                                "https://en.wikipedia.org/wiki/Doc_(computing)"                                                                                   ],
-    x64             => [q(x64),                                                 "https://en.wikipedia.org/wiki/X86-64"                                                                                            ],
+    x64             => [q(X86-64),                                              "https://en.wikipedia.org/wiki/X86-64"                                                                                            ],
     xmllint         => [q(Xml Lint),                                            "http://xmlsoft.org/xmllint.html"                                                                                                 ],
     xmlparser       => [q(Xml parser),                                          "https://metacpan.org/pod/XML::Parser/"                                                                                           ],
     xml             => [q(Xml),                                                 "https://en.wikipedia.org/wiki/XML"                                                                                               ],
@@ -6682,13 +6694,18 @@ sub expandWellKnownWordsAsUrlsInMdFormat($)                                     
  {my ($string)  = @_;                                                           # String containing url names to expand
   my $wellKnown = wellKnownUrls;                                                # Well known urls to expand
 
-  for my $w(sort keys %$wellKnown)                                              # Expand well known words (lowercased) as html links
-   {my ($t, $u) = @{$$wellKnown{$w}};
-#   $string =~ s(L\[$w\])            (\![$t]($u))gis;                           # Explicit link
-#   $string =~ s(\s$w([.,;:'"]*)\s) ( \![$t]($u)$1 )gs;                         # Word that matches
-    $string =~ s(L\[$w\])            ([$t]($u))gis;                             # Explicit link
-    $string =~ s(\s$w([.,;:'"]*)\s) ( [$t]($u)$1 )gs;                           # Word that matches
+  my @s = split m/```/, $string;                                                # Separate code from text
+  my $i = 0;
+  for my $s(@s)
+   {next  unless ++$i % 2;                                                       # Code is in odd sections
+    for my $w(sort keys %$wellKnown)                                            # Expand well known words (lowercased) as html links
+     {my ($t, $u) = @{$$wellKnown{$w}};
+      $s =~ s(L\[$w\])            ([$t]($u))gis;                                # Explicit link
+      $s =~ s(\s$w([.,;:'"]*)\s) ( [$t]($u)$1 )gs;                              # Word that matches
+     }
    }
+
+  $string = join '```', @s;
 
   $string =~ s(W\[(\w+)\]) (```$1```)gs;                                        # Use W[...] wraps words with definitions we wish to stress
   $string =~ s(w\[(\w+)\]) ($1)gsr;                                             # Use w[...] wraps words with definitions we wish to keep as is
