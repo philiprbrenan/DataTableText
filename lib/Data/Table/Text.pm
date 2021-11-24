@@ -15,7 +15,7 @@
 # updateDocumentation - mark synopsis tests with #S and place in synopsis
 package Data::Table::Text;
 use v5.26;
-our $VERSION = 20211015;                                                        # Version
+our $VERSION = 20211124;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
@@ -1938,7 +1938,7 @@ sub numberWithCommas($)                                                         
   scalar reverse join ',',  unpack("(A3)*", reverse $n);
  }
 
-sub divideIntegersIntoRanges(@)                                                 # Divide an array of integers into ranges
+sub divideIntegersIntoRanges(@)                                                 # Divide an array of integers into ranges.
  {my (@s) = @_;                                                                 # Integers to be divided into ranges
 
   @s = sort {$a <=> $b} @s;                                                     # Sort array before splitting it into ranges
@@ -1952,7 +1952,7 @@ sub divideIntegersIntoRanges(@)                                                 
   @$r                                                                           # Array of ranges
  }
 
-sub divideCharactersIntoRanges($)                                               # Divide a string of characters into ranges
+sub divideCharactersIntoRanges($)                                               # Divide a string of characters into ranges.
  {my ($s) = @_;                                                                 # String
 
   my @s = sort split //, $s;                                                    # Sorted array of characters
@@ -6697,7 +6697,7 @@ sub expandWellKnownWordsAsUrlsInMdFormat($)                                     
   my @s = split m/```/, $string;                                                # Separate code from text
   my $i = 0;
   for my $s(@s)
-   {next  unless ++$i % 2;                                                       # Code is in odd sections
+   {next  unless ++$i % 2;                                                      # Code is in odd sections
     for my $w(sort keys %$wellKnown)                                            # Expand well known words (lowercased) as html links
      {my ($t, $u) = @{$$wellKnown{$w}};
       $s =~ s(L\[$w\])            ([$t]($u))gis;                                # Explicit link
@@ -8157,7 +8157,7 @@ Data::Table::Text - Write data in tabular text format.
 Write data in tabular text format.
 
 
-Version 20211015.
+Version 20211124.
 
 
 The following sections describe the methods in each functional area of this
@@ -12263,7 +12263,7 @@ B<Example:>
 Divide a string of characters into ranges
 
      Parameter  Description
-  1  $s         Integers to be divided into ranges
+  1  $s         String
 
 B<Example:>
 
