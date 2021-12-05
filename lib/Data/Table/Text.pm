@@ -1,7 +1,7 @@
 #!/usr/bin/perl -I/home/phil/perl/cpan/DataTableText/lib/
 #-------------------------------------------------------------------------------
 # Write data in tabular text format.
-# Philip R Brenan at gmail dot com, Appa Apps Ltd Inc, 2016-2020
+# Philip R Brenan at gmail dot com, Appa Apps Ltd Inc, 2016-2021
 #-------------------------------------------------------------------------------
 # podDocumentation
 # cd /home/phil/perl/cpan/DataTableText/; perl Build.PL && perl Build test && sudo perl Build install
@@ -4152,7 +4152,7 @@ END
   my $C = &getCCompiler;                                                        # Get C compiler
   my $c = owf(q(zzzTemporary.c), join "\n", @code);                             # Write and run a program to get the values
   my $r = eval qx($C $c; chmod ugo+x a.out; ./a.out; rm a.out);
-
+  unlink $c;
   for my $c(sort keys %$r)                                                      # Update known constants
    {$o{$c} = $getSystemConstantsFromIncludeFile{$c} = $$r{$c}
    }
