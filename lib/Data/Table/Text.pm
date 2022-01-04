@@ -6566,6 +6566,7 @@ sub wellKnownUrls                                                               
     https           => [q(HTTPS),                                               "https://en.wikipedia.org/wiki/HTTPS"                                                                                             ],
     hxnormalize     => [q(hxnormalize),                                         "https://www.w3.org/Tools/HTML-XML-utils/man1/hxnormalize.html"                                                                   ],
     ibm             => [q(IBM),                                                 "https://en.wikipedia.org/wiki/IBM"                                                                                               ],
+    ibm3270         => [q(IBM 3270),                                            "https://en.wikipedia.org/wiki/IBM_3270"                                                                                     ],
     iconv           => [q(iconv),                                               "https://linux.die.net/man/1/iconv"                                                                                               ],
     ide             => [q(Integrated Development Environment),                  "https://en.wikipedia.org/wiki/Integrated_development_environment"                                                                ],
     ietf            => [q(Internet Engineering Task Force),                     "https://en.wikipedia.org/wiki/Internet_Engineering_Task_Force"                                                                   ],
