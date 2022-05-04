@@ -5576,8 +5576,8 @@ sub Data::Table::Text::Starter::waitOne($)                                      
  {my ($starter) = @_;                                                           # Starter
   my $select = 0;                                                               # Must wait for at least one process to finish
   my $startTime = time;
-
-  while(keys(%{$starter->pids}) and my $p = waitpid 0, $select)                 # Wait for a process to finish - get its pid
+                                                    # -1 or 0 depending on operating system ?
+  while(keys(%{$starter->pids}) and my $p = waitpid -1, $select)                # Wait for a process to finish - get its pid
    {if ($starter->pids->{$p})                                                   # One of ours and it has data to transfer
      {if (my $t = $starter->transferArea)                                       # Transfer folder
        {my $f = fpe($t, $p, q(data));                                           # Transfer file in transfer folder
@@ -22182,8 +22182,8 @@ if (1)                                                                          
 #ok $@, "readFile";
 
 if (1)                                                                          #ToverWriteBinaryFile #TwriteBinaryFile #TcopyBinaryFile
- {vec(my $a, 0, 8) = 254;
-  vec(my $b, 0, 8) = 255;
+ {vec(my $a = '', 0, 8) = 254;
+  vec(my $b = '', 0, 8) = 255;
   ok dump($a) eq dump("\xFE");
   ok dump($b) eq dump("\xFF");
   ok length($a) == 1;
