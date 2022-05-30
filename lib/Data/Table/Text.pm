@@ -13,6 +13,7 @@
 # formatTable should optionally clear left columns identical to previous line
 # checkKeys information should be formatted so it can be referred to in sub descriptions
 # updateDocumentation - mark synopsis tests with #S and place in synopsis
+# pop r15 before calling target sub
 package Data::Table::Text;
 use v5.26;
 our $VERSION = 20211207;                                                        # Version
