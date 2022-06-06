@@ -7154,7 +7154,7 @@ END
          $signatureNames{$name} = $signatureNames;
 
       my $signatureLength = length($signature =~ s([;\\]) ()gsr);               # Number of parameters in signature
-      @parameters == $signatureLength or                                        # Check signature length
+      @parameters == $signatureLength or $line =~ m(\{)  or                     # Check signature length
         confess "Wrong number of parameter descriptions for method: ".
           "$name($signature)\n";
 
@@ -7163,7 +7163,7 @@ END
       if (1)                                                                    # Check parameters comment
        {my $p = @parmDescriptions;
         my $l = $signatureLength;
-        $p == $l or fff $L, $perlModule, <<"END";
+        $p == $l or $line =~ m(\{) or fff $L, $perlModule, <<"END";
 Method:
 
   $name($signature)
@@ -7532,7 +7532,8 @@ END
 
   for my $m(sort keys %title)                                                   # Links to titles
    {my $t = $title{$m};
-    $doc =~ s(L\[$m\]) (L<$m|/"$t">)gs;
+       $t = substr($t, 0, 256) if length($t) > 256;                             # Otherwise some one line subroutines produce very long titles
+    $doc =~ s(L\[$m\]) (L<$m|/"$t">)gs unless $m =~ m(\{);                      # Unless a one line subroutine
    }
 
   unless($sourceIsString)                                                       # Update source file
