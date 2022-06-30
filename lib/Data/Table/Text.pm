@@ -5765,7 +5765,7 @@ sub callSubInOverlappedParallel(&&)                                             
  }
 
 sub runInParallel($$$@)                                                         #I Process the elements of an array in parallel using a maximum of B<$maximumNumberOfProcesses> processes. sub B<&$parallel> is forked to process each array element in parallel. The results returned by the forked copies of &$parallel are presented as a single array to sub B<&$results> which is run in series. B<@array> contains the elements to be processed. Returns the result returned by &$results.
- {my ($maximumNumberOfProcesses, $parallel, $results, @array) = @_;             # Maximum number of processes, parallel sub, results sub, array of items to process
+ {my ($maximumNumberOfProcesses, $parallel, $results, @array) = @_;             # Maximum number of processes, parallel sub, optional sub to process results, array of items to process
 
   my $p = newProcessStarter($maximumNumberOfProcesses);                         # Process starter
 
