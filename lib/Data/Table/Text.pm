@@ -16,7 +16,7 @@
 # pop r15 before calling target sub
 package Data::Table::Text;
 use v5.26;
-our $VERSION = 20211207;                                                        # Version
+our $VERSION = 20220715;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
@@ -1193,6 +1193,31 @@ sub readFiles(@)                                                                
    }
   \%h
  } # readFiles
+
+sub includeFiles($)                                                             # Read the given file and expand all lines that start "includeThisFile " with the file named by the rest of the line and keep doing this until all the included files have been expanded or a repetition is detected.  Returns the exapnded file or conbfesses if one of the included files cannot be located.
+ {my ($expand) = @_;                                                            # File to expand
+  my  %expanded;                                                                # Files already expanded
+
+  my @l = readFile $expand;                                                     # Read the first file
+  for my $i(1..99)                                                              # Limit on the number of expansion passes
+   {my @L; my $changed = 0;                                                     # Latest expansion
+    for my $l(@l)                                                               # Each line
+     {if ($l =~ m(\AincludeThisFile\s(.*)\Z))
+       {my $f = $1;
+        confess "No such file:\n$f\n"          unless -e $f;
+        confess "File already included:\n$f\n" if $expanded{$f}++;
+        push @L, readFile $f;
+        ++$changed;
+       }
+      else
+       {push @L, $l;
+       }
+     }
+    return @l unless $changed;                                                  # Return array of expanded lines if expansion is now complete
+    @l = @L;
+   }
+  confess "Expansion too deep";
+ } # includeFiles
 
 sub appendFile($$)                                                              # Append to B<$file> a B<$string> of L<unicode> content encoded with L<utf8>, creating the $file first if necessary. Return the name of the $file on success else confess. The $file being appended to is locked before the write with L<perlfunc/flock> to allow  multiple processes to append linearly to the same file.
  {my ($file, $string) = @_;                                                     # File to append to, string to append
@@ -7915,7 +7940,9 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
  getSystemConstantsFromIncludeFile getStructureSizeFromIncludeFile getFieldOffsetInStructureFromIncludeFile
  guidFromMd5 guidFromString
  hexToAsciiString hostName htmlToc
- imageSize indentString indexOfMax indexOfMin intersectionOfHashKeys
+ imageSize
+ includeFiles
+ indentString indexOfMax indexOfMin intersectionOfHashKeys
  intersectionOfHashesAsArrays invertHashOfHashes ipAddressViaArp isBlank
  ipAddressOfHost
  isFileUtf8 isSubInPackage
@@ -20634,7 +20661,7 @@ Test::More->builder->output("/dev/null") if $localTest;                         
 
 if ($^V ge v5.26.0)                                                             # Supported versions
  {if ($^O =~ m(bsd|linux|darwin)i)                                              # Supported systems
-    {plan tests => 706;
+    {plan tests => 707;
     }
   #lsif (onWindows) {plan tests    => 620}                                      # Somewhat supported systems
   else
@@ -23797,11 +23824,29 @@ if (1)                                                                          
   is_deeply $o, 48;
  }
 }
-
 else {ok 1 for 1..3}
 
-if ($localTest)
+#latest:;
+if (1)                                                                          #includeFiles
+ {my $d = temporaryFolder;
+  my $a = "$d/a.txt";
+  my $b = "$d/b.txt";
+  my %d = ($a => <<END,
+aaa
+includeThisFile $d/b.txt
+ccc
+END
+           $b => <<END,
+bbb
+END
+  );
 
+  writeFiles(\%d);
+  is_deeply [includeFiles($a)], ["aaa\n", "bbb\n", "ccc\n"];
+  unlink $a, $b;
+ }
+
+if ($localTest)
  {say STDERR "DTT finished in ", (time() - $timeStart), " seconds";
  }
 
