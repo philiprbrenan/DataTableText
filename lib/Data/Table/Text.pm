@@ -169,7 +169,7 @@ sub xxxr($;$)                                                                   
   my $i = $ip // &awsIp;                                                        # Ip address
   return undef unless confirmHasCommandLineCommand(q(ssh));                     # Confirm we have ssh
   my $c = qq(ssh $i "$cmd 2>&1");                                               # Command
-  lll $c;
+# lll $c;
   my $r = eval {qx($c)};                                                        # Execute command remotely
   lll $r if $r;
   $r
