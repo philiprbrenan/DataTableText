@@ -4397,6 +4397,15 @@ sub awsIpFile {q(/tmp/awsPrimaryInstanceIpAddress.data)}                        
 sub awsEc2DescribeInstancesCache {q(/tmp/awsEc2DescribeInstancesCache.data)}    #P File in which to cache latest results from describe instances to avoid being throttled.
 
 sub awsIp                                                                       # Get ip address of server at L<AWS>.
+ {if (-e awsIpFile)
+   {my $d = eval {retrieveFile(awsIpFile)};
+    confess $@ if $@;
+    return $d->{ip};
+   }
+  confess "Unable to get IP address\n";
+ }
+
+sub awsIp22                                                                       # Get ip address of server at L<AWS>.
  {for(1..2)
    {if (-e awsIpFile)
      {if (my $d = eval {retrieveFile(awsIpFile)})
