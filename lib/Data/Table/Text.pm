@@ -803,7 +803,9 @@ sub searchDirectoryTreesForMatchingFiles(@)                                     
   for my $dir(@_)                                                               # Directories
    {next unless $dir && -d $dir;                                                # Do not include folder names
 
-    for my $d(findAllFilesAndFolders($dir, 0))                                  # All files and folders beneath each folder
+    my @f = findAllFilesAndFolders($dir, 0);                                    # All files and folders beneath each folder
+
+    for my $d(@f)
      {next if -d $d;                                                            # Do not include folder names
       push @file, $d if !$ext or $d =~ m(($ext)\Z)is;                           # Filter by extension if requested.
      }
