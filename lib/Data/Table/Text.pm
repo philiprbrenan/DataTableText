@@ -3178,10 +3178,10 @@ sub genHash($%)                                                                 
      {eval $s;
       confess "$@\n$s\n$@" if $@;
      }
-    $genHash{$M}++;                                                             # Record attribute as being created by genHash
+    $genHash{$M}++;                                                             # Record attribute as being created by genHash so we can safely reuse them on subsequent calls
    }
 
-  $h
+  $h                                                                            # Hash with field methods attached
  }
 
 sub loadHash($%)                                                                # Load the specified blessed B<$hash> generated with L<genHash|/genHash> with B<%attributes>. Confess to any unknown attribute names.
