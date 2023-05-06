@@ -6509,7 +6509,7 @@ sub wellKnownUrls                                                               
     ibeam           => [q(I-beam),                                              "https://en.wikipedia.org/wiki/I-beam"                                                                                            ],
     ibm3270         => [q(IBM 3270),                                            "https://en.wikipedia.org/wiki/IBM_3270"                                                                                          ],
     ibm             => [q(IBM),                                                 "https://en.wikipedia.org/wiki/IBM"                                                                                               ],
-    ic              => [q(integrated circuit),                                  "https://en.wikipedia.org/wiki/Integrated_circuit"                                                                                         ],
+    ic              => [q(integrated circuit),                                  "https://en.wikipedia.org/wiki/Integrated_circuit"                                                                                ],
     iconv           => [q(iconv),                                               "https://linux.die.net/man/1/iconv"                                                                                               ],
     ide             => [q(Integrated Development Environment),                  "https://en.wikipedia.org/wiki/Integrated_development_environment"                                                                ],
     ietf            => [q(Internet Engineering Task Force),                     "https://en.wikipedia.org/wiki/Internet_Engineering_Task_Force"                                                                   ],
@@ -6801,6 +6801,7 @@ sub expandWellKnownWordsAsUrlsInMdFormat($)                                     
 
   my @s = split m/```/, $string;                                                # Separate code from text
   my $i = 0;
+
   for my $s(@s)
    {next  unless ++$i % 2;                                                      # Code is in odd sections
     for my $w(sort keys %$wellKnown)                                            # Expand well known words (lowercased) as html links
