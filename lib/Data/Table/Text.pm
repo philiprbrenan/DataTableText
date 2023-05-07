@@ -3726,7 +3726,7 @@ sub cmpArrays($$)                                                               
   0
  }
 
-sub compareArraysAndExplain($$)                                                 # Compare two arrays of strings and provide an explanation as to why they differ if they differ or undef if they do not
+sub compareArraysAndExplain($$)                                                 # Compare two arrays of strings and provide an explanation as to why they differ if they differ or undef if they do not.
  {my ($A, $B) = @_;                                                             # Array A, array B
   my @a = @$A; my $a = @a;
   my @b = @$B; my $b = @b;
@@ -6901,7 +6901,7 @@ sub expandWellKnownUrlsInDitaFormat($)                                          
   $string                                                                       # Result
  }
 
-sub expandWellKnownWordsInMarkDownFile($$)                                      #P Expand well known words in a mark down file
+sub expandWellKnownWordsInMarkDownFile($$)                                      #P Expand well known words in a mark down file.
  {my ($s, $t) = @_;                                                             # Source file, target file
   owf $t, expandWellKnownWordsAsUrlsInMdFormat readFile $s
  }
