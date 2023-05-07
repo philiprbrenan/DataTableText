@@ -7205,6 +7205,7 @@ END
                               s/\A\x28//gsr     =~
                               s/\x29\s*(:lvalue\s*)?\Z//gsr;
       my $name      = $sub =~ s/\x28.*?\x29//r;                                 # Method name after removing parameters
+         $name      =~ s(\s*\{)    ()gs;                                        # Remove opening curly used to show that the method does not have a standard parameter list
 
       my $methodX   = $flags =~ m/X/;                                           # Die rather than return undef
       my $private   = $flags =~ m/P/;                                           # Private
@@ -7573,7 +7574,7 @@ L<http://www.appaapps.com|http://www.appaapps.com>
 
 `head1 Copyright
 
-Copyright (c) 2016-2021 Philip R Brenan.
+Copyright (c) 2016-2023 Philip R Brenan.
 
 This module is free software. It may be used, redistributed and/or modified
 under the same terms as Perl itself.
