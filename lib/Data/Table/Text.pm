@@ -7099,7 +7099,7 @@ END
   for my $l(keys @lines)                                                        # Generated objects
    {my $M = $maxLinesInExample;
     my $line = $lines[$l];
-    if ($line =~ m(genHash\s*\x28\s*(q\x28.+\x29|__PACKAGE__).+?# (.+)\Z))          # GenHash
+    if ($line =~ m(genHash\s*\x28\s*(q\x28.+\x29|__PACKAGE__).+?# (.+)\Z))      # GenHash
      {my $p = $1; my $c = $2;
          $p = $p =~ s(q[qw]?\x28|\x29) ()gsr =~ s(__PACKAGE__) ($package)gsr;
       $genHashPackage{$p} = $c;
@@ -7271,7 +7271,8 @@ END
       if (1)                                                                    # Check parameters comment
        {my $p = @parmDescriptions;
         my $l = $signatureLength;
-        $p == $l or $line =~ m(\{) or fff $L, $perlModule, <<"END";
+#       $p == $l or $line =~ m(\{) or fff $L, $perlModule, <<"END";
+        $p == $l or $line =~ m(\{) or fff $L, <<"END";
 Method:
 
   $name($signature)
