@@ -16,7 +16,7 @@
 # pop r15 before calling target sub
 package Data::Table::Text;
 use v5.26;
-our $VERSION = 20230422;                                                        # Version
+our $VERSION = 20230503;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
