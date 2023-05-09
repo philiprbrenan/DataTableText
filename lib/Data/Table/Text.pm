@@ -6928,7 +6928,7 @@ sub expandNewLinesInDocumentation($)                                            
 sub extractTest($)                                                              #P Remove example markers from test code.
  {my ($string) = @_;                                                            # String containing test line
  #$string =~ s/\A\s*{?(.+?)\s*#.*\Z/$1/;                                        # Remove any initial white space and possible { and any trailing white space and comments
-  $string =~ s(#T(\w|:)+) ()gs;                                                 # Remove test tags from line
+  $string =~ s(#[T#](\w|:)+) ()gs;                                              # Remove test tags from line
   $string
  }
 
@@ -6945,7 +6945,7 @@ sub extractCodeBlock($;$)                                                       
   my $b = 2;                                                                    #CODEBLOCK-end
  }
 
-sub updateDocumentation(;$)                                                     # Update the documentation for a Perl module from the comments in its source code. Comments between the lines marked with:\m  #Dn title # description\mand:\m  #D\mwhere n is either 1, 2 or 3 indicating the heading level of the section and the # is in column 1.\mMethods are formatted as:\m  sub name(signature)      #FLAGS comment describing method\n   {my ($parameters) = @_; # comments for each parameter separated by commas.\mFLAGS can be chosen from:\m=over\m=item I\mmethod of interest to new users\m=item P\mprivate method\m=item r\moptionally replaceable method\m=item R\mrequired replaceable method\m=item S\mstatic method\m=item X\mdie rather than received a returned B<undef> result\m=back\mOther flags will be handed to the method extractDocumentationFlags(flags to process, method name) found in the file being documented, this method should return [the additional documentation for the method, the code to implement the flag].\mText following 'E\xxample:' in the comment (if present) will be placed after the parameters list as an example. Lines containing comments consisting of '#T'.methodName will also be aggregated and displayed as examples for that method.\mLines formatted as:\m  BEGIN{*source=*target}\mstarting in column 1 will define a synonym for a method.\mLines formatted as:\m  #C emailAddress text\mwill be aggregated in the acknowledgments section at the end of the documentation.\mThe character sequence B<\\xn> in the comment will be expanded to one new line, B<\\xm> to two new lines and B<L>B<<$_>>,B<L>B<<confess>>,B<L>B<<die>>,B<L>B<<eval>>,B<L>B<<lvalueMethod>> to links to the perl documentation.\mSearch for '#D1': in L<https://metacpan.org/source/PRBRENAN/Data-Table-Text-20180810/lib/Data/Table/Text.pm> to see  more examples of such documentation in action - although it is quite difficult to see as it looks just like normal comments placed in the code.\mParameters:\n.
+sub updateDocumentation(;$)                                                     # Update the documentation for a Perl module from the comments in its source code. Comments between the lines marked with:\m  #Dn title # description\mand:\m  #D\mwhere n is either 1, 2 or 3 indicating the heading level of the section and the # is in column 1.\mMethods are formatted as:\m  sub name(signature)      #FLAGS comment describing method\n   {my ($parameters) = @_; # comments for each parameter separated by commas.\mFLAGS can be chosen from:\m=over\m=item I\mmethod of interest to new users\m=item P\mprivate method\m=item r\moptionally replaceable method\m=item R\mrequired replaceable method\m=item S\mstatic method\m=item X\mdie rather than received a returned B<undef> result\m=back\mOther flags will be handed to the method extractDocumentationFlags(flags to process, method name) found in the file being documented, this method should return [the additional documentation for the method, the code to implement the flag].\mText following 'E\xxample:' in the comment (if present) will be placed after the parameters list as an example. Lines containing comments consisting of '#[T#]'.methodName will also be aggregated and displayed as examples for that method.\mLines formatted as:\m  BEGIN{*source=*target}\mstarting in column 1 will define a synonym for a method.\mLines formatted as:\m  #C emailAddress text\mwill be aggregated in the acknowledgments section at the end of the documentation.\mThe character sequence B<\\xn> in the comment will be expanded to one new line, B<\\xm> to two new lines and B<L>B<<$_>>,B<L>B<<confess>>,B<L>B<<die>>,B<L>B<<eval>>,B<L>B<<lvalueMethod>> to links to the perl documentation.\mSearch for '#D1': in L<https://metacpan.org/source/PRBRENAN/Data-Table-Text-20180810/lib/Data/Table/Text.pm> to see  more examples of such documentation in action - although it is quite difficult to see as it looks just like normal comments placed in the code.\mParameters:\n.
  {my ($perlModule) = @_;                                                        # Optional file name with caller's file being the default
   $perlModule //= $0;                                                           # Extract documentation from the caller if no perl module is supplied
   my $package = perlPackage($perlModule);                                       # Package name
@@ -7022,7 +7022,7 @@ END
 
   for my $l(keys @lines)                                                        # Tests associated with each method
    {my $line = $lines[$l];
-    if (my @tags = $line =~ m/(?:\s#T((?:\w|:)+))/g)
+    if (my @tags = $line =~ m/(?:\s#[T#]((?:\w|:)+))/g)
      {my %tags; $tags{$_}++ for @tags;
 
       for(grep {$tags{$_} > 1} sort keys %tags)                                 # Check for duplicate example names on the same line
@@ -7816,7 +7816,7 @@ sub extractPythonDocumentationFromFiles(@)                                      
        {$classFiles{$class}       = $class = $1;
         $classDefinitions{$class} = getDocString
        }
-      elsif ($text =~ m(\A\s*if\s+1\s*:\s*#T(\w+)))                             # Test as if 1: statement
+      elsif ($text =~ m(\A\s*if\s+1\s*:\s*#[T#](\w+)))                          # Test as if 1: statement
        {my $test = $1;
         my @test;
         while(@text and $text[0] !~ m(\A\s*\Z))
@@ -7824,7 +7824,7 @@ sub extractPythonDocumentationFromFiles(@)                                      
          }
         push $tests{$class}{$test}->@*, @test;
        }
-      elsif ($text =~ m(\A(.*?)#T(\w+)))                                        # Test on a single line
+      elsif ($text =~ m(\A(.*?)#[T#](\w+)))                                     # Test on a single line
        {my ($text, $test) = @{^CAPTURE};;
         push @{$testsCommon{$test}}, $text;
        }
