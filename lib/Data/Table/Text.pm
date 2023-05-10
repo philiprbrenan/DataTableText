@@ -7216,7 +7216,7 @@ END
       my $exported  = $flags =~ m/E/;                                           # Exported
       my $replace   = $flags =~ m/r/;                                           # Optionally replaceable
       my $Replace   = $flags =~ m/R/;                                           # Required replaceable
-      my $userFlags = $flags =~ s/[EIPrRSX]//gsr;                               # User flags == all flags minus the known flags
+#     my $userFlags = $flags =~ s/[EIPrRSX]//gsr;                               # User flags == all flags minus the known flags
 
       confess "(P)rivate and (rR)eplacable are incompatible on method $name\n"
         if $private and $replace || $Replace;
@@ -7246,9 +7246,9 @@ END
         $moduleDescription{methods}{$name}{$field} = $v;
        }
 
-      $userFlags{$name} =                                                       # Process user flags
-        &docUserFlags($userFlags, $perlModule, $package, $name)
-        if $userFlags;
+#      $userFlags{$name} =                                                       # Process user flags
+#        &docUserFlags($userFlags, $perlModule, $package, $name)
+#        if $userFlags;
 
       my ($parmNames, $parmDescriptions);
       if ($signature)                                                           # Parameters, parameter descriptions from comment
@@ -7304,9 +7304,9 @@ END
       $methodParms{$name} = $name;                                              # Method names not including parameters
       $methodParms{$name.'X'} = $name if $methodX;                              # Method names not including parameters
       $methodX{$name}++ if $methodX;                                            # Method names that have an X version
-      if (my $u = $userFlags{$name})                                            # Add names of any generated methods
-       {$methodParms{$_} = $name for @{$u->[2]};                                # Generated names array
-       }
+#      if (my $u = $userFlags{$name})                                            # Add names of any generated methods
+#       {$methodParms{$_} = $name for @{$u->[2]};                                # Generated names array
+#       }
 
       my @method;                                                               # Accumulate method documentation
 
@@ -7321,8 +7321,8 @@ END
         [qw(Parameter Description)]), '  ')
         if $parmNames and $parmDescriptions and $parmDescriptions !~ /\A#/;     # Add parameter description if present
 
-      push @method,                                                             # Add user documentation
-       "\n".$userFlags{$name}[0]."\n"          if $userFlags{$name}[0];
+#      push @method,                                                             # Add user documentation
+#       "\n".$userFlags{$name}[0]."\n"          if $userFlags{$name}[0];
 
       push @method,                                                             # Add example
        "\nB<Example:>\n\n  $example"           if $example;
@@ -7604,11 +7604,11 @@ END
     push @doc, formatTableBasic(\@x);
    }
 
-  for my $name(sort keys %userFlags)                                            # Insert generated method definitions
-   {if (my $doc = $userFlags{$name})
-     {push @doc, $doc->[1] if $doc->[1];
-     }
-   }
+#  for my $name(sort keys %userFlags)                                            # Insert generated method definitions
+#   {if (my $doc = $userFlags{$name})
+#     {push @doc, $doc->[1] if $doc->[1];
+#     }
+#   }
 
   push @doc, <<'END';                                                           # Standard test sequence
 
@@ -7669,10 +7669,10 @@ sub docUserFlags($$$$)                                                          
 ${package}::extractDocumentationFlags("$flags", "$name");
 END
 
-  use Data::Dump qw(dump);
-  my $r = eval $s;
-  confess "$s\n". dump($@, $!) if $@;
-  $r
+#  use Data::Dump qw(dump);
+#  my $r = eval $s;
+#  confess "$s\n". dump($@, $!) if $@;
+#  $r
  }
 
 sub updatePerlModuleDocumentation($)                                            #P Update the documentation in a B<$perlModule> and display said documentation in a web browser.
