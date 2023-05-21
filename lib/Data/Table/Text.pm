@@ -1,22 +1,17 @@
 #!/usr/bin/perl -I/home/phil/perl/cpan/DataTableText/lib/
 #-------------------------------------------------------------------------------
-# Write data in tabular text format.
+# Write data in tabular text format inter alia.
 # Philip R Brenan at gmail dot com, Appa Apps Ltd Inc, 2016-2023
 #-------------------------------------------------------------------------------
 # podDocumentation
-# cd /home/phil/perl/cpan/DataTableText/; perl Build.PL && perl Build test && sudo perl Build install
-# To escape an open parenthesis in a regular expression use: \x28, for close use: \x29
-# E for exportable methods
-# write binary data without complaints about wide characters
 # formatTableHH hash with sub hash of {} fails to print see svgToDita
 # runInParallel - processing statistics
 # formatTable should optionally clear left columns identical to previous line
 # checkKeys information should be formatted so it can be referred to in sub descriptions
 # updateDocumentation - mark synopsis tests with #S and place in synopsis
-# pop r15 before calling target sub
 package Data::Table::Text;
 use v5.26;
-our $VERSION = 20230503;                                                        # Version
+our $VERSION = 20230521;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
@@ -2051,6 +2046,16 @@ sub setIntersection(@)                                                          
   my $e = setCombination(@_);
   my $S = @s;                                                                   # Set count
   grep {$e->{$_} == $S} sort keys %$e                                           # Return words that appear in all the sets
+ }
+
+sub setDifference($$)                                                           # Subtract the keys in the second set represented as a hash from the first set represented as a hash to create a new hash showing the set difference between the two.
+ {my ($a, $b) = @_;                                                             # First set as a hash, second set as a hash
+  my %c = %$a;
+  my @b = ref($b) =~ m(hash)i  ? keys(%$b) :
+          ref($b) =~ m(array)i ? @$b       :
+          split /\s+/, $b;
+  delete $c{$_} for @b;
+  \%c
  }
 
 sub setIntersectionOverUnion(@)                                                 # Returns the size of the intersection over the size of the union of one or more sets B<@s> represented as arrays and/or hashes.
@@ -8061,7 +8066,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
  s3DownloadFolder s3FileExists s3ListFilesAndSizes s3ReadFile s3ReadString
  s3WriteFile s3WriteString s3ZipFolder s3ZipFolders saveCodeToS3 saveSourceToS3
  saveAwsDomain saveAwsIp
- searchDirectoryTreesForMatchingFiles searchDirectoryTreeForSubFolders setFileExtension setIntersection
+ searchDirectoryTreesForMatchingFiles searchDirectoryTreeForSubFolders setFileExtension setIntersection setDifference
  setIntersectionOfArraysOfStrings setIntersectionOverUnion setPackageSearchOrder
  setPartitionOnIntersectionOverUnion
  setPartitionOnIntersectionOverUnionOfHashStringSets
@@ -20443,7 +20448,7 @@ Test::More->builder->output("/dev/null") if $localTest;                         
 
 if ($^V ge v5.26.0)                                                             # Supported versions
  {if ($^O =~ m(bsd|linux|darwin)i)                                              # Supported systems
-    {plan tests => 709;
+    {plan tests => 712;
     }
   #lsif (onWindows) {plan tests    => 620}                                      # Somewhat supported systems
   else
@@ -21013,6 +21018,12 @@ if (1)
 if (1) {                                                                        #TsetIntersection
   is_deeply [qw(a b c)], [setIntersection[qw(e f g a b c )],[qw(a A b B c C)]];
   is_deeply [qw(e)],   [setIntersection {a=>1, b=>2, e=>3}, [qw(c d e)], qw(e)];
+ }
+
+if (1) {                                                                        #TsetDifference
+  is_deeply {a=>1}, setDifference({a=>1, b=>2}, {b=>3,c=>4});
+  is_deeply {a=>1}, setDifference({a=>1, b=>2}, [qw(b c)]);
+  is_deeply {a=>1}, setDifference({a=>1, b=>2},   q(b c));
  }
 
 
