@@ -6764,9 +6764,11 @@ sub wellKnownUrls                                                               
     userExp         => [q(User Experience),                                     "https://en.wikipedia.org/wiki/User_experience"                                                                                   ],
     vector2         => [q(Vectors In Two Dimensions),                           "https://pypi.org/project/Vector2/"                                                                                               ],
     verify          => [q(verify),                                              "https://en.wikipedia.org/wiki/Software_verification_and_validation"                                                              ],
+    verilog         => [q(Verilog),                                             "https://en.wikipedia.org/wiki/Verilog"                                                                                           ],
     version         => [q(version),                                             "https://en.wikipedia.org/wiki/Software_versioning"                                                                               ],
     vhdl            => [q(VHDL),                                                "https://ghdl.readthedocs.io/en/latest/about.html"                                                                                ],
     vi              => [q(vi),                                                  "https://www.vim.org/"                                                                                                            ],
+    vivado          => [q(Vivado),                                              "https://en.wikipedia.org/wiki/Xilinx_Vivado"                                                                                     ],
     waterfall       => [q(waterfall development methodology),                   "https://en.wikipedia.org/wiki/Waterfall_model"                                                                                   ],
     webpage         => [q(web page),                                            "https://en.wikipedia.org/wiki/Web_page"                                                                                          ],
     webpages        => [q(web pages),                                           "https://en.wikipedia.org/wiki/Web_page"                                                                                          ],
@@ -6792,6 +6794,7 @@ sub wellKnownUrls                                                               
     zerowidthspace  => [q(zero width space),                                    "https://en.wikipedia.org/wiki/Zero-width_space"                                                                                  ],
     zip             => [q(zip),                                                 "https://linux.die.net/man/1/zip"                                                                                                 ],
     zoom            => [q(Zoom),                                                "https://zoom.us/"                                                                                                                ],
+    zynq            => [q(Zynq),                                                "https://www.xilinx.com/products/som/kria/k26c-commercial.html"                                                                   ],
    );
  } # wellKnownUrls
 
