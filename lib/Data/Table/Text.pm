@@ -11,7 +11,7 @@
 # updateDocumentation - mark synopsis tests with #S and place in synopsis
 package Data::Table::Text;
 use v5.26;
-our $VERSION = 20230615;                                                        # Version
+our $VERSION = 20230616;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
@@ -5486,13 +5486,8 @@ sub fpgaGowin(%)                                                                
   my $home    = currentDirectory;                                               # Local folder
   my ($m)     = reverse grep {$_} split m(/), $home;                            # Module is the last element of the path to the current directory
 
-  my $Bin     = q(/home/phil/z/yosys/oss-cad-suite/bin/);                       # Default binary folder
   my $Device  = q(GW1NR-LV9QN88PC6/I5);                                         # Default device
 
-  my $bin     = $options{bin} // $Bin;                                          # Binary folder
-  my $yosys   = fpf $bin, q(yosys);                                             # Yosys
-  my $nextpnr = fpf $bin, q(nextpnr-gowin);                                     # Next pnr
-  my $pack    = fpf $bin, q(gowin_pack);                                        # Pack
   my $v       = fpe $home, $m, q(sv);                                           # Source file
   my $j       = fpe $home, $m, qw(json);                                        # Json description
   my $p       = fpe $home, $m, qw(pnr);                                         # Place and route
@@ -5501,9 +5496,9 @@ sub fpgaGowin(%)                                                                
   $b or confess "Need a .cst file to provide constraints but none found";
   unlink $j, $p;                                                                # Output files
 
-  xxx(qq($yosys -q -p "read_verilog $v; synth_gowin -top countUp -json $j"));
-  xxx(qq($nextpnr -v --json $j --write $p --device "$d" --family GW1N-9C --cst $b));
-  xxx(qq($pack -d GW1N-9C -o pack.fs $p));
+  xxx(qq(yosys -q -p "read_verilog $v; synth_gowin -top countUp -json $j"));
+  xxx(qq(nextpnr-gowin -v --json $j --write $p --device "$d" --family GW1N-9C --cst $b));
+  xxx(qq(gowin_pack -d GW1N-9C -o pack.fs $p));
  }
 
 #D1 Processes                                                                   # Start processes, wait for them to terminate and retrieve their results
