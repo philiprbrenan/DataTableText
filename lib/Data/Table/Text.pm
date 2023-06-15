@@ -5497,7 +5497,7 @@ sub fpgaGowin(%)                                                                
   unlink $j, $p;                                                                # Output files
 
   xxx(qq(yosys -q -p "read_verilog $v; synth_gowin -top $m -json $j"));
-  xxx(qq(nextpnr-gowin -v --json $j --write $p --device "$d" --family GW1N-9C --cst $b));
+  xxx(qq(nextpnr-gowin -v --debug --json $j --write $p --device "$d" --family GW1N-9C --cst $b));
   xxx(qq(gowin_pack -d GW1N-9C -o pack.fs $p));
  }
 
