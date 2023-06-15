@@ -5481,7 +5481,7 @@ sub downloadGitHubPublicRepoFile($$$)                                           
 
 #D1 FPGAs                                                                       # Load verilog into a field programmable gate array
 
-sub fpgaGowin(%)                                                                # Compile verilog to a gowin device
+sub fpgaGowin(%)                                                                # Compile verilog to a gowin device.
  {my (%options) = @_;                                                           # Parameters
   my $home    = currentDirectory;                                               # Local folder
   my ($m)     = reverse grep {$_} split m(/), $home;                            # Module is the last element of the path to the current directory
