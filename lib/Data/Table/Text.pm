@@ -1068,6 +1068,7 @@ sub overWriteFile($$)                                                           
   $file //= temporaryFile;
   $file =~ m(\n|\r)s and confess "File name contains a new line:\n=$file=\n";
   defined($string) or cluck "No string for file:\n$file\n";
+  return $file if -e $file and $string eq readFile $file;                       # Skip if the file already exists and has the right content thus preserving the original modification time
   makePath($file);
   open my $F, ">$file" or
           confess "Cannot open file for write because:\n$file\n$!\n";
