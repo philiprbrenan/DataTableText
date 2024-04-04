@@ -1871,7 +1871,7 @@ sub min(@)                                                                      
   $M
  }
 
-sub mininum(@)                                                                  # Find the mininum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
+sub minimum(@)                                                                  # Find the minimum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
  {my (@m) = @_;                                                                 # Numbers
   my @n = grep {defined($_)} @_;
   return undef unless @n;
@@ -21384,10 +21384,10 @@ if (1) {                                                                        
   is maximum(undef, 1), 1;
   is maximum(1,4,undef,3),  4;
 
-  is mininum, undef;
-  is mininum(1),        1;
-  is mininum(undef, 1), 1;
-  is mininum(1,4,undef,3),  1;
+  is minimum, undef;
+  is minimum(1),        1;
+  is minimum(undef, 1), 1;
+  is minimum(1,4,undef,3),  1;
  }
 
 is_deeply [1],       [contains(1,0..1)];                                        #Tcontains
