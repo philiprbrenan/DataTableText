@@ -3517,12 +3517,32 @@ Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) o
 
     
 
-### mininum (@m)
+### minimum (@m)
 
-Find the mininum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
+Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
 
        Parameter  Description
     1  @m         Numbers
+
+**Example:**
+
+      is maximum, [undef](https://perldoc.perl.org/functions/undef.html);       is maximum(1),        1;
+      is maximum(undef, 1), 1;
+      is maximum(1,4,undef,3),  4;
+    
+    
+      is minimum, [undef](https://perldoc.perl.org/functions/undef.html);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    
+      is minimum(1),        1;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    
+      is minimum(undef, 1), 1;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    
+      is minimum(1,4,undef,3),  1;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    
 
 ### indexOfMin  (@m)
 
@@ -3580,9 +3600,9 @@ Find the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) o
       is maximum(1,4,undef,3),  4;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
-      is mininum, [undef](https://perldoc.perl.org/functions/undef.html);       is mininum(1),        1;
-      is mininum(undef, 1), 1;
-      is mininum(1,4,undef,3),  1;
+      is minimum, [undef](https://perldoc.perl.org/functions/undef.html);       is minimum(1),        1;
+      is minimum(undef, 1), 1;
+      is minimum(1,4,undef,3),  1;
     
 
 ### indexOfMax  (@m)
@@ -10935,7 +10955,7 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 262 [min](#min) - Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
 
-263 [mininum](#mininum) - Find the mininum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
+263 [minimum](#minimum) - Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
 
 264 [mmm](#mmm) - Log messages with a differential time in milliseconds and originating [file](https://en.wikipedia.org/wiki/Computer_file) and line number.
 
@@ -11260,6 +11280,6 @@ Hey! **The above document had some coding errors, which are explained below:**
 
     Non-ASCII character seen before =encoding in 'dateTimeStamp '. Assuming CP1252
 
-- Around line 12399:
+- Around line 12421:
 
     Unterminated L<...> sequence
