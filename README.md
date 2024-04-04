@@ -41,7 +41,7 @@ Remove the path and extension from a [file](https://en.wikipedia.org/wiki/Comput
 
 [formatTable($data, $columnTitles, @options)](#formattable-data-columntitles-options)
 
-Format various **$data** structures as a [table](https://en.wikipedia.org/wiki/Table_(information)) with titles as specified by **$columnTitles**: either a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of column titles or a [string](https://en.wikipedia.org/wiki/String_(computer_science)) each line of which contains the column title as the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) with the rest of the line describing that column.
+Format various **$data** structures as a [table](https://en.wikipedia.org/wiki/Table_(information)) with titles as specified by **$columnTitles**: either a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of column titles or a [string](https://en.wikipedia.org/wiki/String_(computer_science)) each line of which contains the column title as the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) with the [REST](https://en.wikipedia.org/wiki/REST) of the line describing that column.
 
 Optionally create a report from the [table](https://en.wikipedia.org/wiki/Table_(information)) using the report **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
 
@@ -2374,7 +2374,7 @@ Read all the files in the specified [list](https://en.wikipedia.org/wiki/Linked_
 
 ### includeFiles($expand)
 
-Read the given [file](https://en.wikipedia.org/wiki/Computer_file) and expand all lines that start "includeThisFile " with the [file](https://en.wikipedia.org/wiki/Computer_file) named by the rest of the line and keep doing this until all the included files have been expanded or a repetition is detected.  Returns the expanded [file](https://en.wikipedia.org/wiki/Computer_file) or confesses if one of the included files cannot be located.
+Read the given [file](https://en.wikipedia.org/wiki/Computer_file) and expand all lines that start "includeThisFile " with the [file](https://en.wikipedia.org/wiki/Computer_file) named by the [REST](https://en.wikipedia.org/wiki/REST) of the line and keep doing this until all the included files have been expanded or a repetition is detected.  Returns the expanded [file](https://en.wikipedia.org/wiki/Computer_file) or confesses if one of the included files cannot be located.
 
        Parameter  Description
     1  $expand    File to expand
@@ -3517,6 +3517,13 @@ Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) o
 
     
 
+### mininum (@m)
+
+Find the mininum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
+
+       Parameter  Description
+    1  @m         Numbers
+
 ### indexOfMin  (@m)
 
 Find the index of the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
@@ -3550,6 +3557,32 @@ Find the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) o
     
       ok min(1) == 1;
       ok min(5,4,2,3) == 2;
+    
+
+### maximum (@m)
+
+Find the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
+
+       Parameter  Description
+    1  @m         Numbers
+
+**Example:**
+
+      is maximum, [undef](https://perldoc.perl.org/functions/undef.html);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    
+      is maximum(1),        1;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    
+      is maximum(undef, 1), 1;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    
+      is maximum(1,4,undef,3),  4;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    
+      is mininum, [undef](https://perldoc.perl.org/functions/undef.html);       is mininum(1),        1;
+      is mininum(undef, 1), 1;
+      is mininum(1,4,undef,3),  1;
     
 
 ### indexOfMax  (@m)
@@ -4141,7 +4174,7 @@ Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](h
 
 ## formatTable ($data, $columnTitles, @options)
 
-Format various **$data** structures as a [table](https://en.wikipedia.org/wiki/Table_(information)) with titles as specified by **$columnTitles**: either a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of column titles or a [string](https://en.wikipedia.org/wiki/String_(computer_science)) each line of which contains the column title as the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) with the rest of the line describing that column.
+Format various **$data** structures as a [table](https://en.wikipedia.org/wiki/Table_(information)) with titles as specified by **$columnTitles**: either a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of column titles or a [string](https://en.wikipedia.org/wiki/String_(computer_science)) each line of which contains the column title as the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) with the [REST](https://en.wikipedia.org/wiki/REST) of the line describing that column.
 
 Optionally create a report from the [table](https://en.wikipedia.org/wiki/Table_(information)) using the report **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
 
@@ -4670,7 +4703,7 @@ Load an [array](https://en.wikipedia.org/wiki/Dynamic_array) from lines of text 
 
 ## loadHashFromLines   ($string)
 
-Load a [hash](https://en.wikipedia.org/wiki/Hash_table): first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key and the rest is the value.
+Load a [hash](https://en.wikipedia.org/wiki/Hash_table): first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key and the [REST](https://en.wikipedia.org/wiki/REST) is the value.
 
        Parameter  Description
     1  $string    The [string](https://en.wikipedia.org/wiki/String_(computer_science)) of lines from which to create a [hash](https://en.wikipedia.org/wiki/Hash_table) 
@@ -7239,7 +7272,7 @@ Number of [CPUs](https://en.wikipedia.org/wiki/Central_processing_unit) scaled b
 
 ## ipAddressViaArp ($hostName)
 
-Get the [IP address](https://en.wikipedia.org/wiki/IP_address) address of a [server](https://en.wikipedia.org/wiki/Server_(computing)) on the local network by hostname via arp.
+Get the [IP address](https://en.wikipedia.org/wiki/IP_address) address of a [server](https://en.wikipedia.org/wiki/Server_(computing)) on the local [network](https://en.wikipedia.org/wiki/Computer_network) by hostname via arp.
 
        Parameter  Description
     1  $hostName  Host name
@@ -10743,7 +10776,7 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 171 [formatString](#formatstring) - Format the specified **$string** so it can be displayed in **$width** columns.
 
-172 [formatTable](#formattable) - Format various **$data** structures as a [table](https://en.wikipedia.org/wiki/Table_(information)) with titles as specified by **$columnTitles**: either a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of column titles or a [string](https://en.wikipedia.org/wiki/String_(computer_science)) each line of which contains the column title as the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) with the rest of the line describing that column.
+172 [formatTable](#formattable) - Format various **$data** structures as a [table](https://en.wikipedia.org/wiki/Table_(information)) with titles as specified by **$columnTitles**: either a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of column titles or a [string](https://en.wikipedia.org/wiki/String_(computer_science)) each line of which contains the column title as the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) with the [REST](https://en.wikipedia.org/wiki/REST) of the line describing that column.
 
 173 [formatTableA](#formattablea) - Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
 174 [formatTableAA](#formattableaa) - Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array). 
@@ -10802,7 +10835,7 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 207 [htmlToc](#htmltoc) - Generate a [table](https://en.wikipedia.org/wiki/Table_(information)) of contents for some [HTML](https://en.wikipedia.org/wiki/HTML) held in a [file](https://en.wikipedia.org/wiki/Computer_file) or a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
 208 [imageSize](#imagesize) - Return (width, height) of an **$image**.
 
-209 [includeFiles](#includefiles) - Read the given [file](https://en.wikipedia.org/wiki/Computer_file) and expand all lines that start "includeThisFile " with the [file](https://en.wikipedia.org/wiki/Computer_file) named by the rest of the line and keep doing this until all the included files have been expanded or a repetition is detected.
+209 [includeFiles](#includefiles) - Read the given [file](https://en.wikipedia.org/wiki/Computer_file) and expand all lines that start "includeThisFile " with the [file](https://en.wikipedia.org/wiki/Computer_file) named by the [REST](https://en.wikipedia.org/wiki/REST) of the line and keep doing this until all the included files have been expanded or a repetition is detected.
 
 210 [indentString](#indentstring) - Indent lines contained in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) or formatted [table](https://en.wikipedia.org/wiki/Table_(information)) by the specified [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
 211 [indexOfMax](#indexofmax) - Find the index of the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
@@ -10816,7 +10849,7 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 216 [ipAddressOfHost](#ipaddressofhost) - Get the first [IP address](https://en.wikipedia.org/wiki/IP_address) address of the specified host via Domain Name Services.
 
-217 [ipAddressViaArp](#ipaddressviaarp) - Get the [IP address](https://en.wikipedia.org/wiki/IP_address) address of a [server](https://en.wikipedia.org/wiki/Server_(computing)) on the local network by hostname via arp.
+217 [ipAddressViaArp](#ipaddressviaarp) - Get the [IP address](https://en.wikipedia.org/wiki/IP_address) address of a [server](https://en.wikipedia.org/wiki/Server_(computing)) on the local [network](https://en.wikipedia.org/wiki/Computer_network) by hostname via arp.
 
 218 [isBlank](#isblank) - Test whether a [string](https://en.wikipedia.org/wiki/String_(computer_science)) is blank.
 
@@ -10841,7 +10874,7 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 231 [loadHashArrayFromLines](#loadhasharrayfromlines) - Load a [hash](https://en.wikipedia.org/wiki/Hash_table) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) from lines of text: the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key, the remaining words are the [array](https://en.wikipedia.org/wiki/Dynamic_array) contents.
 
-232 [loadHashFromLines](#loadhashfromlines) - Load a [hash](https://en.wikipedia.org/wiki/Hash_table): first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key and the rest is the value.
+232 [loadHashFromLines](#loadhashfromlines) - Load a [hash](https://en.wikipedia.org/wiki/Hash_table): first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key and the [REST](https://en.wikipedia.org/wiki/REST) is the value.
 
 233 [loadHashHashFromLines](#loadhashhashfromlines) - Load a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes from lines of text: the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key, the remaining words are the [sub](https://perldoc.perl.org/perlsub.html) [hash](https://en.wikipedia.org/wiki/Hash_table) contents.
 
@@ -10887,307 +10920,311 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 254 [max](#max) - Find the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
 
-255 [maximumLineLength](#maximumlinelength) - Find the longest line in a **$string**.
+255 [maximum](#maximum) - Find the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
 
-256 [md5FromGuid](#md5fromguid) - Recover an [MD5](https://en.wikipedia.org/wiki/MD5) sum from a [guid](https://en.wikipedia.org/wiki/Universally_unique_identifier). 
-257 [mergeFolder](#mergefolder) - Copy the **$source** [folder](https://en.wikipedia.org/wiki/File_folder) into the **$target** [folder](https://en.wikipedia.org/wiki/File_folder) retaining any existing files not replaced by copied files.
+256 [maximumLineLength](#maximumlinelength) - Find the longest line in a **$string**.
 
-258 [mergeFolderFromRemote](#mergefolderfromremote) - Merge the specified **$Source** [folder](https://en.wikipedia.org/wiki/File_folder) from the corresponding remote [folder](https://en.wikipedia.org/wiki/File_folder) on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+257 [md5FromGuid](#md5fromguid) - Recover an [MD5](https://en.wikipedia.org/wiki/MD5) sum from a [guid](https://en.wikipedia.org/wiki/Universally_unique_identifier). 
+258 [mergeFolder](#mergefolder) - Copy the **$source** [folder](https://en.wikipedia.org/wiki/File_folder) into the **$target** [folder](https://en.wikipedia.org/wiki/File_folder) retaining any existing files not replaced by copied files.
 
-259 [mergeHashesBySummingValues](#mergehashesbysummingvalues) - Merge a [list](https://en.wikipedia.org/wiki/Linked_list) of hashes **@h** by summing their values.
+259 [mergeFolderFromRemote](#mergefolderfromremote) - Merge the specified **$Source** [folder](https://en.wikipedia.org/wiki/File_folder) from the corresponding remote [folder](https://en.wikipedia.org/wiki/File_folder) on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-260 [microSecondsSinceEpoch](#microsecondssinceepoch) - Micro seconds since [Unix](https://en.wikipedia.org/wiki/Unix) epoch.
+260 [mergeHashesBySummingValues](#mergehashesbysummingvalues) - Merge a [list](https://en.wikipedia.org/wiki/Linked_list) of hashes **@h** by summing their values.
 
-261 [min](#min) - Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
+261 [microSecondsSinceEpoch](#microsecondssinceepoch) - Micro seconds since [Unix](https://en.wikipedia.org/wiki/Unix) epoch.
 
-262 [mmm](#mmm) - Log messages with a differential time in milliseconds and originating [file](https://en.wikipedia.org/wiki/Computer_file) and line number.
+262 [min](#min) - Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
 
-263 [moveFileNoClobber](#movefilenoclobber) - Rename the **$source** [file](https://en.wikipedia.org/wiki/Computer_file), which must exist, to the **$target** [file](https://en.wikipedia.org/wiki/Computer_file) but only if the $target [file](https://en.wikipedia.org/wiki/Computer_file) does not exist already.
+263 [mininum](#mininum) - Find the mininum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
 
-264 [moveFileWithClobber](#movefilewithclobber) - Rename the **$source** [file](https://en.wikipedia.org/wiki/Computer_file), which must exist, to the **$target** [file](https://en.wikipedia.org/wiki/Computer_file) but only if the $target [file](https://en.wikipedia.org/wiki/Computer_file) does not exist already.
+264 [mmm](#mmm) - Log messages with a differential time in milliseconds and originating [file](https://en.wikipedia.org/wiki/Computer_file) and line number.
 
-265 [nameFromFolder](#namefromfolder) - Create a name from the last [folder](https://en.wikipedia.org/wiki/File_folder) in the path of a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+265 [moveFileNoClobber](#movefilenoclobber) - Rename the **$source** [file](https://en.wikipedia.org/wiki/Computer_file), which must exist, to the **$target** [file](https://en.wikipedia.org/wiki/Computer_file) but only if the $target [file](https://en.wikipedia.org/wiki/Computer_file) does not exist already.
 
-266 [nameFromString](#namefromstring) - Create a readable name from an arbitrary [string](https://en.wikipedia.org/wiki/String_(computer_science)) of text.
+266 [moveFileWithClobber](#movefilewithclobber) - Rename the **$source** [file](https://en.wikipedia.org/wiki/Computer_file), which must exist, to the **$target** [file](https://en.wikipedia.org/wiki/Computer_file) but only if the $target [file](https://en.wikipedia.org/wiki/Computer_file) does not exist already.
 
-267 [nameFromStringRestrictedToTitle](#namefromstringrestrictedtotitle) - Create a readable name from a [string](https://en.wikipedia.org/wiki/String_(computer_science)) of text that might contain a title tag - fall back to [nameFromString](#namefromstring) if that is not possible.
+267 [nameFromFolder](#namefromfolder) - Create a name from the last [folder](https://en.wikipedia.org/wiki/File_folder) in the path of a [file](https://en.wikipedia.org/wiki/Computer_file) name.
 
-268 [newProcessStarter](#newprocessstarter) - Create a new [process starter](#data-table-text-starter-definition) with which to start parallel [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) up to a specified **$maximumNumberOfProcesses** maximum number of parallel [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) at a time, wait for all the started [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to finish and then optionally retrieve their saved results as an [array](https://en.wikipedia.org/wiki/Dynamic_array) from the [folder](https://en.wikipedia.org/wiki/File_folder) named by **$transferArea**.
+268 [nameFromString](#namefromstring) - Create a readable name from an arbitrary [string](https://en.wikipedia.org/wiki/String_(computer_science)) of text.
 
-269 [newServiceIncarnation](#newserviceincarnation) - Create a new service incarnation to record the start up of a new instance of a service and return the description as a [Data::Exchange::Service Definition hash](#data-exchange-service-definition).
+269 [nameFromStringRestrictedToTitle](#namefromstringrestrictedtotitle) - Create a readable name from a [string](https://en.wikipedia.org/wiki/String_(computer_science)) of text that might contain a title tag - fall back to [nameFromString](#namefromstring) if that is not possible.
 
-270 [newUdsr](#newudsr) - Create a communicator - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+270 [newProcessStarter](#newprocessstarter) - Create a new [process starter](#data-table-text-starter-definition) with which to start parallel [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) up to a specified **$maximumNumberOfProcesses** maximum number of parallel [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) at a time, wait for all the started [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to finish and then optionally retrieve their saved results as an [array](https://en.wikipedia.org/wiki/Dynamic_array) from the [folder](https://en.wikipedia.org/wiki/File_folder) named by **$transferArea**.
 
-271 [newUdsrClient](#newudsrclient) - Create a new communications client - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+271 [newServiceIncarnation](#newserviceincarnation) - Create a new service incarnation to record the start up of a new instance of a service and return the description as a [Data::Exchange::Service Definition hash](#data-exchange-service-definition).
 
-272 [newUdsrServer](#newudsrserver) - Create a communications [server](https://en.wikipedia.org/wiki/Server_(computing)) - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+272 [newUdsr](#newudsr) - Create a communicator - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
-273 [numberOfCpus](#numberofcpus) - Number of [CPUs](https://en.wikipedia.org/wiki/Central_processing_unit) scaled by an optional factor - but only if you have nproc.
+273 [newUdsrClient](#newudsrclient) - Create a new communications client - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
-274 [numberOfLinesInFile](#numberoflinesinfile) - Return the number of lines in a [file](https://en.wikipedia.org/wiki/Computer_file). 
-275 [numberOfLinesInString](#numberoflinesinstring) - The number of lines in a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-276 [numberWithCommas](#numberwithcommas) - Place commas in a number.
+274 [newUdsrServer](#newudsrserver) - Create a communications [server](https://en.wikipedia.org/wiki/Server_(computing)) - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
-277 [nws](#nws) - Normalize white space in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to make comparisons easier.
+275 [numberOfCpus](#numberofcpus) - Number of [CPUs](https://en.wikipedia.org/wiki/Central_processing_unit) scaled by an optional factor - but only if you have nproc.
 
-278 [onAws](#onaws) - Returns 1 if we are on AWS else return 0.
+276 [numberOfLinesInFile](#numberoflinesinfile) - Return the number of lines in a [file](https://en.wikipedia.org/wiki/Computer_file). 
+277 [numberOfLinesInString](#numberoflinesinstring) - The number of lines in a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+278 [numberWithCommas](#numberwithcommas) - Place commas in a number.
 
-279 [onAwsPrimary](#onawsprimary) - Return 1 if we are on [Amazon Web Services](http://aws.amazon.com) and we are on the primary session instance as defined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), return 0 if we are on a secondary session instance, else return **undef** if we are not on [Amazon Web Services](http://aws.amazon.com).
+279 [nws](#nws) - Normalize white space in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to make comparisons easier.
 
-280 [onAwsSecondary](#onawssecondary) - Return 1 if we are on [Amazon Web Services](http://aws.amazon.com) but we are not on the primary session instance as defined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), return 0 if we are on the primary session instance, else return **undef** if we are not on [Amazon Web Services](http://aws.amazon.com).
+280 [onAws](#onaws) - Returns 1 if we are on AWS else return 0.
 
-281 [onMac](#onmac) - Are we on mac.
+281 [onAwsPrimary](#onawsprimary) - Return 1 if we are on [Amazon Web Services](http://aws.amazon.com) and we are on the primary session instance as defined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), return 0 if we are on a secondary session instance, else return **undef** if we are not on [Amazon Web Services](http://aws.amazon.com).
 
-282 [onWindows](#onwindows) - Are we on windows.
+282 [onAwsSecondary](#onawssecondary) - Return 1 if we are on [Amazon Web Services](http://aws.amazon.com) but we are not on the primary session instance as defined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), return 0 if we are on the primary session instance, else return **undef** if we are not on [Amazon Web Services](http://aws.amazon.com).
 
-283 [overrideAndReabsorbMethods](#overrideandreabsorbmethods) - Override methods down the [list](https://en.wikipedia.org/wiki/Linked_list) of **@packages** then reabsorb any unused methods back up the [list](https://en.wikipedia.org/wiki/Linked_list) of packages so that all the packages have the same methods as the last package with methods from packages mentioned earlier overriding methods from packages mentioned later.
+283 [onMac](#onmac) - Are we on mac.
 
-284 [overrideMethods](#overridemethods) - For each method, if it exists in package **$from** then export it to package **$to** replacing any existing method in **$to**, otherwise export the method from package **$to** to package **$from** in order to merge the behavior of the **$from** and **$to** packages with respect to the named methods with duplicates resolved if favour of package **$from**.
+284 [onWindows](#onwindows) - Are we on windows.
 
-285 [overWriteBinaryFile](#overwritebinaryfile) - Write to **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
+285 [overrideAndReabsorbMethods](#overrideandreabsorbmethods) - Override methods down the [list](https://en.wikipedia.org/wiki/Linked_list) of **@packages** then reabsorb any unused methods back up the [list](https://en.wikipedia.org/wiki/Linked_list) of packages so that all the packages have the same methods as the last package with methods from packages mentioned earlier overriding methods from packages mentioned later.
 
-286 [overWriteFile](#overwritefile) - Write to a **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+286 [overrideMethods](#overridemethods) - For each method, if it exists in package **$from** then export it to package **$to** replacing any existing method in **$to**, otherwise export the method from package **$to** to package **$from** in order to merge the behavior of the **$from** and **$to** packages with respect to the named methods with duplicates resolved if favour of package **$from**.
 
-287 [overWriteHtmlFile](#overwritehtmlfile) - Write an [HTML](https://en.wikipedia.org/wiki/HTML) [file](https://en.wikipedia.org/wiki/Computer_file) to /var/www/html and make it readable.
+287 [overWriteBinaryFile](#overwritebinaryfile) - Write to **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
 
-288 [overWritePerlCgiFile](#overwriteperlcgifile) - Write a [Perl](http://www.perl.org/) [file](https://en.wikipedia.org/wiki/Computer_file) to /usr/lib/cgi-bin and make it executable after checking it for syntax errors.
+288 [overWriteFile](#overwritefile) - Write to a **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-289 [packBySize](#packbysize) - Given **$N** buckets and a [list](https://en.wikipedia.org/wiki/Linked_list) **@sizes** of (\[size of [file](https://en.wikipedia.org/wiki/Computer_file), name of file\].
+289 [overWriteHtmlFile](#overwritehtmlfile) - Write an [HTML](https://en.wikipedia.org/wiki/HTML) [file](https://en.wikipedia.org/wiki/Computer_file) to /var/www/html and make it readable.
 
-290 [pad](#pad) - Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
+290 [overWritePerlCgiFile](#overwriteperlcgifile) - Write a [Perl](http://www.perl.org/) [file](https://en.wikipedia.org/wiki/Computer_file) to /usr/lib/cgi-bin and make it executable after checking it for syntax errors.
 
-291 [parseCommandLineArguments](#parsecommandlinearguments) - Call the specified **$sub** after classifying the specified [array](https://en.wikipedia.org/wiki/Dynamic_array) of \[arguments\] in **$args** into positional and keyword parameters.
+291 [packBySize](#packbysize) - Given **$N** buckets and a [list](https://en.wikipedia.org/wiki/Linked_list) **@sizes** of (\[size of [file](https://en.wikipedia.org/wiki/Computer_file), name of file\].
 
-292 [parseDitaRef](#parseditaref) - Parse a [Dita](http://docs.oasis-open.org/dita/dita/v1.3/os/part2-tech-content/dita-v1.3-os-part2-tech-content.html) reference **$ref** into its components (file name, topic id, id) .
+292 [pad](#pad) - Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
 
-293 [parseFileName](#parsefilename) - Parse a [file](https://en.wikipedia.org/wiki/Computer_file) name into (path, name, extension) considering .
+293 [parseCommandLineArguments](#parsecommandlinearguments) - Call the specified **$sub** after classifying the specified [array](https://en.wikipedia.org/wiki/Dynamic_array) of \[arguments\] in **$args** into positional and keyword parameters.
 
-294 [parseIntoWordsAndStrings](#parseintowordsandstrings) - Parse a **$string** into words and quoted [strings](https://en.wikipedia.org/wiki/String_(computer_science)). 
-295 [parseS3BucketAndFolderName](#parses3bucketandfoldername) - Parse an [S3](https://aws.amazon.com/s3/) bucket/folder name into a bucket and a [folder](https://en.wikipedia.org/wiki/File_folder) name removing any initial s3://.
+294 [parseDitaRef](#parseditaref) - Parse a [Dita](http://docs.oasis-open.org/dita/dita/v1.3/os/part2-tech-content/dita-v1.3-os-part2-tech-content.html) reference **$ref** into its components (file name, topic id, id) .
 
-296 [parseXmlDocType](#parsexmldoctype) - Parse an [Xml](https://en.wikipedia.org/wiki/XML) DOCTYPE and return a [hash](https://en.wikipedia.org/wiki/Hash_table) indicating its components.
+295 [parseFileName](#parsefilename) - Parse a [file](https://en.wikipedia.org/wiki/Computer_file) name into (path, name, extension) considering .
 
-297 [partitionStringsOnPrefixBySize](#partitionstringsonprefixbysize) - Partition a [hash](https://en.wikipedia.org/wiki/Hash_table) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and associated sizes into partitions with either a maximum size **$maxSize** or only one element; the [hash](https://en.wikipedia.org/wiki/Hash_table) **%Sizes** consisting of a mapping {string=>size}; with each partition being named with the shortest [string](https://en.wikipedia.org/wiki/String_(computer_science)) prefix that identifies just the [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in that partition.
+296 [parseIntoWordsAndStrings](#parseintowordsandstrings) - Parse a **$string** into words and quoted [strings](https://en.wikipedia.org/wiki/String_(computer_science)). 
+297 [parseS3BucketAndFolderName](#parses3bucketandfoldername) - Parse an [S3](https://aws.amazon.com/s3/) bucket/folder name into a bucket and a [folder](https://en.wikipedia.org/wiki/File_folder) name removing any initial s3://.
 
-298 [perlPackage](#perlpackage) - Extract the package name from a [Perl](http://www.perl.org/) [string](https://en.wikipedia.org/wiki/String_(computer_science)) or [file](https://en.wikipedia.org/wiki/Computer_file). 
-299 [powerOfTwo](#poweroftwo) - Test whether a number **$n** is a power of two, return the power if it is else **undef**.
+298 [parseXmlDocType](#parsexmldoctype) - Parse an [Xml](https://en.wikipedia.org/wiki/XML) DOCTYPE and return a [hash](https://en.wikipedia.org/wiki/Hash_table) indicating its components.
 
-300 [ppp](#ppp) - Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
+299 [partitionStringsOnPrefixBySize](#partitionstringsonprefixbysize) - Partition a [hash](https://en.wikipedia.org/wiki/Hash_table) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and associated sizes into partitions with either a maximum size **$maxSize** or only one element; the [hash](https://en.wikipedia.org/wiki/Hash_table) **%Sizes** consisting of a mapping {string=>size}; with each partition being named with the shortest [string](https://en.wikipedia.org/wiki/String_(computer_science)) prefix that identifies just the [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in that partition.
 
-301 [prefferedFileName](#prefferedfilename) - Normalize a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+300 [perlPackage](#perlpackage) - Extract the package name from a [Perl](http://www.perl.org/) [string](https://en.wikipedia.org/wiki/String_(computer_science)) or [file](https://en.wikipedia.org/wiki/Computer_file). 
+301 [powerOfTwo](#poweroftwo) - Test whether a number **$n** is a power of two, return the power if it is else **undef**.
 
-302 [printQw](#printqw) - Print an [array](https://en.wikipedia.org/wiki/Dynamic_array) of words in qw() format.
+302 [ppp](#ppp) - Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
 
-303 [processFilesInParallel](#processfilesinparallel) - Process files in parallel using (8 \* the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each [file](https://en.wikipedia.org/wiki/Computer_file) is assigned to depending on the size of the [file](https://en.wikipedia.org/wiki/Computer_file) so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-304 [processJavaFilesInParallel](#processjavafilesinparallel) - Process [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) files of known size in parallel using (the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each item is assigned to depending on the size of the [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) item so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-305 [processSizesInParallel](#processsizesinparallel) - Process items of known size in parallel using (8 \* the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each item is assigned to depending on the size of the item so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the items it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-306 [processSizesInParallelN](#processsizesinparalleln) - Process items of known size in parallel using the specified number **$N** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each [file](https://en.wikipedia.org/wiki/Computer_file) is assigned to depending on the size of the [file](https://en.wikipedia.org/wiki/Computer_file) so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-307 [quoteFile](#quotefile) - Quote a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+303 [prefferedFileName](#prefferedfilename) - Normalize a [file](https://en.wikipedia.org/wiki/Computer_file) name.
 
-308 [randomizeArray](#randomizearray) - Randomize an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-309 [readBinaryFile](#readbinaryfile) - Read a binary [file](https://en.wikipedia.org/wiki/Computer_file) on the local machine.
+304 [printQw](#printqw) - Print an [array](https://en.wikipedia.org/wiki/Dynamic_array) of words in qw() format.
 
-310 [readFile](#readfile) - Return the content of a [file](https://en.wikipedia.org/wiki/Computer_file) residing on the local machine interpreting the content of the [file](https://en.wikipedia.org/wiki/Computer_file) as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+305 [processFilesInParallel](#processfilesinparallel) - Process files in parallel using (8 \* the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each [file](https://en.wikipedia.org/wiki/Computer_file) is assigned to depending on the size of the [file](https://en.wikipedia.org/wiki/Computer_file) so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+306 [processJavaFilesInParallel](#processjavafilesinparallel) - Process [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) files of known size in parallel using (the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each item is assigned to depending on the size of the [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) item so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+307 [processSizesInParallel](#processsizesinparallel) - Process items of known size in parallel using (8 \* the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each item is assigned to depending on the size of the item so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the items it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+308 [processSizesInParallelN](#processsizesinparalleln) - Process items of known size in parallel using the specified number **$N** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each [file](https://en.wikipedia.org/wiki/Computer_file) is assigned to depending on the size of the [file](https://en.wikipedia.org/wiki/Computer_file) so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+309 [quoteFile](#quotefile) - Quote a [file](https://en.wikipedia.org/wiki/Computer_file) name.
 
-311 [readFileFromRemote](#readfilefromremote) - Copy and [read](https://en.wikipedia.org/wiki/Reading_(computer)) a **$file** from the remote machine whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp) and return the content of $file interpreted as [utf8](https://en.wikipedia.org/wiki/UTF-8) .
+310 [randomizeArray](#randomizearray) - Randomize an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+311 [readBinaryFile](#readbinaryfile) - Read a binary [file](https://en.wikipedia.org/wiki/Computer_file) on the local machine.
 
-312 [readFiles](#readfiles) - Read all the files in the specified [list](https://en.wikipedia.org/wiki/Linked_list) of folders into a [hash](https://en.wikipedia.org/wiki/Hash_table). 
-313 [readGZipFile](#readgzipfile) - Read the specified [file](https://en.wikipedia.org/wiki/Computer_file) containing compressed [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8) through [gzip](https://en.wikipedia.org/wiki/Gzip).
+312 [readFile](#readfile) - Return the content of a [file](https://en.wikipedia.org/wiki/Computer_file) residing on the local machine interpreting the content of the [file](https://en.wikipedia.org/wiki/Computer_file) as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-314 [readStdIn](#readstdin) - Return the contents of STDIN and return the results as either an [array](https://en.wikipedia.org/wiki/Dynamic_array) or a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-315 [readUtf16File](#readutf16file) - Read a [file](https://en.wikipedia.org/wiki/Computer_file) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) encoded in utf-16.
+313 [readFileFromRemote](#readfilefromremote) - Copy and [read](https://en.wikipedia.org/wiki/Reading_(computer)) a **$file** from the remote machine whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp) and return the content of $file interpreted as [utf8](https://en.wikipedia.org/wiki/UTF-8) .
 
-316 [rectangularArray](#rectangulararray) - Create a two dimensional rectangular [array](https://en.wikipedia.org/wiki/Dynamic_array) whose first dimension is **$first** from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-317 [rectangularArray2](#rectangulararray2) - Create a two dimensional rectangular [array](https://en.wikipedia.org/wiki/Dynamic_array) whose second dimension is **$second** from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-318 [reinstateWellKnown](#reinstatewellknown) - Contract references to well known Urls to their abbreviated form.
+314 [readFiles](#readfiles) - Read all the files in the specified [list](https://en.wikipedia.org/wiki/Linked_list) of folders into a [hash](https://en.wikipedia.org/wiki/Hash_table). 
+315 [readGZipFile](#readgzipfile) - Read the specified [file](https://en.wikipedia.org/wiki/Computer_file) containing compressed [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8) through [gzip](https://en.wikipedia.org/wiki/Gzip).
 
-319 [relFromAbsAgainstAbs](#relfromabsagainstabs) - Relative [file](https://en.wikipedia.org/wiki/Computer_file) from one absolute [file](https://en.wikipedia.org/wiki/Computer_file) **$a** against another **$b**.
+316 [readStdIn](#readstdin) - Return the contents of STDIN and return the results as either an [array](https://en.wikipedia.org/wiki/Dynamic_array) or a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+317 [readUtf16File](#readutf16file) - Read a [file](https://en.wikipedia.org/wiki/Computer_file) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) encoded in utf-16.
 
-320 [reloadHashes](#reloadhashes) - Ensures that all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures have LValue methods to get and set their current keys.
+318 [rectangularArray](#rectangulararray) - Create a two dimensional rectangular [array](https://en.wikipedia.org/wiki/Dynamic_array) whose first dimension is **$first** from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+319 [rectangularArray2](#rectangulararray2) - Create a two dimensional rectangular [array](https://en.wikipedia.org/wiki/Dynamic_array) whose second dimension is **$second** from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+320 [reinstateWellKnown](#reinstatewellknown) - Contract references to well known Urls to their abbreviated form.
 
-321 [reloadHashes2](#reloadhashes2) - Ensures that all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures have LValue methods to get and set their current keys.
+321 [relFromAbsAgainstAbs](#relfromabsagainstabs) - Relative [file](https://en.wikipedia.org/wiki/Computer_file) from one absolute [file](https://en.wikipedia.org/wiki/Computer_file) **$a** against another **$b**.
 
-322 [removeDuplicatePrefixes](#removeduplicateprefixes) - Remove duplicated leading directory names from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+322 [reloadHashes](#reloadhashes) - Ensures that all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures have LValue methods to get and set their current keys.
 
-323 [removeFilePathsFromStructure](#removefilepathsfromstructure) - Remove all [file](https://en.wikipedia.org/wiki/Computer_file) paths from a specified **$structure** to make said $structure testable with ["is\_deeply" in Test::More](https://metacpan.org/pod/Test%3A%3AMore#is_deeply).
+323 [reloadHashes2](#reloadhashes2) - Ensures that all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures have LValue methods to get and set their current keys.
 
-324 [removeFilePrefix](#removefileprefix) - Removes a [file](https://en.wikipedia.org/wiki/Computer_file) **$prefix** from an [array](https://en.wikipedia.org/wiki/Dynamic_array) of **@files**.
+324 [removeDuplicatePrefixes](#removeduplicateprefixes) - Remove duplicated leading directory names from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
 
-325 [renormalizeFolderName](#renormalizefoldername) - Normalize a [folder](https://en.wikipedia.org/wiki/File_folder) name by ensuring it has a single trailing directory separator.
+325 [removeFilePathsFromStructure](#removefilepathsfromstructure) - Remove all [file](https://en.wikipedia.org/wiki/Computer_file) paths from a specified **$structure** to make said $structure testable with ["is\_deeply" in Test::More](https://metacpan.org/pod/Test%3A%3AMore#is_deeply).
 
-326 [replaceStringWithString](#replacestringwithstring) - Replace all instances in **$string** of **$source** with **$target**.
+326 [removeFilePrefix](#removefileprefix) - Removes a [file](https://en.wikipedia.org/wiki/Computer_file) **$prefix** from an [array](https://en.wikipedia.org/wiki/Dynamic_array) of **@files**.
 
-327 [reportAttributes](#reportattributes) - Report the attributes present in a **$sourceFile**.
+327 [renormalizeFolderName](#renormalizefoldername) - Normalize a [folder](https://en.wikipedia.org/wiki/File_folder) name by ensuring it has a single trailing directory separator.
 
-328 [reportAttributeSettings](#reportattributesettings) - Report the current values of the attribute methods in the calling [file](https://en.wikipedia.org/wiki/Computer_file) and optionally [write](https://en.wikipedia.org/wiki/Write_(system_call)) the report to **$reportFile**.
+328 [replaceStringWithString](#replacestringwithstring) - Replace all instances in **$string** of **$source** with **$target**.
 
-329 [reportExportableMethods](#reportexportablemethods) - Report the exportable methods marked with #e in a **$sourceFile**.
+329 [reportAttributes](#reportattributes) - Report the attributes present in a **$sourceFile**.
 
-330 [reportReplacableMethods](#reportreplacablemethods) - Report the replaceable methods marked with #r in a **$sourceFile**.
+330 [reportAttributeSettings](#reportattributesettings) - Report the current values of the attribute methods in the calling [file](https://en.wikipedia.org/wiki/Computer_file) and optionally [write](https://en.wikipedia.org/wiki/Write_(system_call)) the report to **$reportFile**.
 
-331 [reportSettings](#reportsettings) - Report the current values of parameterless subs.
+331 [reportExportableMethods](#reportexportablemethods) - Report the exportable methods marked with #e in a **$sourceFile**.
 
-332 [retrieveFile](#retrievefile) - Retrieve a **$file** created via [Storable](https://metacpan.org/pod/Storable).
+332 [reportReplacableMethods](#reportreplacablemethods) - Report the replaceable methods marked with #r in a **$sourceFile**.
 
-333 [runInParallel](#runinparallel) - Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) in parallel using a maximum of **$maximumNumberOfProcesses** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-334 [runInSquareRootParallel](#runinsquarerootparallel) - Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) in square root parallel using a maximum of **$maximumNumberOfProcesses** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-335 [s3Delete](#s3delete) - Return an S3 --delete keyword from an S3 option set.
+333 [reportSettings](#reportsettings) - Report the current values of parameterless subs.
 
-336 [s3DownloadFolder](#s3downloadfolder) - Download a specified **$folder** on S3 to a **$local** [folder](https://en.wikipedia.org/wiki/File_folder) using the specified **%options** if any.
+334 [retrieveFile](#retrievefile) - Retrieve a **$file** created via [Storable](https://metacpan.org/pod/Storable).
 
-337 [s3FileExists](#s3fileexists) - Return (name, size, date, time) for a **$file** that exists on S3 else () using the specified **%options** if any.
+335 [runInParallel](#runinparallel) - Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) in parallel using a maximum of **$maximumNumberOfProcesses** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+336 [runInSquareRootParallel](#runinsquarerootparallel) - Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) in square root parallel using a maximum of **$maximumNumberOfProcesses** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+337 [s3Delete](#s3delete) - Return an S3 --delete keyword from an S3 option set.
 
-338 [s3ListFilesAndSizes](#s3listfilesandsizes) - Return {file=>size} for all the files in a specified **$folderOrFile** on S3 using the specified **%options** if any.
+338 [s3DownloadFolder](#s3downloadfolder) - Download a specified **$folder** on S3 to a **$local** [folder](https://en.wikipedia.org/wiki/File_folder) using the specified **%options** if any.
 
-339 [s3Profile](#s3profile) - Return an S3 profile keyword from an S3 option set.
+339 [s3FileExists](#s3fileexists) - Return (name, size, date, time) for a **$file** that exists on S3 else () using the specified **%options** if any.
 
-340 [s3ReadFile](#s3readfile) - Read from a **$file** on S3 and [write](https://en.wikipedia.org/wiki/Write_(system_call)) the contents to a local [file](https://en.wikipedia.org/wiki/Computer_file) **$local** using the specified **%options** if any.
+340 [s3ListFilesAndSizes](#s3listfilesandsizes) - Return {file=>size} for all the files in a specified **$folderOrFile** on S3 using the specified **%options** if any.
 
-341 [s3ReadString](#s3readstring) - Read from a **$file** on S3 and return the contents as a [string](https://en.wikipedia.org/wiki/String_(computer_science)) using specified **%options** if any.
+341 [s3Profile](#s3profile) - Return an S3 profile keyword from an S3 option set.
 
-342 [s3WriteFile](#s3writefile) - Write to a [file](https://en.wikipedia.org/wiki/Computer_file) **$fileS3** on S3 the contents of a local [file](https://en.wikipedia.org/wiki/Computer_file) **$fileLocal** using the specified **%options** if any.
+342 [s3ReadFile](#s3readfile) - Read from a **$file** on S3 and [write](https://en.wikipedia.org/wiki/Write_(system_call)) the contents to a local [file](https://en.wikipedia.org/wiki/Computer_file) **$local** using the specified **%options** if any.
 
-343 [s3WriteString](#s3writestring) - Write to a **$file** on S3 the contents of **$string** using the specified **%options** if any.
+343 [s3ReadString](#s3readstring) - Read from a **$file** on S3 and return the contents as a [string](https://en.wikipedia.org/wiki/String_(computer_science)) using specified **%options** if any.
 
-344 [s3ZipFolder](#s3zipfolder) - Zip the specified **$source** [folder](https://en.wikipedia.org/wiki/File_folder) and [write](https://en.wikipedia.org/wiki/Write_(system_call)) it to the named **$target** [file](https://en.wikipedia.org/wiki/Computer_file) on S3.
+344 [s3WriteFile](#s3writefile) - Write to a [file](https://en.wikipedia.org/wiki/Computer_file) **$fileS3** on S3 the contents of a local [file](https://en.wikipedia.org/wiki/Computer_file) **$fileLocal** using the specified **%options** if any.
 
-345 [s3ZipFolders](#s3zipfolders) - Zip local folders and [upload](https://en.wikipedia.org/wiki/Upload) them to S3 in parallel.
+345 [s3WriteString](#s3writestring) - Write to a **$file** on S3 the contents of **$string** using the specified **%options** if any.
 
-346 [saveAwsDomain](#saveawsdomain) - Make the [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon Web Services](http://aws.amazon.com) with the given [domain name](https://en.wikipedia.org/wiki/Domain_name) name the default primary [server](https://en.wikipedia.org/wiki/Server_(computing)) as used by all the methods whose names end in **r** or **Remote**.
+346 [s3ZipFolder](#s3zipfolder) - Zip the specified **$source** [folder](https://en.wikipedia.org/wiki/File_folder) and [write](https://en.wikipedia.org/wiki/Write_(system_call)) it to the named **$target** [file](https://en.wikipedia.org/wiki/Computer_file) on S3.
 
-347 [saveAwsIp](#saveawsip) - Make the [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon Web Services](http://aws.amazon.com) with the given IP address the default primary [server](https://en.wikipedia.org/wiki/Server_(computing)) as used by all the methods whose names end in **r** or **Remote**.
+347 [s3ZipFolders](#s3zipfolders) - Zip local folders and [upload](https://en.wikipedia.org/wiki/Upload) them to S3 in parallel.
 
-348 [saveCodeToS3](#savecodetos3) - Save source [code](https://en.wikipedia.org/wiki/Computer_program) every **$saveCodeEvery** seconds by zipping [folder](https://en.wikipedia.org/wiki/File_folder) **$folder** to [zip](https://linux.die.net/man/1/zip) [file](https://en.wikipedia.org/wiki/Computer_file) **$zipFileName** then saving this [zip](https://linux.die.net/man/1/zip) [file](https://en.wikipedia.org/wiki/Computer_file) in the specified [S3](https://aws.amazon.com/s3/) **$bucket** using any additional [S3](https://aws.amazon.com/s3/) parameters in **$S3Parms**.
+348 [saveAwsDomain](#saveawsdomain) - Make the [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon Web Services](http://aws.amazon.com) with the given [domain name](https://en.wikipedia.org/wiki/Domain_name) name the default primary [server](https://en.wikipedia.org/wiki/Server_(computing)) as used by all the methods whose names end in **r** or **Remote**.
 
-349 [saveSourceToS3](#savesourcetos3) - Save source [code](https://en.wikipedia.org/wiki/Computer_program). 
-350 [searchDirectoryTreeForSubFolders](#searchdirectorytreeforsubfolders) - Search the specified directory under the specified [folder](https://en.wikipedia.org/wiki/File_folder) for [sub](https://perldoc.perl.org/perlsub.html) folders.
+349 [saveAwsIp](#saveawsip) - Make the [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon Web Services](http://aws.amazon.com) with the given IP address the default primary [server](https://en.wikipedia.org/wiki/Server_(computing)) as used by all the methods whose names end in **r** or **Remote**.
 
-351 [searchDirectoryTreesForMatchingFiles](#searchdirectorytreesformatchingfiles) - Search the specified directory [trees](https://en.wikipedia.org/wiki/Tree_(data_structure)) for the files (not folders) that match the specified [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions). 
-352 [setCombination](#setcombination) - Count the elements in sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
+350 [saveCodeToS3](#savecodetos3) - Save source [code](https://en.wikipedia.org/wiki/Computer_program) every **$saveCodeEvery** seconds by zipping [folder](https://en.wikipedia.org/wiki/File_folder) **$folder** to [zip](https://linux.die.net/man/1/zip) [file](https://en.wikipedia.org/wiki/Computer_file) **$zipFileName** then saving this [zip](https://linux.die.net/man/1/zip) [file](https://en.wikipedia.org/wiki/Computer_file) in the specified [S3](https://aws.amazon.com/s3/) **$bucket** using any additional [S3](https://aws.amazon.com/s3/) parameters in **$S3Parms**.
 
-353 [setDifference](#setdifference) - Subtract the keys in the second set represented as a [hash](https://en.wikipedia.org/wiki/Hash_table) from the first set represented as a [hash](https://en.wikipedia.org/wiki/Hash_table) to create a new [hash](https://en.wikipedia.org/wiki/Hash_table) showing the set difference between the two.
+351 [saveSourceToS3](#savesourcetos3) - Save source [code](https://en.wikipedia.org/wiki/Computer_program). 
+352 [searchDirectoryTreeForSubFolders](#searchdirectorytreeforsubfolders) - Search the specified directory under the specified [folder](https://en.wikipedia.org/wiki/File_folder) for [sub](https://perldoc.perl.org/perlsub.html) folders.
 
-354 [setFileExtension](#setfileextension) - Given a **$file**, change its extension to **$extension**.
+353 [searchDirectoryTreesForMatchingFiles](#searchdirectorytreesformatchingfiles) - Search the specified directory [trees](https://en.wikipedia.org/wiki/Tree_(data_structure)) for the files (not folders) that match the specified [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions). 
+354 [setCombination](#setcombination) - Count the elements in sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
 
-355 [setIntersection](#setintersection) - Intersection of sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
+355 [setDifference](#setdifference) - Subtract the keys in the second set represented as a [hash](https://en.wikipedia.org/wiki/Hash_table) from the first set represented as a [hash](https://en.wikipedia.org/wiki/Hash_table) to create a new [hash](https://en.wikipedia.org/wiki/Hash_table) showing the set difference between the two.
 
-356 [setIntersectionOverUnion](#setintersectionoverunion) - Returns the size of the intersection over the size of the union of one or more sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) and/or hashes.
+356 [setFileExtension](#setfileextension) - Given a **$file**, change its extension to **$extension**.
 
-357 [setPackageSearchOrder](#setpackagesearchorder) - Set a package search order for methods requested in the current package via AUTOLOAD.
+357 [setIntersection](#setintersection) - Intersection of sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
 
-358 [setPartitionOnIntersectionOverUnion](#setpartitiononintersectionoverunion) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets** so that within each partition the [setIntersectionOverUnion](#setintersectionoverunion) of any two sets in the partition is never less than the specified level of _$confidence\*\*2_.
+358 [setIntersectionOverUnion](#setintersectionoverunion) - Returns the size of the intersection over the size of the union of one or more sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) and/or hashes.
 
-359 [setPartitionOnIntersectionOverUnionOfHashStringSets](#setpartitiononintersectionoverunionofhashstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a [hash](https://en.wikipedia.org/wiki/Hash_table), each [hash](https://en.wikipedia.org/wiki/Hash_table) value being a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the [hash](https://en.wikipedia.org/wiki/Hash_table) keys of the [string](https://en.wikipedia.org/wiki/String_(computer_science)) sets.
+359 [setPackageSearchOrder](#setpackagesearchorder) - Set a package search order for methods requested in the current package via AUTOLOAD.
 
-360 [setPartitionOnIntersectionOverUnionOfHashStringSetsInParallel](#setpartitiononintersectionoverunionofhashstringsetsinparallel) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a [hash](https://en.wikipedia.org/wiki/Hash_table), each [hash](https://en.wikipedia.org/wiki/Hash_table) value being a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the [hash](https://en.wikipedia.org/wiki/Hash_table) keys of the [string](https://en.wikipedia.org/wiki/String_(computer_science)) sets.
+360 [setPartitionOnIntersectionOverUnion](#setpartitiononintersectionoverunion) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets** so that within each partition the [setIntersectionOverUnion](#setintersectionoverunion) of any two sets in the partition is never less than the specified level of _$confidence\*\*2_.
 
-361 [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets** of words so that within each partition the [setIntersectionOverUnion](#setintersectionoverunion) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
+361 [setPartitionOnIntersectionOverUnionOfHashStringSets](#setpartitiononintersectionoverunionofhashstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a [hash](https://en.wikipedia.org/wiki/Hash_table), each [hash](https://en.wikipedia.org/wiki/Hash_table) value being a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the [hash](https://en.wikipedia.org/wiki/Hash_table) keys of the [string](https://en.wikipedia.org/wiki/String_(computer_science)) sets.
 
-362 [setPartitionOnIntersectionOverUnionOfStringSets](#setpartitiononintersectionoverunionofstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@strings**, each set represented by a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
+362 [setPartitionOnIntersectionOverUnionOfHashStringSetsInParallel](#setpartitiononintersectionoverunionofhashstringsetsinparallel) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a [hash](https://en.wikipedia.org/wiki/Hash_table), each [hash](https://en.wikipedia.org/wiki/Hash_table) value being a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the [hash](https://en.wikipedia.org/wiki/Hash_table) keys of the [string](https://en.wikipedia.org/wiki/String_(computer_science)) sets.
 
-363 [setPermissionsForFile](#setpermissionsforfile) - Apply [chmod](https://linux.die.net/man/1/chmod) to a **$file** to set its **$permissions**.
+363 [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets** of words so that within each partition the [setIntersectionOverUnion](#setintersectionoverunion) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
 
-364 [setUnion](#setunion) - Union of sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
+364 [setPartitionOnIntersectionOverUnionOfStringSets](#setpartitiononintersectionoverunionofstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@strings**, each set represented by a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
 
-365 [showGotVersusWanted](#showgotversuswanted) - Show the difference between the wanted [string](https://en.wikipedia.org/wiki/String_(computer_science)) and the wanted [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-366 [showHashes](#showhashes) - Create a map of all the keys within all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures.
+365 [setPermissionsForFile](#setpermissionsforfile) - Apply [chmod](https://linux.die.net/man/1/chmod) to a **$file** to set its **$permissions**.
 
-367 [showHashes2](#showhashes2) - Create a map of all the keys within all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures.
+366 [setUnion](#setunion) - Union of sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
 
-368 [spellCheck](#spellcheck) - Spell checker
+367 [showGotVersusWanted](#showgotversuswanted) - Show the difference between the wanted [string](https://en.wikipedia.org/wiki/String_(computer_science)) and the wanted [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+368 [showHashes](#showhashes) - Create a map of all the keys within all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures.
 
-369 [squareArray](#squarearray) - Create a two dimensional square [array](https://en.wikipedia.org/wiki/Dynamic_array) from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-370 [startProcess](#startprocess) - Start new [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) while the number of child [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) recorded in **%$pids** is less than the specified **$maximum**.
+369 [showHashes2](#showhashes2) - Create a map of all the keys within all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures.
 
-371 [storeFile](#storefile) - Store into a **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, a [data](https://en.wikipedia.org/wiki/Data) **$structure** via [Storable](https://metacpan.org/pod/Storable).
+370 [spellCheck](#spellcheck) - Spell checker
 
-372 [stringMd5Sum](#stringmd5sum) - Get the Md5 sum of a **$string** that might contain [utf8](https://en.wikipedia.org/wiki/UTF-8) [code](https://en.wikipedia.org/wiki/Computer_program) points.
+371 [squareArray](#squarearray) - Create a two dimensional square [array](https://en.wikipedia.org/wiki/Dynamic_array) from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+372 [startProcess](#startprocess) - Start new [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) while the number of child [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) recorded in **%$pids** is less than the specified **$maximum**.
 
-373 [stringsAreNotEqual](#stringsarenotequal) - Return the common start followed by the two non equal tails of two non equal [strings](https://en.wikipedia.org/wiki/String_(computer_science)) or an empty [list](https://en.wikipedia.org/wiki/Linked_list) if the [strings](https://en.wikipedia.org/wiki/String_(computer_science)) are equal.
+373 [storeFile](#storefile) - Store into a **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, a [data](https://en.wikipedia.org/wiki/Data) **$structure** via [Storable](https://metacpan.org/pod/Storable).
 
-374 [subNameTraceBack](#subnametraceback) - Find the names of the calling subroutines and return them as a blank separated [string](https://en.wikipedia.org/wiki/String_(computer_science)) of names.
+374 [stringMd5Sum](#stringmd5sum) - Get the Md5 sum of a **$string** that might contain [utf8](https://en.wikipedia.org/wiki/UTF-8) [code](https://en.wikipedia.org/wiki/Computer_program) points.
 
-375 [subScriptString](#subscriptstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [sub](https://perldoc.perl.org/perlsub.html) scripts.
+375 [stringsAreNotEqual](#stringsarenotequal) - Return the common start followed by the two non equal tails of two non equal [strings](https://en.wikipedia.org/wiki/String_(computer_science)) or an empty [list](https://en.wikipedia.org/wiki/Linked_list) if the [strings](https://en.wikipedia.org/wiki/String_(computer_science)) are equal.
 
-376 [subScriptStringUndo](#subscriptstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [sub](https://perldoc.perl.org/perlsub.html) scripts.
+376 [subNameTraceBack](#subnametraceback) - Find the names of the calling subroutines and return them as a blank separated [string](https://en.wikipedia.org/wiki/String_(computer_science)) of names.
 
-377 [sumAbsAndRel](#sumabsandrel) - Combine zero or more absolute and relative names of **@files** starting at the current working [folder](https://en.wikipedia.org/wiki/File_folder) to get an absolute [file](https://en.wikipedia.org/wiki/Computer_file) name.
+377 [subScriptString](#subscriptstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [sub](https://perldoc.perl.org/perlsub.html) scripts.
 
-378 [summarizeColumn](#summarizecolumn) - Count the number of unique instances of each value a column in a [table](https://en.wikipedia.org/wiki/Table_(information)) assumes.
+378 [subScriptStringUndo](#subscriptstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [sub](https://perldoc.perl.org/perlsub.html) scripts.
 
-379 [superScriptString](#superscriptstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to super scripts.
+379 [sumAbsAndRel](#sumabsandrel) - Combine zero or more absolute and relative names of **@files** starting at the current working [folder](https://en.wikipedia.org/wiki/File_folder) to get an absolute [file](https://en.wikipedia.org/wiki/Computer_file) name.
 
-380 [superScriptStringUndo](#superscriptstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to super scripts.
+380 [summarizeColumn](#summarizecolumn) - Count the number of unique instances of each value a column in a [table](https://en.wikipedia.org/wiki/Table_(information)) assumes.
 
-381 [swapFilePrefix](#swapfileprefix) - Swaps the start of a **$file** name from a **$known** name to a **$new** one if the [file](https://en.wikipedia.org/wiki/Computer_file) does in fact start with the $known name otherwise returns the original [file](https://en.wikipedia.org/wiki/Computer_file) name as it is.
+381 [superScriptString](#superscriptstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to super scripts.
 
-382 [swapFolderPrefix](#swapfolderprefix) - Given a **$file**, swap the [folder](https://en.wikipedia.org/wiki/File_folder) name of the $file from **$known** to **$new** if the [file](https://en.wikipedia.org/wiki/Computer_file) $file starts with the $known [folder](https://en.wikipedia.org/wiki/File_folder) name else return the $file as it is.
+382 [superScriptStringUndo](#superscriptstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to super scripts.
 
-383 [syncFromS3InParallel](#syncfroms3inparallel) - Download from [S3](https://aws.amazon.com/s3/) by using "aws [S3](https://aws.amazon.com/s3/) sync --exclude '\*' --include '.
+383 [swapFilePrefix](#swapfileprefix) - Swaps the start of a **$file** name from a **$known** name to a **$new** one if the [file](https://en.wikipedia.org/wiki/Computer_file) does in fact start with the $known name otherwise returns the original [file](https://en.wikipedia.org/wiki/Computer_file) name as it is.
 
-384 [syncToS3InParallel](#synctos3inparallel) - Upload to [S3](https://aws.amazon.com/s3/) by using "aws [S3](https://aws.amazon.com/s3/) sync --exclude '\*' --include '.
+384 [swapFolderPrefix](#swapfolderprefix) - Given a **$file**, swap the [folder](https://en.wikipedia.org/wiki/File_folder) name of the $file from **$known** to **$new** if the [file](https://en.wikipedia.org/wiki/Computer_file) $file starts with the $known [folder](https://en.wikipedia.org/wiki/File_folder) name else return the $file as it is.
 
-385 [temporaryFile](#temporaryfile) - Create a new, empty, temporary [file](https://en.wikipedia.org/wiki/Computer_file). 
-386 [temporaryFolder](#temporaryfolder) - Create a new, empty, temporary [folder](https://en.wikipedia.org/wiki/File_folder). 
-387 [timeStamp](#timestamp) - Hours:minute:seconds.
+385 [syncFromS3InParallel](#syncfroms3inparallel) - Download from [S3](https://aws.amazon.com/s3/) by using "aws [S3](https://aws.amazon.com/s3/) sync --exclude '\*' --include '.
 
-388 [transitiveClosure](#transitiveclosure) - Transitive closure of a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes.
+386 [syncToS3InParallel](#synctos3inparallel) - Upload to [S3](https://aws.amazon.com/s3/) by using "aws [S3](https://aws.amazon.com/s3/) sync --exclude '\*' --include '.
 
-389 [trim](#trim) - Remove any white space from the front and end of a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-390 [Udsr::kill](#udsr-kill) - Kill a communications [server](https://en.wikipedia.org/wiki/Server_(computing)). 
-391 [Udsr::read](#udsr-read) - Read a message from the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#newudsrclient).
+387 [temporaryFile](#temporaryfile) - Create a new, empty, temporary [file](https://en.wikipedia.org/wiki/Computer_file). 
+388 [temporaryFolder](#temporaryfolder) - Create a new, empty, temporary [folder](https://en.wikipedia.org/wiki/File_folder). 
+389 [timeStamp](#timestamp) - Hours:minute:seconds.
 
-392 [Udsr::webUser](#udsr-webuser) - Create a [systemd](https://en.wikipedia.org/wiki/Systemd) installed [server](https://en.wikipedia.org/wiki/Server_(computing)) that [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) [HTTP](https://en.wikipedia.org/wiki/HTTP) requests using a specified [userid](https://en.wikipedia.org/wiki/User_identifier). 
-393 [Udsr::write](#udsr-write) - Write a communications message to the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#newudsrclient).
+390 [transitiveClosure](#transitiveclosure) - Transitive closure of a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes.
 
-394 [unbless](#unbless) - Remove the effects of bless from a [Perl](http://www.perl.org/) [data](https://en.wikipedia.org/wiki/Data) **$structure** enabling it to be converted to [Json](https://en.wikipedia.org/wiki/JSON) or compared with [Test::More::is\_deeply](https://metacpan.org/pod/Test%3A%3AMore%3A%3Ais_deeply).
+391 [trim](#trim) - Remove any white space from the front and end of a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+392 [Udsr::kill](#udsr-kill) - Kill a communications [server](https://en.wikipedia.org/wiki/Server_(computing)). 
+393 [Udsr::read](#udsr-read) - Read a message from the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#newudsrclient).
 
-395 [unionOfHashesAsArrays](#unionofhashesasarrays) - Form the union of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose values are a [array](https://en.wikipedia.org/wiki/Dynamic_array) of corresponding values from each [hash](https://en.wikipedia.org/wiki/Hash_table). 
-396 [unionOfHashKeys](#unionofhashkeys) - Form the union of the keys of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose keys represent the union.
+394 [Udsr::webUser](#udsr-webuser) - Create a [systemd](https://en.wikipedia.org/wiki/Systemd) installed [server](https://en.wikipedia.org/wiki/Server_(computing)) that [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) [HTTP](https://en.wikipedia.org/wiki/HTTP) requests using a specified [userid](https://en.wikipedia.org/wiki/User_identifier). 
+395 [Udsr::write](#udsr-write) - Write a communications message to the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#newudsrclient).
 
-397 [uniqueNameFromFile](#uniquenamefromfile) - Create a unique name from a [file](https://en.wikipedia.org/wiki/Computer_file) name and the [MD5](https://en.wikipedia.org/wiki/MD5) sum of its content.
+396 [unbless](#unbless) - Remove the effects of bless from a [Perl](http://www.perl.org/) [data](https://en.wikipedia.org/wiki/Data) **$structure** enabling it to be converted to [Json](https://en.wikipedia.org/wiki/JSON) or compared with [Test::More::is\_deeply](https://metacpan.org/pod/Test%3A%3AMore%3A%3Ais_deeply).
 
-398 [updateDocumentation](#updatedocumentation) - Update the [documentation](https://en.wikipedia.org/wiki/Software_documentation) for a Perl [module](https://en.wikipedia.org/wiki/Modular_programming) from the comments in its source [code](https://en.wikipedia.org/wiki/Computer_program). 
-399 [updatePerlModuleDocumentation](#updateperlmoduledocumentation) - Update the [documentation](https://en.wikipedia.org/wiki/Software_documentation) in a **$perlModule** and display said [documentation](https://en.wikipedia.org/wiki/Software_documentation) in a web [web browser](https://en.wikipedia.org/wiki/Web_browser). 
-400 [userId](#userid) - Get or confirm the [userid](https://en.wikipedia.org/wiki/User_identifier) we are currently running under.
+397 [unionOfHashesAsArrays](#unionofhashesasarrays) - Form the union of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose values are a [array](https://en.wikipedia.org/wiki/Dynamic_array) of corresponding values from each [hash](https://en.wikipedia.org/wiki/Hash_table). 
+398 [unionOfHashKeys](#unionofhashkeys) - Form the union of the keys of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose keys represent the union.
 
-401 [validateHash](#validatehash) - Confess if the specified [hash](https://en.wikipedia.org/wiki/Hash_table) does not have all of the specified keys.
+399 [uniqueNameFromFile](#uniquenamefromfile) - Create a unique name from a [file](https://en.wikipedia.org/wiki/Computer_file) name and the [MD5](https://en.wikipedia.org/wiki/MD5) sum of its content.
 
-402 [versionCode](#versioncode) - YYYYmmdd-HHMMSS.
+400 [updateDocumentation](#updatedocumentation) - Update the [documentation](https://en.wikipedia.org/wiki/Software_documentation) for a Perl [module](https://en.wikipedia.org/wiki/Modular_programming) from the comments in its source [code](https://en.wikipedia.org/wiki/Computer_program). 
+401 [updatePerlModuleDocumentation](#updateperlmoduledocumentation) - Update the [documentation](https://en.wikipedia.org/wiki/Software_documentation) in a **$perlModule** and display said [documentation](https://en.wikipedia.org/wiki/Software_documentation) in a web [web browser](https://en.wikipedia.org/wiki/Web_browser). 
+402 [userId](#userid) - Get or confirm the [userid](https://en.wikipedia.org/wiki/User_identifier) we are currently running under.
 
-403 [versionCodeDashed](#versioncodedashed) - YYYY-mm-dd-HH:MM:SS.
+403 [validateHash](#validatehash) - Confess if the specified [hash](https://en.wikipedia.org/wiki/Hash_table) does not have all of the specified keys.
 
-404 [waitForAllStartedProcessesToFinish](#waitforallstartedprocessestofinish) - Wait until all the [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) started by [startProcess](#startprocess) have finished.
+404 [versionCode](#versioncode) - YYYYmmdd-HHMMSS.
 
-405 [wellKnownUrls](#wellknownurls) - Short names for some well known urls.
+405 [versionCodeDashed](#versioncodedashed) - YYYY-mm-dd-HH:MM:SS.
 
-406 [writeBinaryFile](#writebinaryfile) - Write to a new **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
+406 [waitForAllStartedProcessesToFinish](#waitforallstartedprocessestofinish) - Wait until all the [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) started by [startProcess](#startprocess) have finished.
 
-407 [writeFile](#writefile) - Write to a new **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+407 [wellKnownUrls](#wellknownurls) - Short names for some well known urls.
 
-408 [writeFiles](#writefiles) - Write the values of a **$hash** reference into files identified by the key of each value using [overWriteFile](#overwritefile) optionally swapping the prefix of each [file](https://en.wikipedia.org/wiki/Computer_file) from **$old** to **$new**.
+408 [writeBinaryFile](#writebinaryfile) - Write to a new **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
 
-409 [writeFileToRemote](#writefiletoremote) - Write to a new **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+409 [writeFile](#writefile) - Write to a new **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-410 [writeGZipFile](#writegzipfile) - Write to a **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, through [gzip](https://en.wikipedia.org/wiki/Gzip) a **$string** whose content is encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+410 [writeFiles](#writefiles) - Write the values of a **$hash** reference into files identified by the key of each value using [overWriteFile](#overwritefile) optionally swapping the prefix of each [file](https://en.wikipedia.org/wiki/Computer_file) from **$old** to **$new**.
 
-411 [writeStructureTest](#writestructuretest) - Write a [test](https://en.wikipedia.org/wiki/Software_testing) for a [data](https://en.wikipedia.org/wiki/Data) **$structure** with [file](https://en.wikipedia.org/wiki/Computer_file) names in it.
+411 [writeFileToRemote](#writefiletoremote) - Write to a new **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-412 [writeTempFile](#writetempfile) - Write an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) as lines to a temporary [file](https://en.wikipedia.org/wiki/Computer_file) and return the [file](https://en.wikipedia.org/wiki/Computer_file) name.
+412 [writeGZipFile](#writegzipfile) - Write to a **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, through [gzip](https://en.wikipedia.org/wiki/Gzip) a **$string** whose content is encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-413 [wwwDecode](#wwwdecode) - Percent decode a [url](https://en.wikipedia.org/wiki/URL) **$string** per: https://en.
+413 [writeStructureTest](#writestructuretest) - Write a [test](https://en.wikipedia.org/wiki/Software_testing) for a [data](https://en.wikipedia.org/wiki/Data) **$structure** with [file](https://en.wikipedia.org/wiki/Computer_file) names in it.
 
-414 [wwwEncode](#wwwencode) - Percent encode a [url](https://en.wikipedia.org/wiki/URL) per: https://en.
+414 [writeTempFile](#writetempfile) - Write an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) as lines to a temporary [file](https://en.wikipedia.org/wiki/Computer_file) and return the [file](https://en.wikipedia.org/wiki/Computer_file) name.
 
-415 [wwwGitHubAuth](#wwwgithubauth) - Logon as a [GitHub](https://github.com/philiprbrenan) [Oauth](https://en.wikipedia.org/wiki/OAuth) app per: [https://github.](https://github.)
+415 [wwwDecode](#wwwdecode) - Percent decode a [url](https://en.wikipedia.org/wiki/URL) **$string** per: https://en.
 
-416 [xxx](#xxx) - Execute a [shell](https://en.wikipedia.org/wiki/Shell_(computing)) command optionally checking its response.
+416 [wwwEncode](#wwwencode) - Percent encode a [url](https://en.wikipedia.org/wiki/URL) per: https://en.
 
-417 [xxxr](#xxxr) - Execute a command **$cmd** via [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+417 [wwwGitHubAuth](#wwwgithubauth) - Logon as a [GitHub](https://github.com/philiprbrenan) [Oauth](https://en.wikipedia.org/wiki/OAuth) app per: [https://github.](https://github.)
 
-418 [yyy](#yyy) - Execute a block of [shell](https://en.wikipedia.org/wiki/Shell_(computing)) commands line by line after removing comments - stop if there is a non zero return [code](https://en.wikipedia.org/wiki/Computer_program) from any command.
+418 [xxx](#xxx) - Execute a [shell](https://en.wikipedia.org/wiki/Shell_(computing)) command optionally checking its response.
 
-419 [zzz](#zzz) - Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return [code](https://en.wikipedia.org/wiki/Computer_program) of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails.
+419 [xxxr](#xxxr) - Execute a command **$cmd** via [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+
+420 [yyy](#yyy) - Execute a block of [shell](https://en.wikipedia.org/wiki/Shell_(computing)) commands line by line after removing comments - stop if there is a non zero return [code](https://en.wikipedia.org/wiki/Computer_program) from any command.
+
+421 [zzz](#zzz) - Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return [code](https://en.wikipedia.org/wiki/Computer_program) of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails.
 
 # Installation
 
@@ -11223,6 +11260,6 @@ Hey! **The above document had some coding errors, which are explained below:**
 
     Non-ASCII character seen before =encoding in 'dateTimeStamp '. Assuming CP1252
 
-- Around line 12359:
+- Around line 12399:
 
     Unterminated L<...> sequence
