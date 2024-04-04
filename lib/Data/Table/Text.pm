@@ -1864,7 +1864,18 @@ sub min(@)                                                                      
   my @n = grep {defined($_) and looks_like_number($_)} @_;
   @_ == @n or confess q(Undefined or non numeric parameters present);
   return undef unless @n;
-  my $M = shift;
+  my $M = shift @n;
+  for(@n)
+   {$M = $_ if $_ < $M;
+   }
+  $M
+ }
+
+sub mininum(@)                                                                  # Find the mininum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
+ {my (@m) = @_;                                                                 # Numbers
+  my @n = grep {defined($_)} @_;
+  return undef unless @n;
+  my $M = shift @n;
   for(@n)
    {$M = $_ if $_ < $M;
    }
@@ -1889,7 +1900,18 @@ sub max(@)                                                                      
   my @n = grep {defined($_) and looks_like_number($_)} @_;
   @_ == @n or confess q(Undefined or non numeric parameters present);
   return undef unless @n;
-  my $M = shift;
+  my $M = shift @n;
+  for(@n)
+   {$M = $_ if $_ > $M;
+   }
+  $M
+ }
+
+sub maximum(@)                                                                  # Find the maximum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
+ {my (@m) = @_;                                                                 # Numbers
+  my @n = grep {defined($_)} @_;
+  return undef unless @n;
+  my $M = shift @n;
   for(@n)
    {$M = $_ if $_ > $M;
    }
@@ -6394,6 +6416,7 @@ sub wellKnownUrls                                                               
     adamSmith       => [q(Adam Smith),                                          "https://en.wikipedia.org/wiki/Adam_Smith"                                                                                        ],
     agile           => [q(agile development methodology),                       "https://en.wikipedia.org/wiki/Agile_software_development"                                                                        ],
     ai              => [q(artificial intelligence),                             "https://en.wikipedia.org/wiki/Artificial_intelligence"                                                                           ],
+    airFlow         => [q(Airflow),                                             "https://en.wikipedia.org/wiki/Apache_Airflow"                                                                                    ],
     alva            => [q(Rio Alva),                                            "https://duckduckgo.com/?t=canonical&q=rio+alva&iax=images&ia=images"                                                             ],
     amazonAurora    => [q(Amazon Aurora),                                       "https://en.wikipedia.org/wiki/Amazon_Aurora"                                                                                     ],
     ami             => [q(Amazon Machine Image),                                "https://en.wikipedia.org/wiki/Amazon_Machine_Image"                                                                              ],
@@ -6401,6 +6424,7 @@ sub wellKnownUrls                                                               
     androidBuild    => [q(Android Build),                                       "https://metacpan.org/pod/Android::Build"                                                                                         ],
     android         => [q(Android),                                             "https://en.wikipedia.org/wiki/Android_(operating_system)"                                                                        ],
     apache          => [q(Apache Web Server),                                   "https://en.wikipedia.org/wiki/Apache_HTTP_Server"                                                                                ],
+    api             => [q(Application Porgramming Interface(API)),              "https://en.wikipedia.org/wiki/API"                                                                                               ],
     appaapps        => [q(prb.appaapps.com),                                    "http://www.appaaps.com"                                                                                                          ],
     apt             => [q(<b>sudo apt-get</b>),                                 "https://en.wikipedia.org/wiki/APT_(software)"                                                                                    ],
     aramco          => [q(Saudi Aramco),                                        "https://en.wikipedia.org/wiki/Saudi_Aramco"                                                                                      ],
@@ -6410,8 +6434,8 @@ sub wellKnownUrls                                                               
     arrays          => [q(arrays),                                              "https://en.wikipedia.org/wiki/Dynamic_array"                                                                                     ],
     as400           => [q(as400),                                               "https://en.wikipedia.org/wiki/IBM_System_i"                                                                                      ],
     ascii           => [q(Ascii),                                               "https://en.wikipedia.org/wiki/ASCII"                                                                                             ],
-    asimov          => [q(Isaac Asimov),                                        "https://en.wikipedia.org/wiki/Asimov"                                                                                            ],
     asic            => [q(application specific integrated circuit),             "https://en.wikipedia.org/wiki/Application-specific_integrated_circuit"                                                           ],
+    asimov          => [q(Isaac Asimov),                                        "https://en.wikipedia.org/wiki/Asimov"                                                                                            ],
     asin            => [q(ASIN),                                                "https://en.wikipedia.org/wiki/Amazon_Standard_Identification_Number"                                                             ],
     assemble        => [q(assemble),                                            "https://en.wikipedia.org/wiki/Assembly_language#Assembler"                                                                       ],
     assembler       => [q(assembler),                                           "https://en.wikipedia.org/wiki/Assembly_language#Assembler"                                                                       ],
@@ -6467,8 +6491,8 @@ sub wellKnownUrls                                                               
     commandline     => [q(command line),                                        "https://en.wikipedia.org/wiki/Command-line_interface"                                                                            ],
     commandLine     => [q(command line),                                        "https://en.wikipedia.org/wiki/Command-line_interface"                                                                            ],
     comment         => [q(comment),                                             "https://en.wikipedia.org/wiki/Comment_(computer_programming)"                                                                    ],
-    computer        => [q(computer),                                            "https://en.wikipedia.org/wiki/Computer"                                                                                          ],
     comparator      => [q(comparator),                                          "https://en.wikipedia.org/wiki/Digital_comparator"                                                                                ],
+    computer        => [q(computer),                                            "https://en.wikipedia.org/wiki/Computer"                                                                                          ],
     compuware       => [q(Compuware),                                           "https://en.wikipedia.org/wiki/Compuware",                                                                                        ],
     concept         => [q(concept),                                             "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/langRef/technicalContent/concept.html#concept"],
     confess         => [q(confess),                                             "http://perldoc.perl.org/Carp.html#SYNOPSIS/"                                                                                     ],
@@ -6483,12 +6507,14 @@ sub wellKnownUrls                                                               
     cpp             => [q(C++ programming language),                            "https://en.wikipedia.org/wiki/C%2B%2B"                                                                                           ],
     cpu             => [q(CPU),                                                 "https://en.wikipedia.org/wiki/Central_processing_unit"                                                                           ],
     cpus            => [q(CPUs),                                                "https://en.wikipedia.org/wiki/Central_processing_unit"                                                                           ],
+    cron            => [q(cron),                                                "https://en.wikipedia.org/wiki/Cron"                                                                                               ],
     css             => [q(Cascading Style Sheets),                              "https://en.wikipedia.org/wiki/CSS"                                                                                               ],
     csv             => [q(csv),                                                 "https://en.wikipedia.org/wiki/Comma-separated_values"                                                                            ],
-    cvs             => [q(Concurrent Versions System),                          "https://people.redhat.com/~jlaska/documentation-guide-en/ch-cvs.html"                                                            ],
     curl            => [q(curl),                                                "https://linux.die.net/man/1/curl"                                                                                                ],
-    data            => [q(data),                                                "https://en.wikipedia.org/wiki/Data"                                                                                              ],
+    cvs             => [q(Concurrent Versions System),                          "https://people.redhat.com/~jlaska/documentation-guide-en/ch-cvs.html"                                                            ],
+    dag             => [q(DAG),                                                 "https://en.wikipedia.org/wiki/Directed_acyclic_graph"                                                                            ],
     database        => [q(database),                                            "https://en.wikipedia.org/wiki/Database"                                                                                          ],
+    data            => [q(data),                                                "https://en.wikipedia.org/wiki/Data"                                                                                              ],
     dataStructure   => [q(data structure),                                      "https://en.wikipedia.org/wiki/Data_structure"                                                                                    ],
     db2             => [q(DB2),                                                 "https://en.wikipedia.org/wiki/IBM_Db2_Family"                                                                                    ],
     dbi             => [q(DBI),                                                 "https://dbi.perl.org/"                                                                                                           ],
@@ -6527,11 +6553,11 @@ sub wellKnownUrls                                                               
     dynamodb        => [q(DynamoDB),                                            "https://aws.amazon.com/dynamodb/"                                                                                                ],
     ec2Console      => [q(EC2 Console),                                         "https://us-east-1.console.aws.amazon.com/ec2/"                                                                                   ],
     ec2             => [q(EC2),                                                 "https://aws.amazon.com/ec2/"                                                                                                     ],
+    eda             => [q(<b>E</b>lectronic <b>D</b>esign <b>A</b>utomation),   "https://en.wikipedia.org/wiki/Electronic_design_automation"                                                                      ],
     editCompileTest => [q(Edit, Compile, Test Loop),                            "https://tripack45.github.io/2018/11/03/edit-compile-run/"                                                                        ],
     edwardSnowden   => [q(Edward Snowden),                                      "https://en.wikipedia.org/wiki/Edward_Snowden"                                                                                    ],
     effo            => [q(The Case For Fiber),                                  "https://www.eff.org/wp/case-fiber-home-today-why-fiber-superior-medium-21st-century-broadband"                                   ],
     eff             => [q(The Electronic Frontier Foundation),                  "https://en.wikipedia.org/wiki/Electronic_Frontier_Foundation"                                                                    ],
-    ethernet        => [q(Ethernet),                                            "https://en.wikipedia.org/wiki/Ethernet"                                                                                          ],
     electrons       => [q(electrons),                                           "https://en.wikipedia.org/wiki/Electron"                                                                                          ],
     elevator        => [q(elevator),                                            "https://en.wikipedia.org/wiki/Elevator"                                                                                          ],
     emacsVsVi       => [q(Emacs vesus Vi Flame War),                            "https://www.linux.com/news/emacs-vs-vi-endless-geek-holy-war/"                                                                   ],
@@ -6540,6 +6566,7 @@ sub wellKnownUrls                                                               
     encrypt         => [q(encrypt),                                             "https://en.wikipedia.org/wiki/Encryption"                                                                                        ],
     english         => [q(English),                                             "https://en.wikipedia.org/wiki/English_language"                                                                                  ],
     etcPasswd       => [q(/etc/passwd),                                         "https://en.wikipedia.org/wiki/Passwd#Password_file"                                                                              ],
+    ethernet        => [q(Ethernet),                                            "https://en.wikipedia.org/wiki/Ethernet"                                                                                          ],
     euler           => [q(Leonhard Euler),                                      "https://en.wikipedia.org/wiki/Leonhard_Euler"                                                                                    ],
     eval            => [q(eval),                                                "http://perldoc.perl.org/functions/eval.html"                                                                                     ],
     extensions      => [q(file name extensions),                                "https://en.wikipedia.org/wiki/List_of_filename_extensions"                                                                       ],
@@ -6552,8 +6579,8 @@ sub wellKnownUrls                                                               
     fileutility     => [q(File  utility),                                       "https://www.man7.org/linux/man-pages/man1/file.1.html"                                                                           ],
     filter          => [q(filter),                                              "https://en.wikipedia.org/wiki/Filter_(software)"                                                                                 ],
     find            => [q(find),                                                "https://en.wikipedia.org/wiki/Find_(Unix)"                                                                                       ],
-    flask           => [q(flask),                                               "https://flask.palletsprojects.com"                                                                                               ],
     flashMemory     => [q(flash memory),                                        "https://en.wikipedia.org/wiki/Flash_memory"                                                                                      ],
+    flask           => [q(flask),                                               "https://flask.palletsprojects.com"                                                                                               ],
     flexsim         => [q(FlexSim),                                             "https://www.flexsim.com/"                                                                                                        ],
     foehn           => [q(Foehn),                                               "https://en.wikipedia.org/wiki/Foehn_wind"                                                                                        ],
     folder          => [q(folder),                                              "https://en.wikipedia.org/wiki/File_folder"                                                                                       ],
@@ -6564,18 +6591,18 @@ sub wellKnownUrls                                                               
     function        => [q(function),                                            "https://en.wikipedia.org/wiki/Function_(computer_programming)"                                                                   ],
     fusion          => [q(fusion),                                              "https://en.wikipedia.org/wiki/Nuclear_fusion"                                                                                    ],
     future          => [q(future),                                              "https://en.wikipedia.org/wiki/Future"                                                                                            ],
-    gate            => [q(digital logic gate),                                  "https://en.wikipedia.org/wiki/Logic_gate"                                                                                        ],
     gantryCrane     => [q(Gantry Crane),                                        "https://en.wikipedia.org/wiki/Gantry_crane"                                                                                      ],
+    gate            => [q(digital logic gate),                                  "https://en.wikipedia.org/wiki/Logic_gate"                                                                                        ],
     Gauss           => [q(Karl Friedrich Gauss),                                "https://en.wikipedia.org/wiki/Carl_Friedrich_Gauss#Anecdotes"                                                                    ],
     gbstandard      => [q(GB Standard),                                         "http://metacpan.org/pod/Dita::GB::Standard"                                                                                      ],
     gdpr            => [q(European Directive on Data Protection),               "https://gdpr.eu"                                                                                                                 ],
+    gds2            => [q(Graphic Design System 2),                             "https://en.wikipedia.org/wiki/GDSII"                                                                                             ],
     geany           => [q(Geany),                                               "https://www.geany.org"                                                                                                           ],
     ghc             => [q(Github Automation),                                   "https://metacpan.org/release/GitHub-Crud"                                                                                        ],
     ghe             => [q(Github Edit),                                         "https://github.com/ricksnp/github-editor"                                                                                        ],
     ghl             => [q(gohighlevel),                                         "https://gohighlevel.com"                                                                                                         ],
     gigabit         => [q(gigabit),                                             "https://en.wikipedia.org/wiki/Gigabit_Ethernet"                                                                                  ],
     gigabyte        => [q(gigabyte),                                            "https://en.wikipedia.org/wiki/Gigabyte"                                                                                          ],
-    git             => [q(Git),                                                 "https://en.wikipedia.org/wiki/Git"                                                                                               ],
     githubaction    => [q(GitHub Action),                                       "https://docs.github.com/en/free-pro-team\@latest/actions/quickstart"                                                             ],
     gitHubAction    => [q(GitHub Action),                                       "https://docs.github.com/en/free-pro-team\@latest/actions/quickstart"                                                             ],
     gitHubCrud      => [q(GitHub::Crud),                                        "https://metacpan.org/pod/GitHub::Crud"                                                                                           ],
@@ -6584,6 +6611,7 @@ sub wellKnownUrls                                                               
     github          => [q(GitHub),                                              "https://github.com/philiprbrenan"                                                                                                ],
     gitHub          => [q(GitHub),                                              "https://github.com/philiprbrenan"                                                                                                ],
     gitLab          => [q(GitLab),                                              "https://en.wikipedia.org/wiki/GitLab"                                                                                            ],
+    git             => [q(Git),                                                 "https://en.wikipedia.org/wiki/Git"                                                                                               ],
     gmt             => [q(Greenwich Mean Time),                                 "https://en.wikipedia.org/wiki/Greenwich_Mean_Time"                                                                               ],
     gnufdl          => [q(GNU Free Documentation License),                      "https://en.wikipedia.org/wiki/Wikipedia:Text_of_the_GNU_Free_Documentation_License"                                              ],
     goldenSection   => [q(The Golden Section),                                  "https://en.wikipedia.org/wiki/Golden_ratio"                                                                                      ],
@@ -6597,6 +6625,7 @@ sub wellKnownUrls                                                               
     gzip            => [q(gzip),                                                "https://en.wikipedia.org/wiki/Gzip"                                                                                              ],
     hacker          => [q(hacker),                                              "https://1lib.eu/book/643342/813ee7"                                                                                              ],
     hardDrive       => [q(hard drive),                                          "https://en.wikipedia.org/wiki/Hard_disk_drive"                                                                                   ],
+    hardware        => [q(hardware),                                            "https://en.wikipedia.org/wiki/Digital_electronics"                                                                               ],
     hash            => [q(hash),                                                "https://en.wikipedia.org/wiki/Hash_table"                                                                                        ],
     heapsLaw        => [q(Heap's Law),                                          "https://en.wikipedia.org/wiki/Heaps%27_law"                                                                                      ],
     help            => [q(help),                                                "https://en.wikipedia.org/wiki/Online_help"                                                                                       ],
@@ -6624,15 +6653,18 @@ sub wellKnownUrls                                                               
     infix           => [q(infix),                                               "https://en.wikipedia.org/wiki/Infix_notation"                                                                                    ],
     infix           => [q(infix),                                               "https://en.wikipedia.org/wiki/Infix_notation"                                                                                    ],
     install         => [q(install),                                             "https://en.wikipedia.org/wiki/Installation_(computer_programs)"                                                                  ],
+    intellectualPropert => [q(intellectual property),                           "https://en.wikipedia.org/wiki/Intellectual_property"                                                                             ],
     intel           => [q(Intel),                                               "https://en.wikipedia.org/wiki/Intel"                                                                                             ],
     intelsde        => [q(Intel Software Development Emulator),                 "https://software.intel.com/content/www/us/en/develop/articles/intel-software-development-emulator.html"                          ],
-    intellectualPropert => [q(intellectual property),                           "https://en.wikipedia.org/wiki/Intellectual_property"                                                                             ],
     internet        => [q(Internet),                                            "https://en.wikipedia.org/wiki/Internet"                                                                                          ],
     iot             => [q(Internet of Things),                                  "https://en.wikipedia.org/wiki/Internet_of_things"                                                                                ],
     ip4             => [q(IPv4 address),                                        "https://en.wikipedia.org/wiki/IPv4"                                                                                              ],
     ip6             => [q(IPv6 address),                                        "https://en.wikipedia.org/wiki/IPv6"                                                                                              ],
     ipaddress       => [q(IP address),                                          "https://en.wikipedia.org/wiki/IP_address"                                                                                        ],
     ip              => [q(IP address),                                          "https://en.wikipedia.org/wiki/IP_address"                                                                                        ],
+    iso14001        => [q(NOM ISO 14001:2015),                                  "https://www.iso.org/obp/ui#iso:std:iso:14001:ed-3:v1:es"                                                                         ],
+    iso45001        => [q(NOM ISO 45001:2018),                                  "https://www.iso.org/obp/ui#iso:std:iso:45001:ed-1:v1:es"                                                                         ],
+    iso9001         => [q(NOM ISO 9001:2015),                                   "https://www.iso.org/obp/ui#iso:std:iso:9001:ed-5:v1:es"                                                                          ],
     ITP             => [q(Puebla Institute of Technology),                      "https://en.wikipedia.org/wiki/Puebla_Institute_of_Technology"                                                                    ],
     jasm            => [q(Java Assembly Language),                              "http://www.eg.bucknell.edu/~cs360/java-assembler/jasm.html",                                                                     ],
     java            => [q(Java),                                                "https://en.wikipedia.org/wiki/Java_(programming_language)"                                                                       ],
@@ -6669,19 +6701,19 @@ sub wellKnownUrls                                                               
     list            => [q(list),                                                "https://en.wikipedia.org/wiki/Linked_list"                                                                                       ],
     littleEndian    => [q(Little Endian),                                       "https://en.wikipedia.org/wiki/Endianness"                                                                                        ],
     llm             => [q(Large Language Model),                                "https://en.wikipedia.org/wiki/Large_language_model"                                                                              ],
+    logicGates      => [q(logicGates),                                          "https://en.wikipedia.org/wiki/Logic_gate"                                                                                        ],
     login           => [q(login),                                               "https://en.wikipedia.org/wiki/Login"                                                                                             ],
     log             => [q(log),                                                 "https://en.wikipedia.org/wiki/Log_file"                                                                                          ],
-    logicGates      => [q(logicGates),                                          "https://en.wikipedia.org/wiki/Logic_gate"                                                                                        ],
     losAlamos       => [q(Los Alamos),                                          "https://en.wikipedia.org/wiki/Project_Y"                                                                                         ],
     lunchclub       => [q(LunchClub),                                           "https://lunchclub.com/?invite_code=philipb4"                                                                                     ],
     lvaluemethod    => [q(lvalue method),                                       "http://perldoc.perl.org/perlsub.html#Lvalue-subroutines"                                                                         ],
     markDown        => [q(Mark Down),                                           "https://en.wikipedia.org/wiki/Markdown"                                                                                          ],
-    mas             => [q(Math::Algebra::Symbols),                              "https://metacpan.org/pod/Math::Algebra::Symbols"                                                                                 ],
     mask            => [q(mask),                                                "https://en.wikipedia.org/wiki/Integrated_circuit_layout"                                                                         ],
+    mas             => [q(Math::Algebra::Symbols),                              "https://metacpan.org/pod/Math::Algebra::Symbols"                                                                                 ],
     matrices        => [q(Matrices),                                            "https://en.wikipedia.org/wiki/Matrix_(mathematics)"                                                                              ],
     matrix          => [q(Matrix),                                              "https://en.wikipedia.org/wiki/Matrix_(mathematics)"                                                                              ],
+    maven           => [q(Apache Maven),                                        "https://maven.apache.org/what-is-maven.html"                                                                                     ],
     maximize        => [q(maximize),                                            "https://en.wikipedia.org/wiki/Maximum_and_minimum"                                                                               ],
-    minimize        => [q(minimize),                                            "https://en.wikipedia.org/wiki/Maximum_and_minimum"                                                                               ],
     maze            => [q(Maze),                                                "https://github.com/philiprbrenan/maze"                                                                                           ],
     md5             => [q(MD5),                                                 "https://en.wikipedia.org/wiki/MD5"                                                                                               ],
     mdnfetch        => [q(the Javascript Fetch API),                            "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"                                                                      ],
@@ -6694,24 +6726,24 @@ sub wellKnownUrls                                                               
     microsoft       => [q(Microsoft)  ,                                         "https://en.wikipedia.org/wiki/Microsoft"                                                                                         ],
     mideast         => [q(Middle East),                                         "https://en.wikipedia.org/wiki/Middle_East"                                                                                       ],
     minimalism      => [q(minimalism),                                          "https://en.wikipedia.org/wiki/Minimalism_(computing)"                                                                            ],
+    minimize        => [q(minimize),                                            "https://en.wikipedia.org/wiki/Maximum_and_minimum"                                                                               ],
     mjaf            => [q(Maria Julieta Arredondo Flores),                      "https://maria-lim04.github.io/index.html"                                                                                        ],
     mod_shib        => [q(mod_shib),                                            "https://wiki.shibboleth.net/confluence/display/SP3/Apache"                                                                       ],
     module          => [q(module),                                              "https://en.wikipedia.org/wiki/Modular_programming"                                                                               ],
-    mopc            => [q(mop-c),                                               "https://metacpan.org/pod/Preprocess::Ops"                                                                                        ],
     mooresLaw       => [q(Moore's Law),                                         "https://en.wikipedia.org/wiki/Moore%27s_law"                                                                                     ],
+    mopc            => [q(mop-c),                                               "https://metacpan.org/pod/Preprocess::Ops"                                                                                        ],
     murphyslaw      => [q(Murphy's Law),                                        "https://en.wikipedia.org/wiki/Murphy%27s_law"                                                                                    ],
     mvp             => [q(Minimal Viable Product),                              "https://en.wikipedia.org/wiki/Minimum_viable_product"                                                                            ],
     mysqlMan        => [q(MySql manual),                                        "https://dev.mysql.com/doc/refman/8.0/en/"                                                                                        ],
     mysql           => [q(MySql),                                               "https://en.wikipedia.org/wiki/MySQL"                                                                                             ],
     nasm            => [q(NASM - the Netwide Assember),                         "https://github.com/netwide-assembler/nasm"                                                                                       ],
     nasmx86         => [q(NasmX86),                                             "https://github.com/philiprbrenan/NasmX86"                                                                                        ],
+    NasmX86         => [q(NasmX86),                                             "https://github.com/philiprbrenan/NasmX86"                                                                                        ],
     nbi             => [q(Neutral Beam Injection),                              "https://en.wikipedia.org/wiki/Neutral-beam_injection"                                                                            ],
+    network         => [q(network),                                             "https://en.wikipedia.org/wiki/Computer_network"                                                                                  ],
     newton          => [q(Isaac Newton),                                        "https://en.wikipedia.org/wiki/Isaac_Newton"                                                                                      ],
     nfa             => [q(NFA),                                                 "https://metacpan.org/pod/Data::NFA"                                                                                              ],
     nodejs          => [q(NodeJs),                                              "https://en.wikipedia.org/wiki/NodeJs"                                                                                            ],
-    iso45001        => [q(NOM ISO 45001:2018),                                  "https://www.iso.org/obp/ui#iso:std:iso:45001:ed-1:v1:es"                                                                         ],
-    iso14001        => [q(NOM ISO 14001:2015),                                  "https://www.iso.org/obp/ui#iso:std:iso:14001:ed-3:v1:es"                                                                         ],
-    iso9001         => [q(NOM ISO 9001:2015),                                   "https://www.iso.org/obp/ui#iso:std:iso:9001:ed-5:v1:es"                                                                          ],
     oauth           => [q(Oauth),                                               "https://en.wikipedia.org/wiki/OAuth"                                                                                             ],
     object          => [q(object),                                              "https://en.wikipedia.org/wiki/Object_(computer_science)"                                                                         ],
     offloading      => [q(off loading),                                         "https://en.wikipedia.org/wiki/Computation_offloading"                                                                            ],
@@ -6723,6 +6755,7 @@ sub wellKnownUrls                                                               
     openssl         => [q(Open SSL),                                            "https://www.openssl.org/"                                                                                                        ],
     operatingSystem => [q(operating system),                                    "https://en.wikipedia.org/wiki/Operating_system"                                                                                  ],
     opVengenance    => [q(Operation Vengeance),                                 "https://en.wikipedia.org/wiki/Operation_Vengeance"                                                                               ],
+    oracle          => [q(Oracle),                                              "https://www.oracle.com/"                                                                                                         ],
     origami         => [q(Origami),                                             "https://en.wikipedia.org/wiki/Origami"                                                                                           ],
     othermeta       => [q(othermeta),                                           "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/contentmodels/cmlto.html#cmlto__othermeta"    ],
 #   our             => [q(our),                                                 "https://perldoc.perl.org/functions/our.html"                                                                                     ],
@@ -6776,6 +6809,7 @@ sub wellKnownUrls                                                               
     redmine         => [q(Redmine),                                             "https://en.wikipedia.org/wiki/Redmine"                                                                                           ],
     relocatable     => [q(relocatable),                                         "https://en.wikipedia.org/wiki/Relocation_%28computing%29"                                                                        ],
     repeatability   => [q(repeatability),                                       "https://en.wikipedia.org/wiki/Repeatability"                                                                                     ],
+    rest            => [q(REST),                                                "https://en.wikipedia.org/wiki/REST"                                                                                             ],
     rfp             => [q(Request For Proposal),                                "https://en.wikipedia.org/wiki/Request_for_proposal"                                                                              ],
     riyadh          => [q(Riyadh),                                              "https://en.wikipedia.org/wiki/Riyadh"                                                                                            ],
     rmsd            => [q(Root Mean Square Deviation),                          "https://en.wikipedia.org/wiki/Root-mean-square_deviation"                                                                        ],
@@ -6804,14 +6838,11 @@ sub wellKnownUrls                                                               
     sha             => [q(SHA),                                                 "https://en.wikipedia.org/wiki/SHA-1"                                                                                             ],
     shell           => [q(shell),                                               "https://en.wikipedia.org/wiki/Shell_(computing)"                                                                                 ],
     shib            => [q(Shibboleth),                                          "https://www.shibboleth.net/"                                                                                                     ],
-    silicon         => [q(Silicon),                                             "https://en.wikipedia.org/wiki/Silicon"                                                                                           ],
-
-    SiliconChip     => [q(SiliconChip),                                         "https://github.com/philiprbrenan/SiliconChip"                                                                                    ],
     SiliconChipBtree=> [q(SiliconChipBtree),                                    "https://github.com/philiprbrenan/SiliconChipBtree"                                                                               ],
+    SiliconChip     => [q(SiliconChip),                                         "https://github.com/philiprbrenan/SiliconChip"                                                                                    ],
     SiliconLayout   => [q(SiliconLayout),                                       "https://github.com/philiprbrenan/SiliconChipLayout"                                                                              ],
+    silicon         => [q(Silicon),                                             "https://en.wikipedia.org/wiki/Silicon"                                                                                           ],
     SiliconWiring   => [q(SiliconWiring),                                       "https://github.com/philiprbrenan/SiliconChipWiring"                                                                              ],
-    NasmX86         => [q(NasmX86),                                             "https://github.com/philiprbrenan/NasmX86"                                                                                        ],
-
     simd            => [q(SIMD),                                                "https://www.officedaytime.com/simd512e/"                                                                                         ],
     smartmatch      => [q(smartmatch),                                          "https://perldoc.perl.org/perlop.html#Smartmatch-Operator"                                                                        ],
     snake_case      => [q(snake_case),                                          "https://en.wikipedia.org/wiki/Snake_case"                                                                                        ],
@@ -6822,12 +6853,13 @@ sub wellKnownUrls                                                               
     speed           => [q(speed),                                               "https://en.wikipedia.org/wiki/Speed"                                                                                             ],
     spot            => [q(spot),                                                "https://aws.amazon.com/ec2/spot/"                                                                                                ],
     spreadsheet     => [q(Spreadsheet),                                         "https://en.wikipedia.org/wiki/Spreadsheet"                                                                                       ],
+    springBoot      => [q(Spring Boot),                                         "https://en.wikipedia.org/wiki/Spring_Boot"                                                                                       ],
     sql             => [q(SQL),                                                 "https://en.wikipedia.org/wiki/SQL"                                                                                               ],
     sqn             => [q(sine qua non),                                        "https://en.wikipedia.org/wiki/Sine_qua_non"                                                                                      ],
     squareroot      => [q(Square Root),                                         "https://en.wikipedia.org/wiki/Square_root"                                                                                       ],
     sram            => [q(Static Random Access Memory),                         "https://en.wikipedia.org/wiki/Static_random-access_memory"                                                                       ],
-    sshfs           => [q(Secure Shell File System),                            "https://en.wikipedia.org/wiki/SSHFS"                                                                                             ],
     ssd             => [q(Solid State Drive),                                   "https://en.wikipedia.org/wiki/Solid-state_drive"                                                                                 ],
+    sshfs           => [q(Secure Shell File System),                            "https://en.wikipedia.org/wiki/SSHFS"                                                                                             ],
     ssh             => [q(Secure Shell),                                        "https://www.ssh.com/ssh"                                                                                                         ],
     ssxr            => [q(Self Xref),                                           "https://philiprbrenan.github.io/selfServiceXref.pdf"                                                                             ],
     starLink        => [q(Starlink),                                            "https://www.starlink.com/residential"                                                                                            ],
@@ -6850,8 +6882,8 @@ sub wellKnownUrls                                                               
     systemd         => [q(systemd),                                             "https://en.wikipedia.org/wiki/Systemd"                                                                                           ],
     table           => [q(table),                                               "https://en.wikipedia.org/wiki/Table_(information)"                                                                               ],
     tab             => [q(tab),                                                 "https://en.wikipedia.org/wiki/Tab_key"                                                                                           ],
-    taocp           => [q(The Art of Computer Programming),                     "https://en.wikipedia.org/wiki/The_Art_of_Computer_Programming"                                                                   ],
     taeKwondo       => [q(Taekwondo),                                           "https://en.wikipedia.org/wiki/Taekwondo"                                                                                         ],
+    taocp           => [q(The Art of Computer Programming),                     "https://en.wikipedia.org/wiki/The_Art_of_Computer_Programming"                                                                   ],
     tar             => [q(Tar),                                                 "https://en.wikipedia.org/wiki/Tar_(computing)"                                                                                   ],
     task            => [q(task),                                                "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/langRef/technicalContent/task.html#task"      ],
     tcl             => [q(Tcl),                                                 "https://en.wikipedia.org/wiki/Tcl"                                                                                               ],
@@ -6861,8 +6893,8 @@ sub wellKnownUrls                                                               
     Teh             => [q(The),                                                 "https://en.wikipedia.org/wiki/The"                                                                                               ],
     test            => [q(test),                                                "https://en.wikipedia.org/wiki/Software_testing"                                                                                  ],
     teul            => [q(tanquam ex ungue leonem),                             "https://en.wikipedia.org/wiki/Later_life_of_Isaac_Newton#Bernoulli's_mathematical_challenge"                                     ],
-    textmatch       => [q(text matching),                                       "https://metacpan.org/pod/Text::Match"                                                                                            ],
     texas           => [q(Texas),                                               "https://en.wikipedia.org/wiki/Texas"                                                                                             ],
+    textmatch       => [q(text matching),                                       "https://metacpan.org/pod/Text::Match"                                                                                            ],
     theArtOfWar     => [q(The Art of War),                                      "https://en.wikipedia.org/wiki/The_Art_of_War#Cultural_influence"                                                                 ],
     theWealthOfNations=> [q(The Wealth of Nations),                             "https://en.wikipedia.org/wiki/The_Wealth_of_Nations"                                                                             ],
     thp             => [q(Theoretical Computational Physics),                   "https://en.wikipedia.org/wiki/Theoretical_physics"                                                                               ],
@@ -6871,7 +6903,8 @@ sub wellKnownUrls                                                               
     timeAndChance   => [q("time and chance happenth to all men"),               "https://www.kingjamesbibleonline.org/Ecclesiastes-9-11/"                                                                         ],
     tls             => [q(TLS),                                                 "https://en.wikipedia.org/wiki/Transport_Layer_Security"                                                                          ],
     tmm             => [q(The Mythical Man Month),                              "https://pt1lib.org/book/632726/63ef6f"                                                                                           ],
-    todayTime       => [dateTimeStamp,                                          ""                                                                                                                                ],
+    todayTime       => [dateTimeStamp.' Z',                                     ""                                                                                                                                ],
+    tomcat          => [q(Apache Tomcat),                                       "https://en.wikipedia.org/wiki/Apache_Tomcat"                                                                                     ],
     totc            => [q(Tragedy of the Commons),                              "https://en.wikipedia.org/wiki/Tragedy_of_the_commons"                                                                            ],
     tracing         => [q(tracing),                                             "https://en.wikipedia.org/wiki/Tracing_(software)"                                                                                ],
     trafalgar       => [q(The Battle of Trafalgar),                             "https://en.wikipedia.org/wiki/Battle_of_Trafalgar"                                                                               ],
@@ -6921,8 +6954,8 @@ sub wellKnownUrls                                                               
     vhdl            => [q(VHDL),                                                "https://ghdl.readthedocs.io/en/latest/about.html"                                                                                ],
     vi              => [q(vi),                                                  "https://www.vim.org/"                                                                                                            ],
     vivado          => [q(Vivado),                                              "https://en.wikipedia.org/wiki/Xilinx_Vivado"                                                                                     ],
-    VM              => [q(Virtual Machine),                                     "https://en.wikipedia.org/wiki/Virtual_machine"                                                                                   ],
     VLSI            => [q(Introduction to VLSI, Mead, Conway, 1980),            "Introduction to VLSI systems"                                                                                                    ],
+    VM              => [q(Virtual Machine),                                     "https://en.wikipedia.org/wiki/Virtual_machine"                                                                                   ],
     waterfall       => [q(waterfall development methodology),                   "https://en.wikipedia.org/wiki/Waterfall_model"                                                                                   ],
     webFrameWork    => [q(web frame work),                                      "https://en.wikipedia.org/wiki/Web_framework"                                                                                     ],
     webpage         => [q(web page),                                            "https://en.wikipedia.org/wiki/Web_page"                                                                                          ],
@@ -6962,10 +6995,16 @@ sub spellCheck($%)                                                              
   binModeAllUtf8;
 
   my $text = $Text;
-     $text =~ s(<head>.*?</head>) ()gs;                                         # Removehead section
+     $text =~ s(<head>.*?</head>)     ()gs;                                     # Remove head section
+     $text =~ s(<script>.*?</script>) ()gs;                                     # Remove script sections
+     $text =~ s(<pre>.*?</pre>)       ()gs;                                     # Remove pre sections
+     $text =~ s(<style>.*?</style>)   ()gs;                                     # Remove style sections
+     $text =~ s(<b>.*?</b>)           ()gs;                                     # Remove quotes as they are probably spelled incorrectly
+     $text =~ s(<q>.*?</q>)           ()gs;                                     # Remove quotes as they are probably spelled correctly as far as their authors care
      $text =~ s(<.*?>) ()gs;                                                    # Remove tags
      $text =~ s(&nbsp;) ()gs;                                                   # Remove &nbsp;
-     $text =~ s(\b[A-Z𝗔-𝗭]\w*) ()gs;                                            # Remove words that start with capital letters
+     $text =~ s(\b[A-Z𝗔-𝗭𝗮-𝘇].*\b)   ()gs;                                     # Remove words that start with capital letters
+     $text =~ s(philip|brenan)       ()gs;                                      # Remove names of famous people who choose to spell their names in lower case
   my $c = Text::SpellChecker->new(text=>$text, lang => q(en_US));
   while(my $word = $c->next_word)                                               # Each error
    {say STDERR  pad($word, 16), " : ", (join ", ", @{$c->suggestions});
@@ -7171,7 +7210,7 @@ sub updateDocumentation(;$)                                                     
   my %signatureNames;                                                           # Signature using parameter names
   my %static;                                                                   # Static methods
   my %substitutions;                                                            # Substitute variables from the code into the documentation: my $key = q(value); #Substitute will replace all occurrences of B<$key> in the documentation with B<value>.
-  my $svg;                                                                      # A url pointing to an an oline folder of svg images to illustrate this package
+  my $svg;                                                                      # A url pointing to an an online folder of svg images to illustrate this package
   my %svg;                                                                      # Svg images used - only include each svg image once each time as otherwise it gets overwhelming very quickly
   my %synonymTargetSource;                                                      # Synonyms from source to target - {$source}{$target} = 1 - can be several
   my %synonymTarget;                                                            # Synonym target - confess is more than one
@@ -8286,6 +8325,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
  mathematicalSansSerifBoldStringUndo mathematicalSansSerifItalicString
  mathematicalSansSerifItalicStringUndo mathematicalSansSerifString
  mathematicalSansSerifStringUndo max md5FromGuid mergeFolder
+ maximum minimum
  mergeFolderFromRemote microSecondsSinceEpoch min mmm
  moveFileNoClobber moveFileWithClobber
  nameFromFolder nameFromString nameFromStringRestrictedToTitle newProcessStarter
@@ -20861,7 +20901,7 @@ Test::More->builder->output("/dev/null") if $localTest;                         
 
 if ($^V ge v5.26.0)                                                             # Supported versions
  {if ($^O =~ m(bsd|linux|darwin)i)                                              # Supported systems
-    {plan tests => 715;
+    {#plan tests => 715;
     }
   #lsif (onWindows) {plan tests    => 620}                                      # Somewhat supported systems
   else
@@ -21336,6 +21376,18 @@ if (1) {                                                                        
 
   ok min(1) == 1;
   ok min(5,4,2,3) == 2;
+ }
+
+if (1) {                                                                        #Tmaximum #Tminimum
+  is maximum, undef;
+  is maximum(1),        1;
+  is maximum(undef, 1), 1;
+  is maximum(1,4,undef,3),  4;
+
+  is mininum, undef;
+  is mininum(1),        1;
+  is mininum(undef, 1), 1;
+  is mininum(1,4,undef,3),  1;
  }
 
 is_deeply [1],       [contains(1,0..1)];                                        #Tcontains
@@ -24134,4 +24186,4 @@ END
   unlink $h, $H;
  }
 
-1
+done_testing;
