@@ -11,7 +11,7 @@
 # updateDocumentation - mark synopsis tests with #S and place in synopsis
 package Data::Table::Text;
 use v5.26;
-our $VERSION = 20240316;                                                        # Version
+our $VERSION = 20240408;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
@@ -8418,6 +8418,8 @@ if (0)                                                                          
 =pod
 
 =encoding utf-8
+
+=for html <p><a href="https://github.com/philiprbrenan/DataTableText"><img src="https://github.com/philiprbrenan/DataTableText/workflows/Test/badge.svg"></a>
 
 =head1 Name
 
