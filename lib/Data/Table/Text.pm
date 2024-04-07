@@ -24166,7 +24166,6 @@ END
 }
 
 #latest:;
-
 if (1) {                                                                        #TencodeUnicodeHtmlAsAscii
   my $h = "a 𝝰 b 𝝱 g 𝝲";
   my $H = encodeUnicodeHtmlAsAscii $h;
@@ -24197,5 +24196,10 @@ END
 END
   unlink $h, $H;
  }
+
+#latest:;
+if (1) {                                                                        #TnewLine
+  is_deeply newLine, "\n";
+}
 
 done_testing;
