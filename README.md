@@ -4704,6 +4704,15 @@ Load [data](https://en.wikipedia.org/wiki/Data) structures from lines.
 
 Return a new line - useful for writing [Perl](http://www.perl.org/) one liners
 
+**Example:**
+
+      is_deeply newLine, "
+  ";  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    }
+    
+    
+
 ## loadArrayFromLines  ($string)
 
 Load an [array](https://en.wikipedia.org/wiki/Dynamic_array) from lines of text in a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
@@ -9295,7 +9304,6 @@ Generate a [table](https://en.wikipedia.org/wiki/Table_(information)) of content
     }
     
     #latest:;
-    
     if (1) {                                                                        
       my $h = "a 𝝰 b 𝝱 g 𝝲";
       my $H = encodeUnicodeHtmlAsAscii $h;
@@ -11286,6 +11294,6 @@ Hey! **The above document had some coding errors, which are explained below:**
 
     Non-ASCII character seen before =encoding in 'dateTimeStamp '. Assuming CP1252
 
-- Around line 12428:
+- Around line 12438:
 
     Unterminated L<...> sequence
