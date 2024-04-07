@@ -2,7 +2,7 @@
 
 Write [data](https://en.wikipedia.org/wiki/Data) in tabular text format.
 
-Version 20240316.
+Version 20240408.
 
 The following sections describe the methods in each functional area of this [module](https://en.wikipedia.org/wiki/Modular_programming).  For an alphabetic listing of all methods by name see [Index](#index).
 
