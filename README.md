@@ -1,27 +1,192 @@
+<div>
+    <p><a href="https://github.com/philiprbrenan/DataTableText"><img src="https://github.com/philiprbrenan/DataTableText/workflows/Test/badge.svg"></a>
+</div>
+
+# Name
+
+Data::Table::Text - Write data in tabular text format.
+
+<div>
+
+    <p><a href="https://github.com/philiprbrenan/DataTableText"><img src="https://github.com/philiprbrenan/DataTableText/workflows/Test/badge.svg"></a>
+</div>
+
+# Synopsis
+
+    use Data::Table::Text;
+
+\# Print a table:
+
+    my $d =
+     [[qq(a), qq(b\nbb), qq(c\ncc\nccc\n)],
+      [qq(1), qq(1\n22), qq(1\n22\n333\n)],
+     ];
+
+    my $t = formatTable($d, [qw(A BB CCC)]);
+
+    ok $t eq <<END;
+       A  BB  CCC
+    1  a  b   c
+          bb  cc
+              ccc
+    2  1   1    1
+          22   22
+              333
+    END
+
+\# Print a table containing tables and make it into a report:
+
+    my $D = [[qq(See the\ntable\nopposite), $t],
+             [qq(Or\nthis\none),            $t],
+            ];
+
+
+    my $T = formatTable($D, [qw(Description Table)], head=><<END);
+    Table of Tables.
+
+    Table has NNNN rows each of which contains a table.
+    END
+
+    ok $T eq <<END;
+    Table of Tables.
+
+    Table has 2 rows each of which contains a table.
+
+
+       Description  Table
+    1  See the         A  BB  CCC
+       table        1  a  b   c
+       opposite           bb  cc
+                              ccc
+                    2  1   1    1
+                          22   22
+                              333
+    2  Or              A  BB  CCC
+       this         1  a  b   c
+       one                bb  cc
+                              ccc
+                    2  1   1    1
+                          22   22
+                              333
+    END
+
+\# Print an array of arrays:
+
+    my $aa = formatTable
+     ([[qw(A   B   C  )],
+       [qw(AA  BB  CC )],
+       [qw(AAA BBB CCC)],
+       [qw(1   22  333)]],
+       [qw (aa  bb  cc)]);
+
+    ok $aa eq <<END;
+       aa   bb   cc
+    1  A    B    C
+    2  AA   BB   CC
+    3  AAA  BBB  CCC
+    4    1   22  333
+    END
+
+\# Print an array of hashes:
+
+    my $ah = formatTable
+     ([{aa=> "A",   bb => "B",   cc => "C" },
+       {aa=> "AA",  bb => "BB",  cc => "CC" },
+       {aa=> "AAA", bb => "BBB", cc => "CCC" },
+       {aa=> 1,     bb => 22,    cc => 333 }]);
+
+    ok $ah eq <<END;
+       aa   bb   cc
+    1  A    B    C
+    2  AA   BB   CC
+    3  AAA  BBB  CCC
+    4    1   22  333
+    END
+
+\# Print a hash of arrays:
+
+    my $ha = formatTable
+     ({""     => ["aa",  "bb",  "cc"],
+       "1"    => ["A",   "B",   "C"],
+       "22"   => ["AA",  "BB",  "CC"],
+       "333"  => ["AAA", "BBB", "CCC"],
+       "4444" => [1,      22,    333]},
+       [qw(Key A B C)]
+       );
+
+    ok $ha eq <<END;
+    Key   A    B    C
+          aa   bb   cc
+       1  A    B    C
+      22  AA   BB   CC
+     333  AAA  BBB  CCC
+    4444    1   22  333
+    END
+
+\# Print a hash of hashes:
+
+    my $hh = formatTable
+     ({a    => {aa=>"A",   bb=>"B",   cc=>"C" },
+       aa   => {aa=>"AA",  bb=>"BB",  cc=>"CC" },
+       aaa  => {aa=>"AAA", bb=>"BBB", cc=>"CCC" },
+       aaaa => {aa=>1,     bb=>22,    cc=>333 }});
+
+    ok $hh eq <<END;
+          aa   bb   cc
+    a     A    B    C
+    aa    AA   BB   CC
+    aaa   AAA  BBB  CCC
+    aaaa    1   22  333
+    END
+
+\# Print an array of scalars:
+
+    my $a = formatTable(["a", "bb", "ccc", 4], [q(#), q(Col)]);
+
+    ok $a eq <<END;
+    #  Col
+    0  a
+    1  bb
+    2  ccc
+    3    4
+    END
+
+\# Print a hash of scalars:
+
+    my $h = formatTable({aa=>"AAAA", bb=>"BBBB", cc=>"333"}, [qw(Key Title)]);
+
+    ok $h eq <<END;
+    Key  Title
+    aa   AAAA
+    bb   BBBB
+    cc     333
+    END
+
 # Description
 
-Write [data](https://en.wikipedia.org/wiki/Data) in tabular text format.
+Write data in tabular text format.
 
 Version 20240408.
 
-The following sections describe the methods in each functional area of this [module](https://en.wikipedia.org/wiki/Modular_programming).  For an alphabetic listing of all methods by name see [Index](#index).
+The following sections describe the methods in each functional area of this
+module.  For an alphabetic listing of all methods by name see [Index](#index).
 
 # Immediately useful methods
 
 These methods are the ones most likely to be of immediate use to anyone using
-this [module](https://en.wikipedia.org/wiki/Modular_programming) for the first time:
+this module for the first time:
 
 [absFromAbsPlusRel($a, $r)](#absfromabsplusrel-a-r)
 
-Absolute [file](https://en.wikipedia.org/wiki/Computer_file) from an absolute [file](https://en.wikipedia.org/wiki/Computer_file) **$a** plus a relative [file](https://en.wikipedia.org/wiki/Computer_file) **$r**. In the event that the relative [file](https://en.wikipedia.org/wiki/Computer_file) $r is, in fact, an absolute [file](https://en.wikipedia.org/wiki/Computer_file) then it is returned as the result.
+Absolute file from an absolute file **$a** plus a relative file **$r**. In the event that the relative file $r is, in fact, an absolute file then it is returned as the result.
 
 [awsParallelProcessFiles($userData, $parallel, $results, $files, %options)](#awsparallelprocessfiles-userdata-parallel-results-files-options)
 
-Process files in parallel across multiple [Amazon Web Services](http://aws.amazon.com) instances if available or in series if not.  The [data](https://en.wikipedia.org/wiki/Data) located by **$userData** is transferred from the primary instance, as determined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), to all the secondary instances. **$parallel** contains a reference to a [sub](https://perldoc.perl.org/perlsub.html), parameterized by [array](https://en.wikipedia.org/wiki/Dynamic_array) @\_ = (a copy of the [user](https://en.wikipedia.org/wiki/User_(computing)) [data](https://en.wikipedia.org/wiki/Data), the name of the [file](https://en.wikipedia.org/wiki/Computer_file) to process), which will be executed upon each session instance including the primary instance to update $userData. **$results** contains a reference to a [sub](https://perldoc.perl.org/perlsub.html), parameterized by [array](https://en.wikipedia.org/wiki/Dynamic_array) @\_ = (the [user](https://en.wikipedia.org/wiki/User_(computing)) [data](https://en.wikipedia.org/wiki/Data), an [array](https://en.wikipedia.org/wiki/Dynamic_array) of results returned by each execution of $parallel), that will be called on the primary instance to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) the results folders from each instance once their results folders have been copied back and merged into the results [folder](https://en.wikipedia.org/wiki/File_folder) of the primary instance. $results should update its copy of $userData with the information received from each instance. **$files** is a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of the files to be processed: each [file](https://en.wikipedia.org/wiki/Computer_file) will be copied from the primary instance to each of the secondary instances before parallel processing starts. **%options** contains any parameters needed to interact with [EC2](https://aws.amazon.com/ec2/)  via the [Amazon Web Services Command Line Interface](https://aws.amazon.com/cli/).  The returned result is that returned by [sub](https://perldoc.perl.org/perlsub.html) $results.
+Process files in parallel across multiple [Amazon Web Services](http://aws.amazon.com) instances if available or in series if not.  The data located by **$userData** is transferred from the primary instance, as determined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), to all the secondary instances. **$parallel** contains a reference to a sub, parameterized by array @\_ = (a copy of the user data, the name of the file to process), which will be executed upon each session instance including the primary instance to update $userData. **$results** contains a reference to a sub, parameterized by array @\_ = (the user data, an array of results returned by each execution of $parallel), that will be called on the primary instance to process the results folders from each instance once their results folders have been copied back and merged into the results folder of the primary instance. $results should update its copy of $userData with the information received from each instance. **$files** is a reference to an array of the files to be processed: each file will be copied from the primary instance to each of the secondary instances before parallel processing starts. **%options** contains any parameters needed to interact with [EC2](https://aws.amazon.com/ec2/)  via the [Amazon Web Services Command Line Interface](https://aws.amazon.com/cli/).  The returned result is that returned by sub $results.
 
 [clearFolder($folder, $limitCount, $noMsg)](#clearfolder-folder-limitcount-nomsg)
 
-Remove all the files and folders under and including the specified **$folder** as long as the number of files to be removed is less than the specified **$limitCount**. Sometimes the [folder](https://en.wikipedia.org/wiki/File_folder) can be emptied but not removed - perhaps because it a link, in this case a message is produced unless suppressed by the optional **$nomsg** parameter.
+Remove all the files and folders under and including the specified **$folder** as long as the number of files to be removed is less than the specified **$limitCount**. Sometimes the folder can be emptied but not removed - perhaps because it a link, in this case a message is produced unless suppressed by the optional **$nomsg** parameter.
 
 [dateTimeStamp](#datetimestamp)
 
@@ -29,61 +194,61 @@ Year-monthNumber-day at hours:minute:seconds.
 
 [execPerlOnRemote($code, $ip)](#execperlonremote-code-ip)
 
-Execute some Perl **$code** on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+Execute some Perl **$code** on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
 [filePathExt(@File)](#filepathext-file)
 
-Create a [file](https://en.wikipedia.org/wiki/Computer_file) name from a [list](https://en.wikipedia.org/wiki/Linked_list) of  names the last of which is assumed to be the extension of the [file](https://en.wikipedia.org/wiki/Computer_file) name. Identical to [fpe](#fpe).
+Create a file name from a list of  names the last of which is assumed to be the extension of the file name. Identical to [fpe](#fpe).
 
 [fn($file)](#fn-file)
 
-Remove the path and extension from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Remove the path and extension from a file name.
 
 [formatTable($data, $columnTitles, @options)](#formattable-data-columntitles-options)
 
-Format various **$data** structures as a [table](https://en.wikipedia.org/wiki/Table_(information)) with titles as specified by **$columnTitles**: either a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of column titles or a [string](https://en.wikipedia.org/wiki/String_(computer_science)) each line of which contains the column title as the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) with the [REST](https://en.wikipedia.org/wiki/REST) of the line describing that column.
+Format various **$data** structures as a table with titles as specified by **$columnTitles**: either a reference to an array of column titles or a string each line of which contains the column title as the first word with the rest of the line describing that column.
 
-Optionally create a report from the [table](https://en.wikipedia.org/wiki/Table_(information)) using the report **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
+Optionally create a report from the table using the report **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
 
 [genHash($bless, %attributes)](#genhash-bless-attributes)
 
-Return a **$bless**ed [hash](https://en.wikipedia.org/wiki/Hash_table) with the specified **$attributes** accessible via [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) method calls. [updateDocumentation](#updatedocumentation) will generate [documentation](https://en.wikipedia.org/wiki/Software_documentation) at ["Hash Definitions"](#hash-definitions) for the [hash](https://en.wikipedia.org/wiki/Hash_table) defined by the call to [genHash](#genhash) if the call is laid out as in the example below.
+Return a **$bless**ed hash with the specified **$attributes** accessible via [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) method calls. [updateDocumentation](#updatedocumentation) will generate documentation at ["Hash Definitions"](#hash-definitions) for the hash defined by the call to [genHash](#genhash) if the call is laid out as in the example below.
 
 [readFile($file)](#readfile-file)
 
-Return the content of a [file](https://en.wikipedia.org/wiki/Computer_file) residing on the local machine interpreting the content of the [file](https://en.wikipedia.org/wiki/Computer_file) as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+Return the content of a file residing on the local machine interpreting the content of the file as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
 [readFileFromRemote($file, $ip)](#readfilefromremote-file-ip)
 
-Copy and [read](https://en.wikipedia.org/wiki/Reading_(computer)) a **$file** from the remote machine whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp) and return the content of $file interpreted as [utf8](https://en.wikipedia.org/wiki/UTF-8) .
+Copy and read a **$file** from the remote machine whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp) and return the content of $file interpreted as utf8 .
 
 [relFromAbsAgainstAbs($a, $b)](#relfromabsagainstabs-a-b)
 
-Relative [file](https://en.wikipedia.org/wiki/Computer_file) from one absolute [file](https://en.wikipedia.org/wiki/Computer_file) **$a** against another **$b**.
+Relative file from one absolute file **$a** against another **$b**.
 
 [runInParallel($maximumNumberOfProcesses, $parallel, $results, @array)](#runinparallel-maximumnumberofprocesses-parallel-results-array)
 
-Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) in parallel using a maximum of **$maximumNumberOfProcesses** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). [sub](https://perldoc.perl.org/perlsub.html) **&$parallel** is forked to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each [array](https://en.wikipedia.org/wiki/Dynamic_array) element in parallel. The results returned by the forked copies of &$parallel are presented as a single [array](https://en.wikipedia.org/wiki/Dynamic_array) to [sub](https://perldoc.perl.org/perlsub.html) **&$results** which is run in series. **@array** contains the elements to be processed. Returns the result returned by &$results.
+Process the elements of an array in parallel using a maximum of **$maximumNumberOfProcesses** processes. sub **&$parallel** is forked to process each array element in parallel. The results returned by the forked copies of &$parallel are presented as a single array to sub **&$results** which is run in series. **@array** contains the elements to be processed. Returns the result returned by &$results.
 
 [searchDirectoryTreeForSubFolders($folder)](#searchdirectorytreeforsubfolders-folder)
 
-Search the specified directory under the specified [folder](https://en.wikipedia.org/wiki/File_folder) for [sub](https://perldoc.perl.org/perlsub.html) folders.
+Search the specified directory under the specified folder for sub folders.
 
 [searchDirectoryTreesForMatchingFiles(@FoldersandExtensions)](#searchdirectorytreesformatchingfiles-foldersandextensions)
 
-Search the specified directory [trees](https://en.wikipedia.org/wiki/Tree_(data_structure)) for the files (not folders) that match the specified [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions). The argument [list](https://en.wikipedia.org/wiki/Linked_list) should include at least one path name to be useful. If no [file](https://en.wikipedia.org/wiki/Computer_file) [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions) are supplied then all the files below the specified paths are returned.  Arguments wrapped in \[\] will be unwrapped.
+Search the specified directory trees for the files (not folders) that match the specified extensions. The argument list should include at least one path name to be useful. If no file extensions are supplied then all the files below the specified paths are returned.  Arguments wrapped in \[\] will be unwrapped.
 
 [writeFile($file, $string)](#writefile-file-string)
 
-Write to a new **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8). Return the name of the $file written to on success else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if the [file](https://en.wikipedia.org/wiki/Computer_file) already exists or any other error occurs.
+Write to a new **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8). Return the name of the $file written to on success else confess if the file already exists or any other error occurs.
 
 [writeFileToRemote($file, $string, $ip)](#writefiletoremote-file-string-ip)
 
-Write to a new **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). Return the name of the $file on success else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if the [file](https://en.wikipedia.org/wiki/Computer_file) already exists or any other error occurs.
+Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). Return the name of the $file on success else confess if the file already exists or any other error occurs.
 
 [xxxr($cmd, $ip)](#xxxr-cmd-ip)
 
-Execute a command **$cmd** via [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). The command will be run using the [userid](https://en.wikipedia.org/wiki/User_identifier) listed in `.ssh/config`.
+Execute a command **$cmd** via bash on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). The command will be run using the userid listed in `.ssh/config`.
 
 # Time stamps
 
@@ -151,7 +316,7 @@ Hours:minute:seconds.
 
 ## microSecondsSinceEpoch  ()
 
-Micro seconds since [Unix](https://en.wikipedia.org/wiki/Unix) epoch.
+Micro seconds since unix epoch.
 
 **Example:**
 
@@ -165,7 +330,8 @@ Various ways of processing commands and writing results.
 
 ## ddd (@data)
 
-Dump [data](https://en.wikipedia.org/wiki/Data). 
+Dump data.
+
        Parameter  Description
     1  @data      Messages
 
@@ -177,7 +343,7 @@ Dump [data](https://en.wikipedia.org/wiki/Data).
 
 ## fff ($line, $file, @m)
 
-Confess a message with a line position and a [file](https://en.wikipedia.org/wiki/Computer_file) that Geany will jump to if clicked on.
+Confess a message with a line position and a file that Geany will jump to if clicked on.
 
        Parameter  Description
     1  $line      Line
@@ -192,7 +358,7 @@ Confess a message with a line position and a [file](https://en.wikipedia.org/wik
 
 ## lll (@messages)
 
-Log messages with a time stamp and originating [file](https://en.wikipedia.org/wiki/Computer_file) and line number.
+Log messages with a time stamp and originating file and line number.
 
        Parameter  Description
     1  @messages  Messages
@@ -205,7 +371,7 @@ Log messages with a time stamp and originating [file](https://en.wikipedia.org/w
 
 ## mmm (@messages)
 
-Log messages with a differential time in milliseconds and originating [file](https://en.wikipedia.org/wiki/Computer_file) and line number.
+Log messages with a differential time in milliseconds and originating file and line number.
 
        Parameter  Description
     1  @messages  Messages
@@ -218,10 +384,10 @@ Log messages with a differential time in milliseconds and originating [file](htt
 
 ## xxx (@cmd)
 
-Execute a [shell](https://en.wikipedia.org/wiki/Shell_(computing)) command optionally checking its response. The command to execute is specified as one or more [strings](https://en.wikipedia.org/wiki/String_(computer_science)) which are joined together after removing any new lines. Optionally the last [string](https://en.wikipedia.org/wiki/String_(computer_science)) can be a regular expression that is used to [test](https://en.wikipedia.org/wiki/Software_testing) any non blank output generated by the execution of the command: if the regular expression fails the command and the command output are printed, else it is suppressed as being uninteresting. If such a regular expression is not supplied then the command and its non blank output lines are always printed.
+Execute a shell command optionally checking its response. The command to execute is specified as one or more strings which are joined together after removing any new lines. Optionally the last string can be a regular expression that is used to test any non blank output generated by the execution of the command: if the regular expression fails the command and the command output are printed, else it is suppressed as being uninteresting. If such a regular expression is not supplied then the command and its non blank output lines are always printed.
 
        Parameter  Description
-    1  @cmd       Command to execute followed by an optional regular expression to [test](https://en.wikipedia.org/wiki/Software_testing) the results
+    1  @cmd       Command to execute followed by an optional regular expression to test the results
 
 **Example:**
 
@@ -231,10 +397,11 @@ Execute a [shell](https://en.wikipedia.org/wiki/Shell_(computing)) command optio
 
 ## xxxr($cmd, $ip)
 
-Execute a command **$cmd** via [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). The command will be run using the [userid](https://en.wikipedia.org/wiki/User_identifier) listed in `.ssh/config`.
+Execute a command **$cmd** via bash on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). The command will be run using the userid listed in `.ssh/config`.
 
        Parameter  Description
-    1  $cmd       Command [string](https://en.wikipedia.org/wiki/String_(computer_science))     2  $ip        Optional [IP address](https://en.wikipedia.org/wiki/IP_address) address
+    1  $cmd       Command string
+    2  $ip        Optional ip address
 
 **Example:**
 
@@ -247,7 +414,7 @@ Execute a command **$cmd** via [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_s
 
 ## yyy ($cmd)
 
-Execute a block of [shell](https://en.wikipedia.org/wiki/Shell_(computing)) commands line by line after removing comments - stop if there is a non zero return [code](https://en.wikipedia.org/wiki/Computer_program) from any command.
+Execute a block of shell commands line by line after removing comments - stop if there is a non zero return code from any command.
 
        Parameter  Description
     1  $cmd       Commands to execute separated by new lines
@@ -263,13 +430,14 @@ Execute a block of [shell](https://en.wikipedia.org/wiki/Shell_(computing)) comm
 
 ## zzz ($cmd, $success, $returnCode, $message)
 
-Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return [code](https://en.wikipedia.org/wiki/Computer_program) of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails. To execute remotely, add "ssh ... 'echo start" as the first line and "echo end'" as the last line with the commands to be executed on the lines in between.
+Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return code of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails. To execute remotely, add "ssh ... 'echo start" as the first line and "echo end'" as the last line with the commands to be executed on the lines in between.
 
        Parameter    Description
     1  $cmd         Commands to execute - one per line with no trailing &&
     2  $success     Optional regular expression to check for acceptable results
     3  $returnCode  Optional regular expression to check the acceptable return codes
-    4  $message     Message of explanation if any of the checks [fail](https://1lib.eu/book/2468851/544b50) 
+    4  $message     Message of explanation if any of the checks fail
+
 **Example:**
 
     ok zzz(<<END, qr(aaa\s*bbb)s);                                                    # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -281,11 +449,11 @@ Execute lines of commands after replacing new lines with && then check that the 
 
 ## execPerlOnRemote($code, $ip)
 
-Execute some Perl **$code** on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+Execute some Perl **$code** on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
        Parameter  Description
     1  $code      Code to execute
-    2  $ip        Optional [IP address](https://en.wikipedia.org/wiki/IP_address) address
+    2  $ip        Optional ip address
 
 **Example:**
 
@@ -300,11 +468,12 @@ Execute some Perl **$code** on the [server](https://en.wikipedia.org/wiki/Server
 
 ## parseCommandLineArguments   ($sub, $args, $valid)
 
-Call the specified **$sub** after classifying the specified [array](https://en.wikipedia.org/wiki/Dynamic_array) of \[arguments\] in **$args** into positional and keyword parameters. Keywords are always preceded by one or more **-** and separated from their values by **=**. $sub(\[$positional\], {keyword=>value}) will be called  with a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of positional parameters followed by a reference to a [hash](https://en.wikipedia.org/wiki/Hash_table) of keywords and their values. The value returned by $sub will be returned to the caller. The keywords names will be validated if **$valid** is either a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of valid keywords names or a [hash](https://en.wikipedia.org/wiki/Hash_table) of {valid keyword name => textual description}. Confess with a [table](https://en.wikipedia.org/wiki/Table_(information)) of valid keywords definitions if $valid is specified and an invalid keyword argument is presented.
+Call the specified **$sub** after classifying the specified array of \[arguments\] in **$args** into positional and keyword parameters. Keywords are always preceded by one or more **-** and separated from their values by **=**. $sub(\[$positional\], {keyword=>value}) will be called  with a reference to an array of positional parameters followed by a reference to a hash of keywords and their values. The value returned by $sub will be returned to the caller. The keywords names will be validated if **$valid** is either a reference to an array of valid keywords names or a hash of {valid keyword name => textual description}. Confess with a table of valid keywords definitions if $valid is specified and an invalid keyword argument is presented.
 
        Parameter  Description
     1  $sub       Sub to call
-    2  $args      List of arguments to [parse](https://en.wikipedia.org/wiki/Parsing)     3  $valid     Optional [list](https://en.wikipedia.org/wiki/Linked_list) of valid parameters else all parameters will be accepted
+    2  $args      List of arguments to parse
+    3  $valid     Optional list of valid parameters else all parameters will be accepted
 
 **Example:**
 
@@ -330,7 +499,7 @@ Call the specified **$sub** after classifying the specified [array](https://en.w
 
 ## call($sub, @our)
 
-Call the specified **$sub** in a separate child [process](https://en.wikipedia.org/wiki/Process_management_(computing)), wait for it to complete, then copy back the named **@our** variables from the child [process](https://en.wikipedia.org/wiki/Process_management_(computing)) to the calling parent [process](https://en.wikipedia.org/wiki/Process_management_(computing)) effectively freeing any [memory](https://en.wikipedia.org/wiki/Computer_memory) used during the call.
+Call the specified **$sub** in a separate child process, wait for it to complete, then copy back the named **@our** variables from the child process to the calling parent process effectively freeing any memory used during the call.
 
        Parameter  Description
     1  $sub       Sub to call
@@ -355,7 +524,7 @@ Call the specified **$sub** in a separate child [process](https://en.wikipedia.o
 
 ## evalOrConfess   (@c)
 
-Evaluate some [code](https://en.wikipedia.org/wiki/Computer_program) successfully or [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) as to why it failed to evaluate successfully.
+Evaluate some code successfully or confess as to why it failed to evaluate successfully.
 
        Parameter  Description
     1  @c         Code to evaluate
@@ -365,7 +534,7 @@ Evaluate some [code](https://en.wikipedia.org/wiki/Computer_program) successfull
       ok evalOrConfess("1") == 1;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
-      my $r = [eval](http://perldoc.perl.org/functions/eval.html) {evalOrConfess "++ ++"};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      my $r = eval {evalOrConfess "++ ++"};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       ok $@ =~ m(syntax error);
     
@@ -376,7 +545,8 @@ Operations on files and paths.
 
 ## Statistics
 
-Information about each [file](https://en.wikipedia.org/wiki/Computer_file). 
+Information about each file.
+
 ### fileSize($file)
 
 Get the size of a **$file** in bytes.
@@ -414,28 +584,34 @@ Return the largest **$file**.
     #  ok $b > 0, 'bbb';
     
       my $c = processFilesInParallel(
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, (@f) x 12);
     
       ok 108 == $c, 'cc11';
     
       my $C = processSizesInParallel
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, map {[fileSize($_), $_]} (@f) x 12;
     
       ok 108 == $C, 'cc2';
     
       my $J = processJavaFilesInParallel
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, (@f) x 12;
     
       ok 108 == $J, 'cc3';
@@ -464,28 +640,34 @@ Get the size of a **$folder** in bytes.
     #  ok $b > 0, 'bbb';
     
       my $c = processFilesInParallel(
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, (@f) x 12);
     
       ok 108 == $c, 'cc11';
     
       my $C = processSizesInParallel
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, map {[fileSize($_), $_]} (@f) x 12;
     
       ok 108 == $C, 'cc2';
     
       my $J = processJavaFilesInParallel
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, (@f) x 12;
     
       ok 108 == $J, 'cc3';
@@ -498,7 +680,8 @@ Get the size of a **$folder** in bytes.
 Get the Md5 sum of the content of a **$file**.
 
        Parameter  Description
-    1  $file      File or [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    1  $file      File or string
+
 **Example:**
 
       fileMd5Sum(q(/etc/hosts));                                                      # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -535,9 +718,11 @@ Get the Md5 sum of the content of a **$file**.
 
 ### guidFromMd5 ($m)
 
-Create a [guid](https://en.wikipedia.org/wiki/Universally_unique_identifier) from an [MD5](https://en.wikipedia.org/wiki/MD5) [hash](https://en.wikipedia.org/wiki/Hash_table). 
+Create a guid from an md5 hash.
+
        Parameter  Description
-    1  $m         Md5 [hash](https://en.wikipedia.org/wiki/Hash_table) 
+    1  $m         Md5 hash
+
 **Example:**
 
       my $s = join '', 1..100;
@@ -571,7 +756,8 @@ Create a [guid](https://en.wikipedia.org/wiki/Universally_unique_identifier) fro
 
 ### md5FromGuid ($G)
 
-Recover an [MD5](https://en.wikipedia.org/wiki/MD5) sum from a [guid](https://en.wikipedia.org/wiki/Universally_unique_identifier). 
+Recover an md5 sum from a guid.
+
        Parameter  Description
     1  $G         Guid
 
@@ -608,7 +794,8 @@ Recover an [MD5](https://en.wikipedia.org/wiki/MD5) sum from a [guid](https://en
 
 ### guidFromString  ($string)
 
-Create a [guid](https://en.wikipedia.org/wiki/Universally_unique_identifier) representation of the [MD5](https://en.wikipedia.org/wiki/MD5) of the content of a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Create a guid representation of the [MD5](https://en.wikipedia.org/wiki/MD5) of the content of a string.
+
        Parameter  Description
     1  $string    String
 
@@ -658,10 +845,12 @@ Get the modified time of a **$file** as seconds since the epoch.
 
 ### fileOutOfDate   ($make, $target, @source)
 
-Calls the specified [sub](https://perldoc.perl.org/perlsub.html) **$make** for each source [file](https://en.wikipedia.org/wiki/Computer_file) that is missing and then again against the **$target** [file](https://en.wikipedia.org/wiki/Computer_file) if any of the **@source** files were missing or the $target [file](https://en.wikipedia.org/wiki/Computer_file) is older than any of the @source files or if the target does not exist. The [file](https://en.wikipedia.org/wiki/Computer_file) name is passed to the [sub](https://perldoc.perl.org/perlsub.html) each time in $\_. Returns the files to be remade in the order they should be made.
+Calls the specified sub **$make** for each source file that is missing and then again against the **$target** file if any of the **@source** files were missing or the $target file is older than any of the @source files or if the target does not exist. The file name is passed to the sub each time in $\_. Returns the files to be remade in the order they should be made.
 
        Parameter  Description
-    1  $make      Make with this [sub](https://perldoc.perl.org/perlsub.html)     2  $target    Target [file](https://en.wikipedia.org/wiki/Computer_file)     3  @source    Source files
+    1  $make      Make with this sub
+    2  $target    Target file
+    3  @source    Source files
 
 **Example:**
 
@@ -714,7 +903,7 @@ Calls the specified [sub](https://perldoc.perl.org/perlsub.html) **$make** for e
 
 ### firstFileThatExists (@files)
 
-Returns the name of the first [file](https://en.wikipedia.org/wiki/Computer_file) from **@files** that exists or **undef** if none of the named @files exist.
+Returns the name of the first file from **@files** that exists or **undef** if none of the named @files exist.
 
        Parameter  Description
     1  @files     Files to check
@@ -730,7 +919,7 @@ Returns the name of the first [file](https://en.wikipedia.org/wiki/Computer_file
 
 ### fileInWindowsFormat ($file)
 
-Convert a [Unix](https://en.wikipedia.org/wiki/Unix) **$file** name to windows format.
+Convert a unix **$file** name to windows format.
 
        Parameter  Description
     1  $file      File
@@ -750,11 +939,11 @@ File names and components.
 
 ### Fusion
 
-Create [file](https://en.wikipedia.org/wiki/Computer_file) names from [file](https://en.wikipedia.org/wiki/Computer_file) name components.
+Create file names from file name components.
 
 #### filePath(@file)
 
-Create a [file](https://en.wikipedia.org/wiki/Computer_file) name from a [list](https://en.wikipedia.org/wiki/Linked_list) of  names. Identical to [fpf](#fpf).
+Create a file name from a list of  names. Identical to [fpf](#fpf).
 
        Parameter  Description
     1  @file      File name components
@@ -778,7 +967,7 @@ Create a [file](https://en.wikipedia.org/wiki/Computer_file) name from a [list](
 
 #### filePathDir (@file)
 
-Create a [folder](https://en.wikipedia.org/wiki/File_folder) name from a [list](https://en.wikipedia.org/wiki/Linked_list) of  names. Identical to [fpd](#fpd).
+Create a folder name from a list of  names. Identical to [fpd](#fpd).
 
        Parameter  Description
     1  @file      Directory name components
@@ -807,7 +996,7 @@ Create a [folder](https://en.wikipedia.org/wiki/File_folder) name from a [list](
 
 #### filePathExt (@File)
 
-Create a [file](https://en.wikipedia.org/wiki/Computer_file) name from a [list](https://en.wikipedia.org/wiki/Linked_list) of  names the last of which is assumed to be the extension of the [file](https://en.wikipedia.org/wiki/Computer_file) name. Identical to [fpe](#fpe).
+Create a file name from a list of  names the last of which is assumed to be the extension of the file name. Identical to [fpe](#fpe).
 
        Parameter  Description
     1  @File      File name components and extension
@@ -834,11 +1023,11 @@ Create a [file](https://en.wikipedia.org/wiki/Computer_file) name from a [list](
 
 ### Fission
 
-Get [file](https://en.wikipedia.org/wiki/Computer_file) name components from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Get file name components from a file name.
 
 #### fp  ($file)
 
-Get the path from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Get the path from a file name.
 
        Parameter  Description
     1  $file      File name
@@ -851,7 +1040,7 @@ Get the path from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
 
 #### fpn ($file)
 
-Remove the extension from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Remove the extension from a file name.
 
        Parameter  Description
     1  $file      File name
@@ -864,7 +1053,7 @@ Remove the extension from a [file](https://en.wikipedia.org/wiki/Computer_file) 
 
 #### fn  ($file)
 
-Remove the path and extension from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Remove the path and extension from a file name.
 
        Parameter  Description
     1  $file      File name
@@ -877,7 +1066,7 @@ Remove the path and extension from a [file](https://en.wikipedia.org/wiki/Comput
 
 #### fne ($file)
 
-Remove the path from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Remove the path from a file name.
 
        Parameter  Description
     1  $file      File name
@@ -890,7 +1079,7 @@ Remove the path from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
 
 #### fe  ($file)
 
-Get the extension of a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Get the extension of a file name.
 
        Parameter  Description
     1  $file      File name
@@ -903,7 +1092,7 @@ Get the extension of a [file](https://en.wikipedia.org/wiki/Computer_file) name.
 
 #### checkFile   ($file)
 
-Return the name of the specified [file](https://en.wikipedia.org/wiki/Computer_file) if it exists, else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) the maximum extent of the path that does exist.
+Return the name of the specified file if it exists, else confess the maximum extent of the path that does exist.
 
        Parameter  Description
     1  $file      File to check
@@ -929,7 +1118,7 @@ Return the name of the specified [file](https://en.wikipedia.org/wiki/Computer_f
 
 #### quoteFile   ($file)
 
-Quote a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Quote a file name.
 
        Parameter  Description
     1  $file      File name
@@ -942,11 +1131,11 @@ Quote a [file](https://en.wikipedia.org/wiki/Computer_file) name.
 
 #### removeFilePrefix($prefix, @files)
 
-Removes a [file](https://en.wikipedia.org/wiki/Computer_file) **$prefix** from an [array](https://en.wikipedia.org/wiki/Dynamic_array) of **@files**.
+Removes a file **$prefix** from an array of **@files**.
 
        Parameter  Description
     1  $prefix    File prefix
-    2  @files     Array of [file](https://en.wikipedia.org/wiki/Computer_file) names
+    2  @files     Array of file names
 
 **Example:**
 
@@ -960,7 +1149,7 @@ Removes a [file](https://en.wikipedia.org/wiki/Computer_file) **$prefix** from a
 
 #### swapFilePrefix  ($file, $known, $new)
 
-Swaps the start of a **$file** name from a **$known** name to a **$new** one if the [file](https://en.wikipedia.org/wiki/Computer_file) does in fact start with the $known name otherwise returns the original [file](https://en.wikipedia.org/wiki/Computer_file) name as it is. If the optional $new prefix is omitted then the $known prefix is removed from the $file name.
+Swaps the start of a **$file** name from a **$known** name to a **$new** one if the file does in fact start with the $known name otherwise returns the original file name as it is. If the optional $new prefix is omitted then the $known prefix is removed from the $file name.
 
        Parameter  Description
     1  $file      File name
@@ -997,7 +1186,7 @@ Given a **$file**, change its extension to **$extension**. Removes the extension
 
 #### swapFolderPrefix($file, $known, $new)
 
-Given a **$file**, swap the [folder](https://en.wikipedia.org/wiki/File_folder) name of the $file from **$known** to **$new** if the [file](https://en.wikipedia.org/wiki/Computer_file) $file starts with the $known [folder](https://en.wikipedia.org/wiki/File_folder) name else return the $file as it is.
+Given a **$file**, swap the folder name of the $file from **$known** to **$new** if the file $file starts with the $known folder name else return the $file as it is.
 
        Parameter  Description
     1  $file      File name
@@ -1022,7 +1211,8 @@ Given a **$file**, swap the [folder](https://en.wikipedia.org/wiki/File_folder) 
 Check whether a **$file** name is fully qualified or not and, optionally, whether it is fully qualified with a specified **$prefix** or not.
 
        Parameter  Description
-    1  $file      File name to [test](https://en.wikipedia.org/wiki/Software_testing)     2  $prefix    File name prefix
+    1  $file      File name to test
+    2  $prefix    File name prefix
 
 **Example:**
 
@@ -1044,7 +1234,8 @@ Check whether a **$file** name is fully qualified or not and, optionally, whethe
 
 #### fullyQualifyFile($file)
 
-Return the fully qualified name of a [file](https://en.wikipedia.org/wiki/Computer_file). 
+Return the fully qualified name of a file.
+
        Parameter  Description
     1  $file      File name
 
@@ -1059,7 +1250,7 @@ Return the fully qualified name of a [file](https://en.wikipedia.org/wiki/Comput
 
 #### removeDuplicatePrefixes ($file)
 
-Remove duplicated leading directory names from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Remove duplicated leading directory names from a file name.
 
        Parameter  Description
     1  $file      File name
@@ -1080,7 +1271,8 @@ Remove duplicated leading directory names from a [file](https://en.wikipedia.org
 
 #### containingFolderName($file)
 
-The name of a [folder](https://en.wikipedia.org/wiki/File_folder) containing a [file](https://en.wikipedia.org/wiki/Computer_file). 
+The name of a folder containing a file.
+
        Parameter  Description
     1  $file      File name
 
@@ -1092,7 +1284,7 @@ The name of a [folder](https://en.wikipedia.org/wiki/File_folder) containing a [
 
 ## Position
 
-Position in the [file](https://en.wikipedia.org/wiki/Computer_file) system.
+Position in the file system.
 
 ### currentDirectory()
 
@@ -1106,7 +1298,8 @@ Get the current working directory.
 
 ### currentDirectoryAbove   ()
 
-Get the path to the [folder](https://en.wikipedia.org/wiki/File_folder) above the current working [folder](https://en.wikipedia.org/wiki/File_folder). 
+Get the path to the folder above the current working folder.
+
 **Example:**
 
       currentDirectoryAbove;                                                          # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -1115,10 +1308,11 @@ Get the path to the [folder](https://en.wikipedia.org/wiki/File_folder) above th
 
 ### parseFileName   ($file)
 
-Parse a [file](https://en.wikipedia.org/wiki/Computer_file) name into (path, name, extension) considering .. to be always part of the path and using **undef** to mark missing components.  This differs from (fp, fn, fe) which return q() for missing components and do not interpret . or .. as anything special.
+Parse a file name into (path, name, extension) considering .. to be always part of the path and using **undef** to mark missing components.  This differs from (fp, fn, fe) which return q() for missing components and do not interpret . or .. as anything special.
 
        Parameter  Description
-    1  $file      File name to [parse](https://en.wikipedia.org/wiki/Parsing) 
+    1  $file      File name to parse
+
 **Example:**
 
     if (1)                                                                          
@@ -1163,7 +1357,8 @@ Parse a [file](https://en.wikipedia.org/wiki/Computer_file) name into (path, nam
 
 ### fullFileName()
 
-Full name of a [file](https://en.wikipedia.org/wiki/Computer_file). 
+Full name of a file.
+
 **Example:**
 
       fullFileName(fpe(qw(a txt)));                                                   # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -1172,11 +1367,12 @@ Full name of a [file](https://en.wikipedia.org/wiki/Computer_file).
 
 ### relFromAbsAgainstAbs($a, $b)
 
-Relative [file](https://en.wikipedia.org/wiki/Computer_file) from one absolute [file](https://en.wikipedia.org/wiki/Computer_file) **$a** against another **$b**.
+Relative file from one absolute file **$a** against another **$b**.
 
        Parameter  Description
-    1  $a         Absolute [file](https://en.wikipedia.org/wiki/Computer_file) to be made relative
-    2  $b         Against this absolute [file](https://en.wikipedia.org/wiki/Computer_file). 
+    1  $a         Absolute file to be made relative
+    2  $b         Against this absolute file.
+
 **Example:**
 
     ok "bbb.pl"                 eq relFromAbsAgainstAbs("/home/la/perl/bbb.pl", "/home/la/perl/aaa.pl");    # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -1189,10 +1385,12 @@ Relative [file](https://en.wikipedia.org/wiki/Computer_file) from one absolute [
 
 ### absFromAbsPlusRel   ($a, $r)
 
-Absolute [file](https://en.wikipedia.org/wiki/Computer_file) from an absolute [file](https://en.wikipedia.org/wiki/Computer_file) **$a** plus a relative [file](https://en.wikipedia.org/wiki/Computer_file) **$r**. In the event that the relative [file](https://en.wikipedia.org/wiki/Computer_file) $r is, in fact, an absolute [file](https://en.wikipedia.org/wiki/Computer_file) then it is returned as the result.
+Absolute file from an absolute file **$a** plus a relative file **$r**. In the event that the relative file $r is, in fact, an absolute file then it is returned as the result.
 
        Parameter  Description
-    1  $a         Absolute [file](https://en.wikipedia.org/wiki/Computer_file)     2  $r         Relative [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $a         Absolute file
+    2  $r         Relative file
+
 **Example:**
 
     ok "/home/la/perl/aaa.pl"   eq absFromAbsPlusRel("/home/la/perl/bbb",      "aaa.pl");                   # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -1205,10 +1403,11 @@ Absolute [file](https://en.wikipedia.org/wiki/Computer_file) from an absolute [f
 
 ### absFile ($file)
 
-Return the name of the given [file](https://en.wikipedia.org/wiki/Computer_file) if it a fully qualified [file](https://en.wikipedia.org/wiki/Computer_file) name else returns **undef**. See: [fullyQualifiedFile](https://metacpan.org/pod/fullyQualifiedFile) to check the initial prefix of the [file](https://en.wikipedia.org/wiki/Computer_file) name as well.
+Return the name of the given file if it a fully qualified file name else returns **undef**. See: [fullyQualifiedFile](https://metacpan.org/pod/fullyQualifiedFile) to check the initial prefix of the file name as well.
 
        Parameter  Description
-    1  $file      File to [test](https://en.wikipedia.org/wiki/Software_testing) 
+    1  $file      File to test
+
 **Example:**
 
     ok "/aaa/"                  eq absFile(qw(/aaa/));                                # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -1217,10 +1416,10 @@ Return the name of the given [file](https://en.wikipedia.org/wiki/Computer_file)
 
 ### sumAbsAndRel(@files)
 
-Combine zero or more absolute and relative names of **@files** starting at the current working [folder](https://en.wikipedia.org/wiki/File_folder) to get an absolute [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Combine zero or more absolute and relative names of **@files** starting at the current working folder to get an absolute file name.
 
        Parameter  Description
-    1  @files     Absolute and relative [file](https://en.wikipedia.org/wiki/Computer_file) names
+    1  @files     Absolute and relative file names
 
 **Example:**
 
@@ -1234,13 +1433,14 @@ Temporary files and folders
 
 ### temporaryFile   ()
 
-Create a new, empty, temporary [file](https://en.wikipedia.org/wiki/Computer_file). 
+Create a new, empty, temporary file.
+
 **Example:**
 
       my $d = fpd(my $D = temporaryDirectory, qw(a));
       my $f = fpe($d, qw(bbb txt));
       ok !-d $d;
-      [eval](http://perldoc.perl.org/functions/eval.html) q{checkFile($f)};
+      eval q{checkFile($f)};
       my $r = $@;
       my $q = quotemeta($D);
       ok nws($r) =~ m(Can only find.+?: $q)s;
@@ -1267,7 +1467,8 @@ Create a new, empty, temporary [file](https://en.wikipedia.org/wiki/Computer_fil
 
 ### temporaryFolder ()
 
-Create a new, empty, temporary [folder](https://en.wikipedia.org/wiki/File_folder). 
+Create a new, empty, temporary folder.
+
 **Example:**
 
       my $D = temporaryFolder;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -1282,7 +1483,7 @@ Create a new, empty, temporary [folder](https://en.wikipedia.org/wiki/File_folde
     
       my @D = findDirs($D);
       my @e = ($D, $d);
-      my @E = [sort](https://en.wikipedia.org/wiki/Sorting) @e;
+      my @E = sort @e;
       is_deeply [@D], [@E];
     
       is_deeply [sort map {fne $_} searchDirectoryTreesForMatchingFiles($d)],
@@ -1305,7 +1506,7 @@ Create a new, empty, temporary [folder](https://en.wikipedia.org/wiki/File_folde
       my $d = fpd(my $D = temporaryDirectory, qw(a));
       my $f = fpe($d, qw(bbb txt));
       ok !-d $d;
-      [eval](http://perldoc.perl.org/functions/eval.html) q{checkFile($f)};
+      eval q{checkFile($f)};
       my $r = $@;
       my $q = quotemeta($D);
       ok nws($r) =~ m(Can only find.+?: $q)s;
@@ -1334,14 +1535,15 @@ Create a new, empty, temporary [folder](https://en.wikipedia.org/wiki/File_folde
 
 ## Find
 
-Find files and folders below a [folder](https://en.wikipedia.org/wiki/File_folder). 
+Find files and folders below a folder.
+
 ### findFiles   ($folder, $filter)
 
 Find all the files under a **$folder** and optionally **$filter** the selected files with a regular expression.
 
        Parameter  Description
     1  $folder    Folder to start the search with
-    2  $filter    Optional regular expression to [filter](https://en.wikipedia.org/wiki/Filter_(software)) files
+    2  $filter    Optional regular expression to filter files
 
 **Example:**
 
@@ -1358,7 +1560,7 @@ Find all the files under a **$folder** and optionally **$filter** the selected f
     
       my @D = findDirs($D);
       my @e = ($D, $d);
-      my @E = [sort](https://en.wikipedia.org/wiki/Sorting) @e;
+      my @E = sort @e;
       is_deeply [@D], [@E];
     
       is_deeply [sort map {fne $_} searchDirectoryTreesForMatchingFiles($d)],
@@ -1385,7 +1587,7 @@ Find all the folders under a **$folder** and optionally **$filter** the selected
 
        Parameter  Description
     1  $folder    Folder to start the search with
-    2  $filter    Optional regular expression to [filter](https://en.wikipedia.org/wiki/Filter_(software)) files
+    2  $filter    Optional regular expression to filter files
 
 **Example:**
 
@@ -1402,7 +1604,7 @@ Find all the folders under a **$folder** and optionally **$filter** the selected
       my @D = findDirs($D);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my @e = ($D, $d);
-      my @E = [sort](https://en.wikipedia.org/wiki/Sorting) @e;
+      my @E = sort @e;
       is_deeply [@D], [@E];
     
       is_deeply [sort map {fne $_} searchDirectoryTreesForMatchingFiles($d)],
@@ -1443,7 +1645,7 @@ Files that match a given search pattern interpreted by ["bsd\_glob" in perlfunc]
     
       my @D = findDirs($D);
       my @e = ($D, $d);
-      my @E = [sort](https://en.wikipedia.org/wiki/Sorting) @e;
+      my @E = sort @e;
       is_deeply [@D], [@E];
     
       is_deeply [sort map {fne $_} searchDirectoryTreesForMatchingFiles($d)],
@@ -1470,10 +1672,11 @@ Files that match a given search pattern interpreted by ["bsd\_glob" in perlfunc]
 
 ### searchDirectoryTreesForMatchingFiles(@FoldersandExtensions)
 
-Search the specified directory [trees](https://en.wikipedia.org/wiki/Tree_(data_structure)) for the files (not folders) that match the specified [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions). The argument [list](https://en.wikipedia.org/wiki/Linked_list) should include at least one path name to be useful. If no [file](https://en.wikipedia.org/wiki/Computer_file) [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions) are supplied then all the files below the specified paths are returned.  Arguments wrapped in \[\] will be unwrapped.
+Search the specified directory trees for the files (not folders) that match the specified extensions. The argument list should include at least one path name to be useful. If no file extensions are supplied then all the files below the specified paths are returned.  Arguments wrapped in \[\] will be unwrapped.
 
        Parameter              Description
-    1  @FoldersandExtensions  Mixture of [folder](https://en.wikipedia.org/wiki/File_folder) names and [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions) 
+    1  @FoldersandExtensions  Mixture of folder names and extensions
+
 **Example:**
 
       my $D = temporaryFolder;
@@ -1487,7 +1690,7 @@ Search the specified directory [trees](https://en.wikipedia.org/wiki/Tree_(data_
     
       my @D = findDirs($D);
       my @e = ($D, $d);
-      my @E = [sort](https://en.wikipedia.org/wiki/Sorting) @e;
+      my @E = sort @e;
       is_deeply [@D], [@E];
     
     
@@ -1512,10 +1715,10 @@ Search the specified directory [trees](https://en.wikipedia.org/wiki/Tree_(data_
 
 ### searchDirectoryTreeForSubFolders($folder)
 
-Search the specified directory under the specified [folder](https://en.wikipedia.org/wiki/File_folder) for [sub](https://perldoc.perl.org/perlsub.html) folders.
+Search the specified directory under the specified folder for sub folders.
 
        Parameter  Description
-    1  $folder    The [folder](https://en.wikipedia.org/wiki/File_folder) at which to start the search
+    1  $folder    The folder at which to start the search
 
 **Example:**
 
@@ -1530,7 +1733,7 @@ Search the specified directory under the specified [folder](https://en.wikipedia
     
       my @D = findDirs($D);
       my @e = ($D, $d);
-      my @E = [sort](https://en.wikipedia.org/wiki/Sorting) @e;
+      my @E = sort @e;
       is_deeply [@D], [@E];
     
       is_deeply [sort map {fne $_} searchDirectoryTreesForMatchingFiles($d)],
@@ -1555,7 +1758,7 @@ Search the specified directory under the specified [folder](https://en.wikipedia
 
 ### hashifyFolderStructure  (@files)
 
-Hashify a [list](https://en.wikipedia.org/wiki/Linked_list) of [file](https://en.wikipedia.org/wiki/Computer_file) names to get the corresponding [folder](https://en.wikipedia.org/wiki/File_folder) structure.
+Hashify a list of file names to get the corresponding folder structure.
 
        Parameter  Description
     1  @files     File names
@@ -1573,7 +1776,8 @@ Hashify a [list](https://en.wikipedia.org/wiki/Linked_list) of [file](https://en
 
 ### countFileExtensions (@folders)
 
-Return a [hash](https://en.wikipedia.org/wiki/Hash_table) which counts the [file](https://en.wikipedia.org/wiki/Computer_file) [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions) in and below the folders in the specified [list](https://en.wikipedia.org/wiki/Linked_list). 
+Return a hash which counts the file extensions in and below the folders in the specified list.
+
        Parameter  Description
     1  @folders   Folders to search
 
@@ -1585,10 +1789,10 @@ Return a [hash](https://en.wikipedia.org/wiki/Hash_table) which counts the [file
 
 ### countFileTypes  ($maximumNumberOfProcesses, @folders)
 
-Return a [hash](https://en.wikipedia.org/wiki/Hash_table) which counts, in parallel with a maximum number of [processes](https://en.wikipedia.org/wiki/Process_management_(computing)): **$maximumNumberOfProcesses**, the results of applying the **file** command to each [file](https://en.wikipedia.org/wiki/Computer_file) in and under the specified **@folders**.
+Return a hash which counts, in parallel with a maximum number of processes: **$maximumNumberOfProcesses**, the results of applying the **file** command to each file in and under the specified **@folders**.
 
        Parameter                  Description
-    1  $maximumNumberOfProcesses  Maximum number of [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to run in parallel
+    1  $maximumNumberOfProcesses  Maximum number of processes to run in parallel
     2  @folders                   Folders to search
 
 **Example:**
@@ -1599,7 +1803,7 @@ Return a [hash](https://en.wikipedia.org/wiki/Hash_table) which counts, in paral
 
 ### matchPath   ($file)
 
-Return the deepest [folder](https://en.wikipedia.org/wiki/File_folder) that exists along a given [file](https://en.wikipedia.org/wiki/Computer_file) name path.
+Return the deepest folder that exists along a given file name path.
 
        Parameter  Description
     1  $file      File name
@@ -1615,16 +1819,18 @@ Return the deepest [folder](https://en.wikipedia.org/wiki/File_folder) that exis
 
 ### findFileWithExtension   ($file, @ext)
 
-Find the first [file](https://en.wikipedia.org/wiki/Computer_file) that exists with a path and name of **$file** and an extension drawn from <@ext>.
+Find the first file that exists with a path and name of **$file** and an extension drawn from <@ext>.
 
        Parameter  Description
-    1  $file      File name minus [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions)     2  @ext       Possible [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions) 
+    1  $file      File name minus extensions
+    2  @ext       Possible extensions
+
 **Example:**
 
       my $f = createEmptyFile(fpe(my $d = temporaryFolder, qw(a jpg)));             
     
     
-      my $F = findFileWithExtension(fpf($d, q(a)), qw(txt [data](https://en.wikipedia.org/wiki/Data) jpg));                 # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      my $F = findFileWithExtension(fpf($d, q(a)), qw(txt data jpg));                 # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
       ok $F eq "jpg";                                                               
@@ -1632,12 +1838,12 @@ Find the first [file](https://en.wikipedia.org/wiki/Computer_file) that exists w
 
 ### clearFolder ($folder, $limitCount, $noMsg)
 
-Remove all the files and folders under and including the specified **$folder** as long as the number of files to be removed is less than the specified **$limitCount**. Sometimes the [folder](https://en.wikipedia.org/wiki/File_folder) can be emptied but not removed - perhaps because it a link, in this case a message is produced unless suppressed by the optional **$nomsg** parameter.
+Remove all the files and folders under and including the specified **$folder** as long as the number of files to be removed is less than the specified **$limitCount**. Sometimes the folder can be emptied but not removed - perhaps because it a link, in this case a message is produced unless suppressed by the optional **$nomsg** parameter.
 
        Parameter    Description
     1  $folder      Folder
     2  $limitCount  Maximum number of files to remove to limit damage
-    3  $noMsg       No message if the [folder](https://en.wikipedia.org/wiki/File_folder) cannot be completely removed.
+    3  $noMsg       No message if the folder cannot be completely removed.
 
 **Example:**
 
@@ -1652,7 +1858,7 @@ Remove all the files and folders under and including the specified **$folder** a
     
       my @D = findDirs($D);
       my @e = ($D, $d);
-      my @E = [sort](https://en.wikipedia.org/wiki/Sorting) @e;
+      my @E = sort @e;
       is_deeply [@D], [@E];
     
       is_deeply [sort map {fne $_} searchDirectoryTreesForMatchingFiles($d)],
@@ -1675,16 +1881,17 @@ Remove all the files and folders under and including the specified **$folder** a
       ok onWindows ? 1 : !-d $D;
     
 
-## Read and [write](https://en.wikipedia.org/wiki/Write_(system_call)) files
+## Read and write files
 
-Read and [write](https://en.wikipedia.org/wiki/Write_(system_call)) [strings](https://en.wikipedia.org/wiki/String_(computer_science)) from and to files creating paths to any created files as needed.
+Read and write strings from and to files creating paths to any created files as needed.
 
 ### readFile($file)
 
-Return the content of a [file](https://en.wikipedia.org/wiki/Computer_file) residing on the local machine interpreting the content of the [file](https://en.wikipedia.org/wiki/Computer_file) as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+Return the content of a file residing on the local machine interpreting the content of the file as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
        Parameter  Description
-    1  $file      Name of [file](https://en.wikipedia.org/wiki/Computer_file) to [read](https://en.wikipedia.org/wiki/Reading_(computer)) 
+    1  $file      Name of file to read
+
 **Example:**
 
       my $f = writeFile(undef,  "aaa");
@@ -1704,7 +1911,7 @@ Return the content of a [file](https://en.wikipedia.org/wiki/Computer_file) resi
   "];  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
-      [eval](http://perldoc.perl.org/functions/eval.html) {writeFile($f,  q(ccc))};
+      eval {writeFile($f,  q(ccc))};
       ok $@ =~ m(File already exists:)i;
     
       overWriteFile($F,    q(ccc));
@@ -1717,7 +1924,8 @@ Return the content of a [file](https://en.wikipedia.org/wiki/Computer_file) resi
 
 ### readStdIn   ()
 
-Return the contents of STDIN and return the results as either an [array](https://en.wikipedia.org/wiki/Dynamic_array) or a [string](https://en.wikipedia.org/wiki/String_(computer_science)). Terminate with Ctrl-D if testing manually - STDIN remains open allowing this method to be called again to receive another block of [data](https://en.wikipedia.org/wiki/Data). 
+Return the contents of STDIN and return the results as either an array or a string. Terminate with Ctrl-D if testing manually - STDIN remains open allowing this method to be called again to receive another block of data.
+
 **Example:**
 
       my $d = qq(aaaa);
@@ -1730,10 +1938,12 @@ Return the contents of STDIN and return the results as either an [array](https:/
 
 ### readFileFromRemote  ($file, $ip)
 
-Copy and [read](https://en.wikipedia.org/wiki/Reading_(computer)) a **$file** from the remote machine whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp) and return the content of $file interpreted as [utf8](https://en.wikipedia.org/wiki/UTF-8) .
+Copy and read a **$file** from the remote machine whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp) and return the content of $file interpreted as utf8 .
 
        Parameter  Description
-    1  $file      Name of [file](https://en.wikipedia.org/wiki/Computer_file) to [read](https://en.wikipedia.org/wiki/Reading_(computer))     2  $ip        Optional [IP address](https://en.wikipedia.org/wiki/IP_address) address of [server](https://en.wikipedia.org/wiki/Server_(computing)) 
+    1  $file      Name of file to read
+    2  $ip        Optional ip address of server
+
 **Example:**
 
       my $f = writeFileToRemote(undef, q(aaaa));
@@ -1746,10 +1956,11 @@ Copy and [read](https://en.wikipedia.org/wiki/Reading_(computer)) a **$file** fr
 
 ### evalFile($file)
 
-Read a [file](https://en.wikipedia.org/wiki/Computer_file) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each [hash](https://en.wikipedia.org/wiki/Hash_table) element.
+Read a file containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, confess to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each hash element.
 
        Parameter  Description
-    1  $file      File to [read](https://en.wikipedia.org/wiki/Reading_(computer)) 
+    1  $file      File to read
+
 **Example:**
 
       my $d = [qw(aaa bbb ccc), [{aaa=>'AAA', bbb=>'BBB'}]];
@@ -1770,10 +1981,11 @@ Read a [file](https://en.wikipedia.org/wiki/Computer_file) containing [Unicode](
 
 ### evalFileAsJson  ($file)
 
-Read a **$file** containing [Json](https://en.wikipedia.org/wiki/JSON) and return the corresponding [Perl](http://www.perl.org/) [data](https://en.wikipedia.org/wiki/Data) structure.
+Read a **$file** containing [Json](https://en.wikipedia.org/wiki/JSON) and return the corresponding [Perl](http://www.perl.org/) data structure.
 
        Parameter  Description
-    1  $file      File to [read](https://en.wikipedia.org/wiki/Reading_(computer)) 
+    1  $file      File to read
+
 **Example:**
 
       my $d = [qw(aaa bbb ccc), [{aaa=>'AAA', bbb=>'BBB'}]];
@@ -1794,10 +2006,11 @@ Read a **$file** containing [Json](https://en.wikipedia.org/wiki/JSON) and retur
 
 ### evalGZipFile($file)
 
-Read a [file](https://en.wikipedia.org/wiki/Computer_file) compressed with [gzip](https://en.wikipedia.org/wiki/Gzip) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each [hash](https://en.wikipedia.org/wiki/Hash_table) element. This is slower than using [Storable](https://metacpan.org/pod/Storable) but does produce much smaller files, see also: [dumpGZipFile](#dumpgzipfile).
+Read a file compressed with [gzip](https://en.wikipedia.org/wiki/Gzip) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, confess to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each hash element. This is slower than using [Storable](https://metacpan.org/pod/Storable) but does produce much smaller files, see also: [dumpGZipFile](#dumpgzipfile).
 
        Parameter  Description
-    1  $file      File to [read](https://en.wikipedia.org/wiki/Reading_(computer)) 
+    1  $file      File to read
+
 **Example:**
 
       my $d = [1, 2, 3=>{a=>4, b=>5}];
@@ -1812,10 +2025,11 @@ Read a [file](https://en.wikipedia.org/wiki/Computer_file) compressed with [gzip
 
 ### retrieveFile($file)
 
-Retrieve a **$file** created via [Storable](https://metacpan.org/pod/Storable).  This is much faster than [evalFile](#evalfile) as the stored [data](https://en.wikipedia.org/wiki/Data) is not in text format.
+Retrieve a **$file** created via [Storable](https://metacpan.org/pod/Storable).  This is much faster than [evalFile](#evalfile) as the stored data is not in text format.
 
        Parameter  Description
-    1  $file      File to [read](https://en.wikipedia.org/wiki/Reading_(computer)) 
+    1  $file      File to read
+
 **Example:**
 
       my $f = storeFile(undef, my $d = [qw(aaa bbb ccc)]);
@@ -1828,10 +2042,11 @@ Retrieve a **$file** created via [Storable](https://metacpan.org/pod/Storable). 
 
 ### readBinaryFile  ($file)
 
-Read a binary [file](https://en.wikipedia.org/wiki/Computer_file) on the local machine.
+Read a binary file on the local machine.
 
        Parameter  Description
-    1  $file      File to [read](https://en.wikipedia.org/wiki/Reading_(computer)) 
+    1  $file      File to read
+
 **Example:**
 
       my $f = writeBinaryFile(undef, 0xff x 8);                                      
@@ -1845,10 +2060,11 @@ Read a binary [file](https://en.wikipedia.org/wiki/Computer_file) on the local m
 
 ### readGZipFile($file)
 
-Read the specified [file](https://en.wikipedia.org/wiki/Computer_file) containing compressed [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8) through [gzip](https://en.wikipedia.org/wiki/Gzip).
+Read the specified file containing compressed [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8) through [gzip](https://en.wikipedia.org/wiki/Gzip).
 
        Parameter  Description
-    1  $file      File to [read](https://en.wikipedia.org/wiki/Reading_(computer)). 
+    1  $file      File to read.
+
 **Example:**
 
       my $s = '𝝰'x1e3;
@@ -1864,17 +2080,17 @@ Read the specified [file](https://en.wikipedia.org/wiki/Computer_file) containin
 
 ### makePath($file)
 
-Make the path for the specified [file](https://en.wikipedia.org/wiki/Computer_file) name or [folder](https://en.wikipedia.org/wiki/File_folder) on the local machine. Confess to any failure.
+Make the path for the specified file name or folder on the local machine. Confess to any failure.
 
        Parameter  Description
-    1  $file      File or [folder](https://en.wikipedia.org/wiki/File_folder) name
+    1  $file      File or folder name
 
 **Example:**
 
       my $d = fpd(my $D = temporaryDirectory, qw(a));
       my $f = fpe($d, qw(bbb txt));
       ok !-d $d;
-      [eval](http://perldoc.perl.org/functions/eval.html) q{checkFile($f)};
+      eval q{checkFile($f)};
       my $r = $@;
       my $q = quotemeta($D);
       ok nws($r) =~ m(Can only find.+?: $q)s;
@@ -1901,18 +2117,18 @@ Make the path for the specified [file](https://en.wikipedia.org/wiki/Computer_fi
 
 ### makePathRemote  ($file, $ip)
 
-Make the path for the specified **$file** or [folder](https://en.wikipedia.org/wiki/File_folder) on the [Amazon Web Services](http://aws.amazon.com) instance whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). Confess to any failures.
+Make the path for the specified **$file** or folder on the [Amazon Web Services](http://aws.amazon.com) instance whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). Confess to any failures.
 
        Parameter  Description
-    1  $file      File or [folder](https://en.wikipedia.org/wiki/File_folder) name
-    2  $ip        Optional [IP address](https://en.wikipedia.org/wiki/IP_address) address
+    1  $file      File or folder name
+    2  $ip        Optional ip address
 
 **Example:**
 
       my $d = fpd(my $D = temporaryDirectory, qw(a));
       my $f = fpe($d, qw(bbb txt));
       ok !-d $d;
-      [eval](http://perldoc.perl.org/functions/eval.html) q{checkFile($f)};
+      eval q{checkFile($f)};
       my $r = $@;
       my $q = quotemeta($D);
       ok nws($r) =~ m(Can only find.+?: $q)s;
@@ -1939,10 +2155,12 @@ Make the path for the specified **$file** or [folder](https://en.wikipedia.org/w
 
 ### overWriteFile   ($file, $string)
 
-Write to a **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8). Return the name of the $file on success else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) to any failures. If the [file](https://en.wikipedia.org/wiki/Computer_file) already exists it will be overwritten.
+Write to a **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8). Return the name of the $file on success else confess to any failures. If the file already exists it will be overwritten.
 
        Parameter  Description
-    1  $file      File to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to or B<undef> for a temporary [file](https://en.wikipedia.org/wiki/Computer_file)     2  $string    Unicode [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $file      File to write to or B<undef> for a temporary file
+    2  $string    Unicode string to write
+
 **Example:**
 
       my $f = writeFile(undef,  "aaa");
@@ -1956,7 +2174,7 @@ Write to a **$file**, after creating a path to the $file with [makePath](https:/
   ", "bbb
   "];
     
-      [eval](http://perldoc.perl.org/functions/eval.html) {writeFile($f,  q(ccc))};
+      eval {writeFile($f,  q(ccc))};
       ok $@ =~ m(File already exists:)i;
     
     
@@ -1971,10 +2189,12 @@ Write to a **$file**, after creating a path to the $file with [makePath](https:/
 
 ### writeFile   ($file, $string)
 
-Write to a new **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8). Return the name of the $file written to on success else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if the [file](https://en.wikipedia.org/wiki/Computer_file) already exists or any other error occurs.
+Write to a new **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8). Return the name of the $file written to on success else confess if the file already exists or any other error occurs.
 
        Parameter  Description
-    1  $file      New [file](https://en.wikipedia.org/wiki/Computer_file) to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to or B<undef> for a temporary [file](https://en.wikipedia.org/wiki/Computer_file)     2  $string    String to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $file      New file to write to or B<undef> for a temporary file
+    2  $string    String to write
+
 **Example:**
 
       my $f = writeFile(undef,  "aaa");  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -1990,7 +2210,7 @@ Write to a new **$file**, after creating a path to the $file with [makePath](htt
   "];
     
     
-      [eval](http://perldoc.perl.org/functions/eval.html) {writeFile($f,  q(ccc))};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      eval {writeFile($f,  q(ccc))};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       ok $@ =~ m(File already exists:)i;
     
@@ -2002,7 +2222,7 @@ Write to a new **$file**, after creating a path to the $file with [makePath](htt
 
 ### writeTempFile   (@strings)
 
-Write an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) as lines to a temporary [file](https://en.wikipedia.org/wiki/Computer_file) and return the [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Write an array of strings as lines to a temporary file and return the file name.
 
        Parameter  Description
     1  @strings   Array of lines
@@ -2022,7 +2242,7 @@ Write an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https
   ", "bbb
   "];
     
-      [eval](http://perldoc.perl.org/functions/eval.html) {writeFile($f,  q(ccc))};
+      eval {writeFile($f,  q(ccc))};
       ok $@ =~ m(File already exists:)i;
     
       overWriteFile($F,    q(ccc));
@@ -2033,10 +2253,12 @@ Write an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https
 
 ### writeFileToRemote   ($file, $string, $ip)
 
-Write to a new **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). Return the name of the $file on success else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if the [file](https://en.wikipedia.org/wiki/Computer_file) already exists or any other error occurs.
+Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). Return the name of the $file on success else confess if the file already exists or any other error occurs.
 
        Parameter  Description
-    1  $file      New [file](https://en.wikipedia.org/wiki/Computer_file) to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to or B<undef> for a temporary [file](https://en.wikipedia.org/wiki/Computer_file)     2  $string    String to [write](https://en.wikipedia.org/wiki/Write_(system_call))     3  $ip        Optional [IP address](https://en.wikipedia.org/wiki/IP_address) address
+    1  $file      New file to write to or B<undef> for a temporary file
+    2  $string    String to write
+    3  $ip        Optional ip address
 
 **Example:**
 
@@ -2049,9 +2271,12 @@ Write to a new **$file**, after creating a path to the [file](https://en.wikiped
 
 ### overWriteBinaryFile ($file, $string)
 
-Write to **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**. If the $file already exists it is overwritten. Return the name of the $file on success else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/). 
+Write to **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**. If the $file already exists it is overwritten. Return the name of the $file on success else confess.
+
        Parameter  Description
-    1  $file      File to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to or B<undef> for a temporary [file](https://en.wikipedia.org/wiki/Computer_file)     2  $string    L<Unicode|https://en.wikipedia.org/wiki/Unicode> [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $file      File to write to or B<undef> for a temporary file
+    2  $string    L<Unicode|https://en.wikipedia.org/wiki/Unicode> string to write
+
 **Example:**
 
     if (1)                                                                            
@@ -2065,19 +2290,19 @@ Write to **$file**, after creating a path to the [file](https://en.wikipedia.org
       my $s = $a.$a.$b.$b;
       ok length($s) == 4;
     
-      my $f = [eval](http://perldoc.perl.org/functions/eval.html) {writeFile(undef, $s)};
+      my $f = eval {writeFile(undef, $s)};
       ok fileSize($f) == 8;
     
-      [eval](http://perldoc.perl.org/functions/eval.html) {writeBinaryFile($f, $s)};
-      ok $@ =~ m(Binary [file](https://en.wikipedia.org/wiki/Computer_file) already exists:)s;
+      eval {writeBinaryFile($f, $s)};
+      ok $@ =~ m(Binary file already exists:)s;
     
     
-      [eval](http://perldoc.perl.org/functions/eval.html) {overWriteBinaryFile($f, $s)};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      eval {overWriteBinaryFile($f, $s)};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       ok !$@;
       ok fileSize($f) == 4;
     
-      ok $s eq [eval](http://perldoc.perl.org/functions/eval.html) {readBinaryFile($f)};
+      ok $s eq eval {readBinaryFile($f)};
     
       copyBinaryFile($f, my $F = temporaryFile);
       ok $s eq readBinaryFile($F);
@@ -2087,10 +2312,12 @@ Write to **$file**, after creating a path to the [file](https://en.wikipedia.org
 
 ### writeBinaryFile ($file, $string)
 
-Write to a new **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**. Return the name of the $file on success else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if the [file](https://en.wikipedia.org/wiki/Computer_file) already exists or any other error occurs.
+Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**. Return the name of the $file on success else confess if the file already exists or any other error occurs.
 
        Parameter  Description
-    1  $file      New [file](https://en.wikipedia.org/wiki/Computer_file) to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to or B<undef> for a temporary [file](https://en.wikipedia.org/wiki/Computer_file)     2  $string    String to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $file      New file to write to or B<undef> for a temporary file
+    2  $string    String to write
+
 **Example:**
 
       my $f = writeBinaryFile(undef, 0xff x 8);                                        # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -2111,19 +2338,19 @@ Write to a new **$file**, after creating a path to the [file](https://en.wikiped
       my $s = $a.$a.$b.$b;
       ok length($s) == 4;
     
-      my $f = [eval](http://perldoc.perl.org/functions/eval.html) {writeFile(undef, $s)};
+      my $f = eval {writeFile(undef, $s)};
       ok fileSize($f) == 8;
     
     
-      [eval](http://perldoc.perl.org/functions/eval.html) {writeBinaryFile($f, $s)};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      eval {writeBinaryFile($f, $s)};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-      ok $@ =~ m(Binary [file](https://en.wikipedia.org/wiki/Computer_file) already exists:)s;
+      ok $@ =~ m(Binary file already exists:)s;
     
-      [eval](http://perldoc.perl.org/functions/eval.html) {overWriteBinaryFile($f, $s)};
+      eval {overWriteBinaryFile($f, $s)};
       ok !$@;
       ok fileSize($f) == 4;
     
-      ok $s eq [eval](http://perldoc.perl.org/functions/eval.html) {readBinaryFile($f)};
+      ok $s eq eval {readBinaryFile($f)};
     
       copyBinaryFile($f, my $F = temporaryFile);
       ok $s eq readBinaryFile($F);
@@ -2133,10 +2360,12 @@ Write to a new **$file**, after creating a path to the [file](https://en.wikiped
 
 ### dumpFile($file, $structure)
 
-Dump to a **$file** the referenced [data](https://en.wikipedia.org/wiki/Data) **$structure**.
+Dump to a **$file** the referenced data **$structure**.
 
        Parameter   Description
-    1  $file       File to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to or B<undef> for a temporary [file](https://en.wikipedia.org/wiki/Computer_file)     2  $structure  Address of [data](https://en.wikipedia.org/wiki/Data) structure to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $file       File to write to or B<undef> for a temporary file
+    2  $structure  Address of data structure to write
+
 **Example:**
 
       my $d = [qw(aaa bbb ccc), [{aaa=>'AAA', bbb=>'BBB'}]];
@@ -2155,10 +2384,11 @@ Dump to a **$file** the referenced [data](https://en.wikipedia.org/wiki/Data) **
 
 ### dumpTempFile($structure)
 
-Dump a [data](https://en.wikipedia.org/wiki/Data) structure to a temporary [file](https://en.wikipedia.org/wiki/Computer_file) and return the name of the [file](https://en.wikipedia.org/wiki/Computer_file) created.
+Dump a data structure to a temporary file and return the name of the file created.
 
        Parameter   Description
-    1  $structure  Data structure to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $structure  Data structure to write
+
 **Example:**
 
       my $d = [qw(aaa bbb ccc), [{aaa=>'AAA', bbb=>'BBB'}]];
@@ -2177,9 +2407,12 @@ Dump a [data](https://en.wikipedia.org/wiki/Data) structure to a temporary [file
 
 ### dumpFileAsJson  ($file, $structure)
 
-Dump to a **$file** the referenced [data](https://en.wikipedia.org/wiki/Data) **$structure** represented as [Json](https://en.wikipedia.org/wiki/JSON) [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Dump to a **$file** the referenced data **$structure** represented as [Json](https://en.wikipedia.org/wiki/JSON) string.
+
        Parameter   Description
-    1  $file       File to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to or B<undef> for a temporary [file](https://en.wikipedia.org/wiki/Computer_file)     2  $structure  Address of [data](https://en.wikipedia.org/wiki/Data) structure to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $file       File to write to or B<undef> for a temporary file
+    2  $structure  Address of data structure to write
+
 **Example:**
 
       my $d = [qw(aaa bbb ccc), [{aaa=>'AAA', bbb=>'BBB'}]];
@@ -2198,10 +2431,11 @@ Dump to a **$file** the referenced [data](https://en.wikipedia.org/wiki/Data) **
 
 ### dumpTempFileAsJson  ($structure)
 
-Dump a [data](https://en.wikipedia.org/wiki/Data) structure represented as [Json](https://en.wikipedia.org/wiki/JSON) [string](https://en.wikipedia.org/wiki/String_(computer_science)) to a temporary [file](https://en.wikipedia.org/wiki/Computer_file) and return the name of the [file](https://en.wikipedia.org/wiki/Computer_file) created.
+Dump a data structure represented as [Json](https://en.wikipedia.org/wiki/JSON) string to a temporary file and return the name of the file created.
 
        Parameter   Description
-    1  $structure  Data structure to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $structure  Data structure to write
+
 **Example:**
 
       my $d = [qw(aaa bbb ccc), [{aaa=>'AAA', bbb=>'BBB'}]];
@@ -2220,10 +2454,12 @@ Dump a [data](https://en.wikipedia.org/wiki/Data) structure represented as [Json
 
 ### storeFile   ($file, $structure)
 
-Store into a **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, a [data](https://en.wikipedia.org/wiki/Data) **$structure** via [Storable](https://metacpan.org/pod/Storable).  This is much faster than [dumpFile](#dumpfile) but the stored results are not easily modified.
+Store into a **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, a data **$structure** via [Storable](https://metacpan.org/pod/Storable).  This is much faster than [dumpFile](#dumpfile) but the stored results are not easily modified.
 
        Parameter   Description
-    1  $file       File to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to or B<undef> for a temporary [file](https://en.wikipedia.org/wiki/Computer_file)     2  $structure  Address of [data](https://en.wikipedia.org/wiki/Data) structure to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $file       File to write to or B<undef> for a temporary file
+    2  $structure  Address of data structure to write
+
 **Example:**
 
       my $f = storeFile(undef, my $d = [qw(aaa bbb ccc)]);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -2235,11 +2471,12 @@ Store into a **$file**, after creating a path to the [file](https://en.wikipedia
 
 ### writeGZipFile   ($file, $string)
 
-Write to a **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, through [gzip](https://en.wikipedia.org/wiki/Gzip) a **$string** whose content is encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+Write to a **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, through [gzip](https://en.wikipedia.org/wiki/Gzip) a **$string** whose content is encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
        Parameter  Description
-    1  $file      File to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to
-    2  $string    String to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $file      File to write to
+    2  $string    String to write
+
 **Example:**
 
       my $s = '𝝰'x1e3;
@@ -2255,10 +2492,12 @@ Write to a **$file**, after creating a path to the [file](https://en.wikipedia.o
 
 ### dumpGZipFile($file, $structure)
 
-Write to a **$file** a [data](https://en.wikipedia.org/wiki/Data) **$structure** through [gzip](https://en.wikipedia.org/wiki/Gzip). This technique produces files that are a lot more compact files than those produced by [Storable](https://metacpan.org/pod/Storable), but the execution time is much longer. See also: [evalGZipFile](#evalgzipfile).
+Write to a **$file** a data **$structure** through [gzip](https://en.wikipedia.org/wiki/Gzip). This technique produces files that are a lot more compact files than those produced by [Storable](https://metacpan.org/pod/Storable), but the execution time is much longer. See also: [evalGZipFile](#evalgzipfile).
 
        Parameter   Description
-    1  $file       File to [write](https://en.wikipedia.org/wiki/Write_(system_call))     2  $structure  Reference to [data](https://en.wikipedia.org/wiki/Data) 
+    1  $file       File to write
+    2  $structure  Reference to data
+
 **Example:**
 
       my $d = [1, 2, 3=>{a=>4, b=>5}];
@@ -2273,10 +2512,11 @@ Write to a **$file** a [data](https://en.wikipedia.org/wiki/Data) **$structure**
 
 ### writeFiles  ($hash, $old, $new)
 
-Write the values of a **$hash** reference into files identified by the key of each value using [overWriteFile](#overwritefile) optionally swapping the prefix of each [file](https://en.wikipedia.org/wiki/Computer_file) from **$old** to **$new**.
+Write the values of a **$hash** reference into files identified by the key of each value using [overWriteFile](#overwritefile) optionally swapping the prefix of each file from **$old** to **$new**.
 
        Parameter  Description
-    1  $hash      Hash of key value pairs representing files and [data](https://en.wikipedia.org/wiki/Data)     2  $old       Optional old prefix
+    1  $hash      Hash of key value pairs representing files and data
+    2  $old       Optional old prefix
     3  $new       New prefix
 
 **Example:**
@@ -2325,9 +2565,11 @@ Write the values of a **$hash** reference into files identified by the key of ea
 
 ### readFiles   (@folders)
 
-Read all the files in the specified [list](https://en.wikipedia.org/wiki/Linked_list) of folders into a [hash](https://en.wikipedia.org/wiki/Hash_table). 
+Read all the files in the specified list of folders into a hash.
+
        Parameter  Description
-    1  @folders   Folders to [read](https://en.wikipedia.org/wiki/Reading_(computer)) 
+    1  @folders   Folders to read
+
 **Example:**
 
       my $d = temporaryFolder;
@@ -2374,7 +2616,7 @@ Read all the files in the specified [list](https://en.wikipedia.org/wiki/Linked_
 
 ### includeFiles($expand)
 
-Read the given [file](https://en.wikipedia.org/wiki/Computer_file) and expand all lines that start "includeThisFile " with the [file](https://en.wikipedia.org/wiki/Computer_file) named by the [REST](https://en.wikipedia.org/wiki/REST) of the line and keep doing this until all the included files have been expanded or a repetition is detected.  Returns the expanded [file](https://en.wikipedia.org/wiki/Computer_file) or confesses if one of the included files cannot be located.
+Read the given file and expand all lines that start "includeThisFile " with the file named by the rest of the line and keep doing this until all the included files have been expanded or a repetition is detected.  Returns the expanded file or confesses if one of the included files cannot be located.
 
        Parameter  Description
     1  $expand    File to expand
@@ -2408,7 +2650,8 @@ Read the given [file](https://en.wikipedia.org/wiki/Computer_file) and expand al
 
 ### appendFile  ($file, $string)
 
-Append to **$file** a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded with [utf8](https://en.wikipedia.org/wiki/UTF-8), creating the $file first if necessary. Return the name of the $file on success else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/). The $file being appended to is locked before the [write](https://en.wikipedia.org/wiki/Write_(system_call)) with ["flock" in perlfunc](https://metacpan.org/pod/perlfunc#flock) to allow  multiple [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to append linearly to the same [file](https://en.wikipedia.org/wiki/Computer_file). 
+Append to **$file** a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded with [utf8](https://en.wikipedia.org/wiki/UTF-8), creating the $file first if necessary. Return the name of the $file on success else confess. The $file being appended to is locked before the write with ["flock" in perlfunc](https://metacpan.org/pod/perlfunc#flock) to allow  multiple processes to append linearly to the same file.
+
        Parameter  Description
     1  $file      File to append to
     2  $string    String to append
@@ -2428,7 +2671,7 @@ Append to **$file** a **$string** of [Unicode](https://en.wikipedia.org/wiki/Uni
   ", "bbb
   "];
     
-      [eval](http://perldoc.perl.org/functions/eval.html) {writeFile($f,  q(ccc))};
+      eval {writeFile($f,  q(ccc))};
       ok $@ =~ m(File already exists:)i;
     
       overWriteFile($F,    q(ccc));
@@ -2439,10 +2682,11 @@ Append to **$file** a **$string** of [Unicode](https://en.wikipedia.org/wiki/Uni
 
 ### createEmptyFile ($file)
 
-Create an empty [file](https://en.wikipedia.org/wiki/Computer_file) unless the [file](https://en.wikipedia.org/wiki/Computer_file) already exists and return the name of the [file](https://en.wikipedia.org/wiki/Computer_file) else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if the [file](https://en.wikipedia.org/wiki/Computer_file) cannot be created.
+Create an empty file unless the file already exists and return the name of the file else confess if the file cannot be created.
 
        Parameter  Description
-    1  $file      File to create or B<undef> for a temporary [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $file      File to create or B<undef> for a temporary file
+
 **Example:**
 
       my $D = temporaryFolder;
@@ -2458,7 +2702,7 @@ Create an empty [file](https://en.wikipedia.org/wiki/Computer_file) unless the [
     
       my @D = findDirs($D);
       my @e = ($D, $d);
-      my @E = [sort](https://en.wikipedia.org/wiki/Sorting) @e;
+      my @E = sort @e;
       is_deeply [@D], [@E];
     
       is_deeply [sort map {fne $_} searchDirectoryTreesForMatchingFiles($d)],
@@ -2485,7 +2729,8 @@ Apply [chmod](https://linux.die.net/man/1/chmod) to a **$file** to set its **$pe
 
        Parameter     Description
     1  $file         File
-    2  $permissions  Permissions settings per [chmod](https://linux.die.net/man/1/chmod) 
+    2  $permissions  Permissions settings per chmod
+
 **Example:**
 
     if (1)                                                                          
@@ -2505,7 +2750,8 @@ Apply [chmod](https://linux.die.net/man/1/chmod) to a **$file** to set its **$pe
 
 ### numberOfLinesInFile ($file)
 
-Return the number of lines in a [file](https://en.wikipedia.org/wiki/Computer_file). 
+Return the number of lines in a file.
+
        Parameter  Description
     1  $file      File
 
@@ -2522,11 +2768,12 @@ Return the number of lines in a [file](https://en.wikipedia.org/wiki/Computer_fi
 
 ### overWriteHtmlFile   ($file, $data)
 
-Write an [HTML](https://en.wikipedia.org/wiki/HTML) [file](https://en.wikipedia.org/wiki/Computer_file) to /var/www/html and make it readable.
+Write an [HTML](https://en.wikipedia.org/wiki/HTML) file to /var/www/html and make it readable.
 
        Parameter  Description
-    1  $file      Target [file](https://en.wikipedia.org/wiki/Computer_file) relative to /var/www/html
-    2  $data      Data to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $file      Target file relative to /var/www/html
+    2  $data      Data to write
+
 **Example:**
 
       overWriteHtmlFile   (q(index.html), q(<html><h1>Hello</h1></html>));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -2536,11 +2783,12 @@ Write an [HTML](https://en.wikipedia.org/wiki/HTML) [file](https://en.wikipedia.
 
 ### overWritePerlCgiFile($file, $data)
 
-Write a [Perl](http://www.perl.org/) [file](https://en.wikipedia.org/wiki/Computer_file) to /usr/lib/cgi-bin and make it executable after checking it for syntax errors.
+Write a [Perl](http://www.perl.org/) file to /usr/lib/cgi-bin and make it executable after checking it for syntax errors.
 
        Parameter  Description
-    1  $file      Target [file](https://en.wikipedia.org/wiki/Computer_file) relative to /var/www/html
-    2  $data      Data to [write](https://en.wikipedia.org/wiki/Write_(system_call)) 
+    1  $file      Target file relative to /var/www/html
+    2  $data      Data to write
+
 **Example:**
 
       overWriteHtmlFile   (q(index.html), q(<html><h1>Hello</h1></html>));
@@ -2551,13 +2799,16 @@ Write a [Perl](http://www.perl.org/) [file](https://en.wikipedia.org/wiki/Comput
 
 ## Copy
 
-Copy files and folders. The **\\Acopy.\*Md5Normalized.\*\\Z** methods can be used to ensure that files have collision proof names that collapse duplicate content even when copied to another [folder](https://en.wikipedia.org/wiki/File_folder). 
+Copy files and folders. The **\\Acopy.\*Md5Normalized.\*\\Z** methods can be used to ensure that files have collision proof names that collapse duplicate content even when copied to another folder.
+
 ### copyFile($source, $target)
 
-Copy the **$source** [file](https://en.wikipedia.org/wiki/Computer_file) encoded in [utf8](https://en.wikipedia.org/wiki/UTF-8) to the specified **$target** [file](https://en.wikipedia.org/wiki/Computer_file) in and return $target.
+Copy the **$source** file encoded in utf8 to the specified **$target** file in and return $target.
 
        Parameter  Description
-    1  $source    Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $target    Target [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $source    Source file
+    2  $target    Target file
+
 **Example:**
 
       my $d = temporaryFolder;
@@ -2602,10 +2853,12 @@ Copy the **$source** [file](https://en.wikipedia.org/wiki/Computer_file) encoded
 
 ### moveFileNoClobber   ($source, $target)
 
-Rename the **$source** [file](https://en.wikipedia.org/wiki/Computer_file), which must exist, to the **$target** [file](https://en.wikipedia.org/wiki/Computer_file) but only if the $target [file](https://en.wikipedia.org/wiki/Computer_file) does not exist already.  Returns 1 if the $source [file](https://en.wikipedia.org/wiki/Computer_file) was successfully renamed to the $target [file](https://en.wikipedia.org/wiki/Computer_file) else 0.
+Rename the **$source** file, which must exist, to the **$target** file but only if the $target file does not exist already.  Returns 1 if the $source file was successfully renamed to the $target file else 0.
 
        Parameter  Description
-    1  $source    Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $target    Target [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $source    Source file
+    2  $target    Target file
+
 **Example:**
 
       my $d = temporaryFolder;
@@ -2652,10 +2905,12 @@ Rename the **$source** [file](https://en.wikipedia.org/wiki/Computer_file), whic
 
 ### moveFileWithClobber ($source, $target)
 
-Rename the **$source** [file](https://en.wikipedia.org/wiki/Computer_file), which must exist, to the **$target** [file](https://en.wikipedia.org/wiki/Computer_file) but only if the $target [file](https://en.wikipedia.org/wiki/Computer_file) does not exist already.  Returns 1 if the $source [file](https://en.wikipedia.org/wiki/Computer_file) was successfully renamed to the $target [file](https://en.wikipedia.org/wiki/Computer_file) else 0.
+Rename the **$source** file, which must exist, to the **$target** file but only if the $target file does not exist already.  Returns 1 if the $source file was successfully renamed to the $target file else 0.
 
        Parameter  Description
-    1  $source    Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $target    Target [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $source    Source file
+    2  $target    Target file
+
 **Example:**
 
       my $d = temporaryFolder;
@@ -2700,10 +2955,12 @@ Rename the **$source** [file](https://en.wikipedia.org/wiki/Computer_file), whic
 
 ### copyFileToFolder($source, $targetFolder)
 
-Copy the [file](https://en.wikipedia.org/wiki/Computer_file) named in **$source** to the specified **$targetFolder/** or if $targetFolder/ is in fact a [file](https://en.wikipedia.org/wiki/Computer_file) into the [folder](https://en.wikipedia.org/wiki/File_folder) containing this [file](https://en.wikipedia.org/wiki/Computer_file) and return the target [file](https://en.wikipedia.org/wiki/Computer_file) name. Confesses instead of copying if the target already exists.
+Copy the file named in **$source** to the specified **$targetFolder/** or if $targetFolder/ is in fact a file into the folder containing this file and return the target file name. Confesses instead of copying if the target already exists.
 
        Parameter      Description
-    1  $source        Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $targetFolder  Target [folder](https://en.wikipedia.org/wiki/File_folder) 
+    1  $source        Source file
+    2  $targetFolder  Target folder
+
 **Example:**
 
       my $sd = temporaryFolder;
@@ -2719,7 +2976,7 @@ Copy the [file](https://en.wikipedia.org/wiki/Computer_file) named in **$source*
 
 ### nameFromString  ($string, %options)
 
-Create a readable name from an arbitrary [string](https://en.wikipedia.org/wiki/String_(computer_science)) of text.
+Create a readable name from an arbitrary string of text.
 
        Parameter  Description
     1  $string    String
@@ -2759,7 +3016,7 @@ Create a readable name from an arbitrary [string](https://en.wikipedia.org/wiki/
 
 ### nameFromStringRestrictedToTitle ($string, %options)
 
-Create a readable name from a [string](https://en.wikipedia.org/wiki/String_(computer_science)) of text that might contain a title tag - fall back to [nameFromString](#namefromstring) if that is not possible.
+Create a readable name from a string of text that might contain a title tag - fall back to [nameFromString](#namefromstring) if that is not possible.
 
        Parameter  Description
     1  $string    String
@@ -2796,10 +3053,11 @@ Create a readable name from a [string](https://en.wikipedia.org/wiki/String_(com
 
 ### uniqueNameFromFile  ($source)
 
-Create a unique name from a [file](https://en.wikipedia.org/wiki/Computer_file) name and the [MD5](https://en.wikipedia.org/wiki/MD5) sum of its content.
+Create a unique name from a file name and the md5 sum of its content.
 
        Parameter  Description
-    1  $source    Source [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $source    Source file
+
 **Example:**
 
       my $f = owf(q(test.txt), join "", 1..100);
@@ -2811,7 +3069,7 @@ Create a unique name from a [file](https://en.wikipedia.org/wiki/Computer_file) 
 
 ### nameFromFolder  ($file)
 
-Create a name from the last [folder](https://en.wikipedia.org/wiki/File_folder) in the path of a [file](https://en.wikipedia.org/wiki/Computer_file) name.  Return [undef](https://perldoc.perl.org/functions/undef.html) if the [file](https://en.wikipedia.org/wiki/Computer_file) does not have a path.
+Create a name from the last folder in the path of a file name.  Return undef if the file does not have a path.
 
        Parameter  Description
     1  $file      File name
@@ -2824,10 +3082,12 @@ Create a name from the last [folder](https://en.wikipedia.org/wiki/File_folder) 
 
 ### copyBinaryFile  ($source, $target)
 
-Copy the binary [file](https://en.wikipedia.org/wiki/Computer_file) **$source** to a [file](https://en.wikipedia.org/wiki/Computer_file) named <%target> and return the target [file](https://en.wikipedia.org/wiki/Computer_file) name,.
+Copy the binary file **$source** to a file named <%target> and return the target file name,.
 
        Parameter  Description
-    1  $source    Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $target    Target [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $source    Source file
+    2  $target    Target file
+
 **Example:**
 
     if (1)                                                                            
@@ -2841,17 +3101,17 @@ Copy the binary [file](https://en.wikipedia.org/wiki/Computer_file) **$source** 
       my $s = $a.$a.$b.$b;
       ok length($s) == 4;
     
-      my $f = [eval](http://perldoc.perl.org/functions/eval.html) {writeFile(undef, $s)};
+      my $f = eval {writeFile(undef, $s)};
       ok fileSize($f) == 8;
     
-      [eval](http://perldoc.perl.org/functions/eval.html) {writeBinaryFile($f, $s)};
-      ok $@ =~ m(Binary [file](https://en.wikipedia.org/wiki/Computer_file) already exists:)s;
+      eval {writeBinaryFile($f, $s)};
+      ok $@ =~ m(Binary file already exists:)s;
     
-      [eval](http://perldoc.perl.org/functions/eval.html) {overWriteBinaryFile($f, $s)};
+      eval {overWriteBinaryFile($f, $s)};
       ok !$@;
       ok fileSize($f) == 4;
     
-      ok $s eq [eval](http://perldoc.perl.org/functions/eval.html) {readBinaryFile($f)};
+      ok $s eq eval {readBinaryFile($f)};
     
     
       copyBinaryFile($f, my $F = temporaryFile);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -2863,10 +3123,11 @@ Copy the binary [file](https://en.wikipedia.org/wiki/Computer_file) **$source** 
 
 ### copyFileToRemote($file, $ip)
 
-Copy the specified local **$file** to the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+Copy the specified local **$file** to the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
        Parameter  Description
-    1  $file      Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $ip        Optional [IP address](https://en.wikipedia.org/wiki/IP_address) address
+    1  $file      Source file
+    2  $ip        Optional ip address
 
 **Example:**
 
@@ -2882,10 +3143,11 @@ Copy the specified local **$file** to the [server](https://en.wikipedia.org/wiki
 
 ### copyFileFromRemote  ($file, $ip)
 
-Copy the specified **$file** from the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+Copy the specified **$file** from the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
        Parameter  Description
-    1  $file      Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $ip        Optional [IP address](https://en.wikipedia.org/wiki/IP_address) address
+    1  $file      Source file
+    2  $ip        Optional ip address
 
 **Example:**
 
@@ -2901,9 +3163,12 @@ Copy the specified **$file** from the [server](https://en.wikipedia.org/wiki/Ser
 
 ### copyFolder  ($source, $target)
 
-Copy the **$source** [folder](https://en.wikipedia.org/wiki/File_folder) to the **$target** [folder](https://en.wikipedia.org/wiki/File_folder) after clearing the $target [folder](https://en.wikipedia.org/wiki/File_folder). 
+Copy the **$source** folder to the **$target** folder after clearing the $target folder.
+
        Parameter  Description
-    1  $source    Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $target    Target [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $source    Source file
+    2  $target    Target file
+
 **Example:**
 
       my $d = temporaryFolder;
@@ -2950,10 +3215,12 @@ Copy the **$source** [folder](https://en.wikipedia.org/wiki/File_folder) to the 
 
 ### mergeFolder ($source, $target)
 
-Copy the **$source** [folder](https://en.wikipedia.org/wiki/File_folder) into the **$target** [folder](https://en.wikipedia.org/wiki/File_folder) retaining any existing files not replaced by copied files.
+Copy the **$source** folder into the **$target** folder retaining any existing files not replaced by copied files.
 
        Parameter  Description
-    1  $source    Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $target    Target [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $source    Source file
+    2  $target    Target file
+
 **Example:**
 
       my $d = temporaryFolder;
@@ -2998,9 +3265,12 @@ Copy the **$source** [folder](https://en.wikipedia.org/wiki/File_folder) into th
 
 ### copyFolderToRemote  ($Source, $ip)
 
-Copy the specified local **$Source** [folder](https://en.wikipedia.org/wiki/File_folder) to the corresponding remote [folder](https://en.wikipedia.org/wiki/File_folder) on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). The default [userid](https://en.wikipedia.org/wiki/User_identifier) supplied by `.ssh/config` will be used on the remote [server](https://en.wikipedia.org/wiki/Server_(computing)). 
+Copy the specified local **$Source** folder to the corresponding remote folder on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). The default userid supplied by `.ssh/config` will be used on the remote server.
+
        Parameter  Description
-    1  $Source    Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $ip        Optional [IP address](https://en.wikipedia.org/wiki/IP_address) address of [server](https://en.wikipedia.org/wiki/Server_(computing)) 
+    1  $Source    Source file
+    2  $ip        Optional ip address of server
+
 **Example:**
 
     if (0)                                                                             
@@ -3015,9 +3285,12 @@ Copy the specified local **$Source** [folder](https://en.wikipedia.org/wiki/File
 
 ### mergeFolderFromRemote   ($Source, $ip)
 
-Merge the specified **$Source** [folder](https://en.wikipedia.org/wiki/File_folder) from the corresponding remote [folder](https://en.wikipedia.org/wiki/File_folder) on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). The default [userid](https://en.wikipedia.org/wiki/User_identifier) supplied by `.ssh/config` will be used on the remote [server](https://en.wikipedia.org/wiki/Server_(computing)). 
+Merge the specified **$Source** folder from the corresponding remote folder on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp). The default userid supplied by `.ssh/config` will be used on the remote server.
+
        Parameter  Description
-    1  $Source    Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $ip        Optional [IP address](https://en.wikipedia.org/wiki/IP_address) address of [server](https://en.wikipedia.org/wiki/Server_(computing)) 
+    1  $Source    Source file
+    2  $ip        Optional ip address of server
+
 **Example:**
 
     if (0)                                                                             
@@ -3036,7 +3309,7 @@ Methods to assist with testing
 
 ## removeFilePathsFromStructure($structure)
 
-Remove all [file](https://en.wikipedia.org/wiki/Computer_file) paths from a specified **$structure** to make said $structure testable with ["is\_deeply" in Test::More](https://metacpan.org/pod/Test%3A%3AMore#is_deeply).
+Remove all file paths from a specified **$structure** to make said $structure testable with ["is\_deeply" in Test::More](https://metacpan.org/pod/Test%3A%3AMore#is_deeply).
 
        Parameter   Description
     1  $structure  Data structure reference
@@ -3065,7 +3338,7 @@ Remove all [file](https://en.wikipedia.org/wiki/Computer_file) paths from a spec
 
 ## writeStructureTest  ($structure, $expr)
 
-Write a [test](https://en.wikipedia.org/wiki/Software_testing) for a [data](https://en.wikipedia.org/wiki/Data) **$structure** with [file](https://en.wikipedia.org/wiki/Computer_file) names in it.
+Write a test for a data **$structure** with file names in it.
 
        Parameter   Description
     1  $structure  Data structure reference
@@ -3091,19 +3364,19 @@ Write a [test](https://en.wikipedia.org/wiki/Software_testing) for a [data](http
 
 ## subNameTraceBack()
 
-Find the names of the calling subroutines and return them as a blank separated [string](https://en.wikipedia.org/wiki/String_(computer_science)) of names.
+Find the names of the calling subroutines and return them as a blank separated string of names.
 
 **Example:**
 
-      [sub](https://perldoc.perl.org/perlsub.html) aaa
+      sub aaa
        {&bbb;
        }
     
-      [sub](https://perldoc.perl.org/perlsub.html) bbb
+      sub bbb
        {&ccc;
        }
     
-      [sub](https://perldoc.perl.org/perlsub.html) ccc
+      sub ccc
     
        {subNameTraceBack;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
@@ -3131,13 +3404,16 @@ Return (width, height) of an **$image**.
 
 ## convertDocxToFodt   ($inputFile, $outputFile)
 
-Convert a _docx_ **$inputFile** [file](https://en.wikipedia.org/wiki/Computer_file) to a _fodt_ **$outputFile** using **unoconv** which must not be running elsewhere at the time.  [Unoconv](#https-github-com-dagwieers-unoconv) can be installed via:
+Convert a _docx_ **$inputFile** file to a _fodt_ **$outputFile** using **unoconv** which must not be running elsewhere at the time.  [Unoconv](#https-github-com-dagwieers-unoconv) can be installed via:
 
-    sudo [<b>sudo apt-get</b>](https://en.wikipedia.org/wiki/APT_(software)) [install](https://en.wikipedia.org/wiki/Installation_(computer_programs)) sharutils [unoconv](https://github.com/unoconv/unoconv) 
+    sudo apt install sharutils unoconv
+
 Parameters:.
 
        Parameter    Description
-    1  $inputFile   Input [file](https://en.wikipedia.org/wiki/Computer_file)     2  $outputFile  Output [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $inputFile   Input file
+    2  $outputFile  Output file
+
 **Example:**
 
       convertDocxToFodt(fpe(qw(a docx)), fpe(qw(a fodt)));                            # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -3146,18 +3422,20 @@ Parameters:.
 
 ## cutOutImagesInFodtFile  ($inputFile, $outputFolder, $imagePrefix)
 
-Cut out the images embedded in a **fodt** [file](https://en.wikipedia.org/wiki/Computer_file), perhaps produced via [convertDocxToFodt](#convertdocxtofodt), placing them in the specified [folder](https://en.wikipedia.org/wiki/File_folder) and replacing them in the source [file](https://en.wikipedia.org/wiki/Computer_file) with:
+Cut out the images embedded in a **fodt** file, perhaps produced via [convertDocxToFodt](#convertdocxtofodt), placing them in the specified folder and replacing them in the source file with:
 
     <image href="$imageFile" outputclass="imageType">.
 
 This conversion requires that you have both [Imagemagick](https://www.imagemagick.org/script/index.php) and [unoconv](#https-github-com-dagwieers-unoconv) installed on your system:
 
-    sudo [<b>sudo apt-get</b>](https://en.wikipedia.org/wiki/APT_(software)) [install](https://en.wikipedia.org/wiki/Installation_(computer_programs)) sharutils  [Imagemagick](https://www.imagemagick.org/script/index.php) [unoconv](https://github.com/unoconv/unoconv) 
+    sudo apt install sharutils  imagemagick unoconv
+
 Parameters:.
 
        Parameter      Description
-    1  $inputFile     Input [file](https://en.wikipedia.org/wiki/Computer_file)     2  $outputFolder  Output [folder](https://en.wikipedia.org/wiki/File_folder) for images
-    3  $imagePrefix   A prefix to be added to image [file](https://en.wikipedia.org/wiki/Computer_file) names
+    1  $inputFile     Input file
+    2  $outputFolder  Output folder for images
+    3  $imagePrefix   A prefix to be added to image file names
 
 **Example:**
 
@@ -3171,10 +3449,10 @@ Encode and decode using [Json](https://en.wikipedia.org/wiki/JSON) and Mime.
 
 ## unbless ($d)
 
-Remove the effects of bless from a [Perl](http://www.perl.org/) [data](https://en.wikipedia.org/wiki/Data) **$structure** enabling it to be converted to [Json](https://en.wikipedia.org/wiki/JSON) or compared with [Test::More::is\_deeply](https://metacpan.org/pod/Test%3A%3AMore%3A%3Ais_deeply).
+Remove the effects of bless from a [Perl](http://www.perl.org/) data **$structure** enabling it to be converted to [Json](https://en.wikipedia.org/wiki/JSON) or compared with [Test::More::is\_deeply](https://metacpan.org/pod/Test%3A%3AMore%3A%3Ais_deeply).
 
        Parameter  Description
-    1  $d         Unbless a L<Perl|http://www.perl.org/> [data](https://en.wikipedia.org/wiki/Data) structure.
+    1  $d         Unbless a L<Perl|http://www.perl.org/> data structure.
 
 **Example:**
 
@@ -3192,7 +3470,8 @@ Remove the effects of bless from a [Perl](http://www.perl.org/) [data](https://e
 
 ## encodeJson  ($structure)
 
-Convert a [Perl](http://www.perl.org/) [data](https://en.wikipedia.org/wiki/Data) **$structure** to a [Json](https://en.wikipedia.org/wiki/JSON) [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Convert a [Perl](http://www.perl.org/) data **$structure** to a [Json](https://en.wikipedia.org/wiki/JSON) string.
+
        Parameter   Description
     1  $structure  Data to encode
 
@@ -3206,7 +3485,7 @@ Convert a [Perl](http://www.perl.org/) [data](https://en.wikipedia.org/wiki/Data
 
 ## decodeJson  ($string)
 
-Convert a [Json](https://en.wikipedia.org/wiki/JSON) **$string** to a [Perl](http://www.perl.org/) [data](https://en.wikipedia.org/wiki/Data) structure.
+Convert a [Json](https://en.wikipedia.org/wiki/JSON) **$string** to a [Perl](http://www.perl.org/) data structure.
 
        Parameter  Description
     1  $string    Data to decode
@@ -3237,7 +3516,7 @@ Encode an [Ascii](https://en.wikipedia.org/wiki/ASCII) **$string** in base 64.
 
 ## encodeUnicodeHtmlAsAscii($string)
 
-Encode a [Unicode](https://en.wikipedia.org/wiki/Unicode) [string](https://en.wikipedia.org/wiki/String_(computer_science)) of [HTML](https://en.wikipedia.org/wiki/HTML) as [Ascii](https://en.wikipedia.org/wiki/ASCII) by replacing [Unicode](https://en.wikipedia.org/wiki/Unicode) characters with an expression.
+Encode a [Unicode](https://en.wikipedia.org/wiki/Unicode) string of html as [Ascii](https://en.wikipedia.org/wiki/ASCII) by replacing unicode characters with an expression.
 
        Parameter  Description
     1  $string    String to encode
@@ -3294,7 +3573,7 @@ Decode an [Ascii](https://en.wikipedia.org/wiki/ASCII) **$string** in base 64.
 
 ## convertUnicodeToXml ($string)
 
-Convert a **$string** with [Unicode](https://en.wikipedia.org/wiki/Unicode) [code](https://en.wikipedia.org/wiki/Computer_program) points that are not directly representable in [Ascii](https://en.wikipedia.org/wiki/ASCII) into [string](https://en.wikipedia.org/wiki/String_(computer_science)) that replaces these [code](https://en.wikipedia.org/wiki/Computer_program) points with their representation in [Xml](https://en.wikipedia.org/wiki/XML) making the [string](https://en.wikipedia.org/wiki/String_(computer_science)) usable in [Xml](https://en.wikipedia.org/wiki/XML) documents.
+Convert a **$string** with [Unicode](https://en.wikipedia.org/wiki/Unicode) code points that are not directly representable in [Ascii](https://en.wikipedia.org/wiki/ASCII) into string that replaces these code points with their representation in [Xml](https://en.wikipedia.org/wiki/XML) making the string usable in [Xml](https://en.wikipedia.org/wiki/XML) documents.
 
        Parameter  Description
     1  $string    String to convert
@@ -3307,10 +3586,11 @@ Convert a **$string** with [Unicode](https://en.wikipedia.org/wiki/Unicode) [cod
 
 ## asciiToHexString($ascii)
 
-Encode an [Ascii](https://en.wikipedia.org/wiki/ASCII) [string](https://en.wikipedia.org/wiki/String_(computer_science)) as a [string](https://en.wikipedia.org/wiki/String_(computer_science)) of [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits.
+Encode an [Ascii](https://en.wikipedia.org/wiki/ASCII) string as a string of [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits.
 
        Parameter  Description
-    1  $ascii     Ascii [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    1  $ascii     Ascii string
+
 **Example:**
 
       ok asciiToHexString("Hello World!") eq                  "48656c6c6f20576f726c6421";  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -3320,9 +3600,11 @@ Encode an [Ascii](https://en.wikipedia.org/wiki/ASCII) [string](https://en.wikip
 
 ## hexToAsciiString($hex)
 
-Decode a [string](https://en.wikipedia.org/wiki/String_(computer_science)) of [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits as an [Ascii](https://en.wikipedia.org/wiki/ASCII) [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Decode a string of [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits as an [Ascii](https://en.wikipedia.org/wiki/ASCII) string.
+
        Parameter  Description
-    1  $hex       Hexadecimal [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    1  $hex       Hexadecimal string
+
 **Example:**
 
       ok asciiToHexString("Hello World!") eq                  "48656c6c6f20576f726c6421";
@@ -3351,7 +3633,7 @@ Percent encode a [url](https://en.wikipedia.org/wiki/URL) per: https://en.wikipe
         q(%), q(%%), q(%%.%%);
     
     
-    [sub](https://perldoc.perl.org/perlsub.html) wwwEncode($)                                                                 # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+    sub wwwEncode($)                                                                 # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
      {my ($string) = @_;                                                            # String
       join '', map {$translatePercentEncoding{$_}//$_} split //, $string
@@ -3375,7 +3657,7 @@ Percent decode a [url](https://en.wikipedia.org/wiki/URL) **$string** per: https
         q(%), q(%%), q(%%.%%);
     
     
-    [sub](https://perldoc.perl.org/perlsub.html) wwwDecode($)                                                                 # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+    sub wwwDecode($)                                                                 # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
      {my ($string) = @_;                                                            # String
       my $r = '';
@@ -3425,7 +3707,7 @@ Test whether a number **$n** is a power of two, return the power if it is else *
 
 ## containingPowerOfTwo($n)
 
-Find [log](https://en.wikipedia.org/wiki/Log_file) two of the lowest power of two greater than or equal to a number **$n**.
+Find log two of the lowest power of two greater than or equal to a number **$n**.
 
        Parameter  Description
     1  $n         Number to check
@@ -3469,7 +3751,7 @@ Place commas in a number.
 
 ## divideIntegersIntoRanges(@s)
 
-Divide an [array](https://en.wikipedia.org/wiki/Dynamic_array) of integers into ranges.
+Divide an array of integers into ranges.
 
        Parameter  Description
     1  @s         Integers to be divided into ranges
@@ -3482,7 +3764,7 @@ Divide an [array](https://en.wikipedia.org/wiki/Dynamic_array) of integers into 
 
 ## divideCharactersIntoRanges  ($s)
 
-Divide a [string](https://en.wikipedia.org/wiki/String_(computer_science)) of characters into ranges.
+Divide a string of characters into ranges.
 
        Parameter  Description
     1  $s         String
@@ -3495,10 +3777,11 @@ Divide a [string](https://en.wikipedia.org/wiki/String_(computer_science)) of ch
 
 ## Minima and Maxima
 
-Find the smallest and largest elements of [arrays](https://en.wikipedia.org/wiki/Dynamic_array). 
+Find the smallest and largest elements of arrays.
+
 ### min (@m)
 
-Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
+Find the minimum number in a list of numbers confessing to any ill defined values.
 
        Parameter  Description
     1  @m         Numbers
@@ -3519,19 +3802,20 @@ Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) o
 
 ### minimum (@m)
 
-Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
+Find the minimum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
 
        Parameter  Description
     1  @m         Numbers
 
 **Example:**
 
-      is maximum, [undef](https://perldoc.perl.org/functions/undef.html);       is maximum(1),        1;
+      is maximum, undef;
+      is maximum(1),        1;
       is maximum(undef, 1), 1;
       is maximum(1,4,undef,3),  4;
     
     
-      is minimum, [undef](https://perldoc.perl.org/functions/undef.html);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      is minimum, undef;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
       is minimum(1),        1;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -3546,7 +3830,7 @@ Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) o
 
 ### indexOfMin  (@m)
 
-Find the index of the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
+Find the index of the minimum number in a list of numbers confessing to any ill defined values.
 
        Parameter  Description
     1  @m         Numbers
@@ -3559,7 +3843,7 @@ Find the index of the minimum number in a [list](https://en.wikipedia.org/wiki/L
 
 ### max (@m)
 
-Find the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
+Find the maximum number in a list of numbers confessing to any ill defined values.
 
        Parameter  Description
     1  @m         Numbers
@@ -3581,14 +3865,14 @@ Find the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) o
 
 ### maximum (@m)
 
-Find the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
+Find the maximum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
 
        Parameter  Description
     1  @m         Numbers
 
 **Example:**
 
-      is maximum, [undef](https://perldoc.perl.org/functions/undef.html);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      is maximum, undef;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
       is maximum(1),        1;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -3600,14 +3884,15 @@ Find the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) o
       is maximum(1,4,undef,3),  4;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
-      is minimum, [undef](https://perldoc.perl.org/functions/undef.html);       is minimum(1),        1;
+      is minimum, undef;
+      is minimum(1),        1;
       is minimum(undef, 1), 1;
       is minimum(1,4,undef,3),  1;
     
 
 ### indexOfMax  (@m)
 
-Find the index of the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
+Find the index of the maximum number in a list of numbers confessing to any ill defined values.
 
        Parameter  Description
     1  @m         Numbers
@@ -3620,7 +3905,8 @@ Find the index of the maximum number in a [list](https://en.wikipedia.org/wiki/L
 
 ### arraySum(@a)
 
-Find the sum of any [strings](https://en.wikipedia.org/wiki/String_(computer_science)) that look like numbers in an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Find the sum of any strings that look like numbers in an array.
+
        Parameter  Description
     1  @a         Array to sum
 
@@ -3632,7 +3918,8 @@ Find the sum of any [strings](https://en.wikipedia.org/wiki/String_(computer_sci
 
 ### arrayProduct(@a)
 
-Find the product of any [strings](https://en.wikipedia.org/wiki/String_(computer_science)) that look like numbers in an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Find the product of any strings that look like numbers in an array.
+
        Parameter  Description
     1  @a         Array to multiply
 
@@ -3644,7 +3931,7 @@ Find the product of any [strings](https://en.wikipedia.org/wiki/String_(computer
 
 ### arrayTimes  ($multiplier, @a)
 
-Multiply by **$multiplier** each element of the [array](https://en.wikipedia.org/wiki/Dynamic_array) **@a** and return as the result.
+Multiply by **$multiplier** each element of the array **@a** and return as the result.
 
        Parameter    Description
     1  $multiplier  Multiplier
@@ -3662,7 +3949,7 @@ Set operations.
 
 ## mergeHashesBySummingValues  (@h)
 
-Merge a [list](https://en.wikipedia.org/wiki/Linked_list) of hashes **@h** by summing their values.
+Merge a list of hashes **@h** by summing their values.
 
        Parameter  Description
     1  @h         List of hashes to be summed
@@ -3678,7 +3965,7 @@ Merge a [list](https://en.wikipedia.org/wiki/Linked_list) of hashes **@h** by su
 
 ## invertHashOfHashes  ($h)
 
-Invert a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes: given {a}{b} = c return {b}{c} = c.
+Invert a hash of hashes: given {a}{b} = c return {b}{c} = c.
 
        Parameter  Description
     1  $h         Hash of hashes
@@ -3698,7 +3985,7 @@ Invert a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes: given {a}{b
 
 ## unionOfHashKeys (@h)
 
-Form the union of the keys of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose keys represent the union.
+Form the union of the keys of the specified hashes **@h** as one hash whose keys represent the union.
 
        Parameter  Description
     1  @h         List of hashes to be united
@@ -3720,7 +4007,7 @@ Form the union of the keys of the specified hashes **@h** as one [hash](https://
 
 ## intersectionOfHashKeys  (@h)
 
-Form the intersection of the keys of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose keys represent the intersection.
+Form the intersection of the keys of the specified hashes **@h** as one hash whose keys represent the intersection.
 
        Parameter  Description
     1  @h         List of hashes to be intersected
@@ -3742,7 +4029,8 @@ Form the intersection of the keys of the specified hashes **@h** as one [hash](h
 
 ## unionOfHashesAsArrays   (@h)
 
-Form the union of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose values are a [array](https://en.wikipedia.org/wiki/Dynamic_array) of corresponding values from each [hash](https://en.wikipedia.org/wiki/Hash_table). 
+Form the union of the specified hashes **@h** as one hash whose values are a array of corresponding values from each hash.
+
        Parameter  Description
     1  @h         List of hashes to be united
 
@@ -3763,7 +4051,8 @@ Form the union of the specified hashes **@h** as one [hash](https://en.wikipedia
 
 ## intersectionOfHashesAsArrays(@h)
 
-Form the intersection of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose values are an [array](https://en.wikipedia.org/wiki/Dynamic_array) of corresponding values from each [hash](https://en.wikipedia.org/wiki/Hash_table). 
+Form the intersection of the specified hashes **@h** as one hash whose values are an array of corresponding values from each hash.
+
        Parameter  Description
     1  @h         List of hashes to be intersected
 
@@ -3784,10 +4073,10 @@ Form the intersection of the specified hashes **@h** as one [hash](https://en.wi
 
 ## setUnion(@s)
 
-Union of sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
+Union of sets **@s** represented as arrays of strings and/or the keys of hashes.
 
        Parameter  Description
-    1  @s         Array of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or hashes
+    1  @s         Array of arrays of strings and/or hashes
 
 **Example:**
 
@@ -3800,10 +4089,10 @@ Union of sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynam
 
 ## setIntersection (@s)
 
-Intersection of sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
+Intersection of sets **@s** represented as arrays of strings and/or the keys of hashes.
 
        Parameter  Description
-    1  @s         Array of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or hashes
+    1  @s         Array of arrays of strings and/or hashes
 
 **Example:**
 
@@ -3816,10 +4105,12 @@ Intersection of sets **@s** represented as [arrays](https://en.wikipedia.org/wik
 
 ## setDifference   ($a, $b)
 
-Subtract the keys in the second set represented as a [hash](https://en.wikipedia.org/wiki/Hash_table) from the first set represented as a [hash](https://en.wikipedia.org/wiki/Hash_table) to create a new [hash](https://en.wikipedia.org/wiki/Hash_table) showing the set difference between the two.
+Subtract the keys in the second set represented as a hash from the first set represented as a hash to create a new hash showing the set difference between the two.
 
        Parameter  Description
-    1  $a         First set as a [hash](https://en.wikipedia.org/wiki/Hash_table)     2  $b         Second set as a [hash](https://en.wikipedia.org/wiki/Hash_table) 
+    1  $a         First set as a hash
+    2  $b         Second set as a hash
+
 **Example:**
 
       is_deeply {a=>1}, setDifference({a=>1, b=>2}, {b=>3,c=>4});  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -3834,10 +4125,10 @@ Subtract the keys in the second set represented as a [hash](https://en.wikipedia
 
 ## setIntersectionOverUnion(@s)
 
-Returns the size of the intersection over the size of the union of one or more sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) and/or hashes.
+Returns the size of the intersection over the size of the union of one or more sets **@s** represented as arrays and/or hashes.
 
        Parameter  Description
-    1  @s         Array of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or hashes
+    1  @s         Array of arrays of strings and/or hashes
 
 **Example:**
 
@@ -3852,7 +4143,7 @@ Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets*
 
        Parameter    Description
     1  $confidence  Minimum setIntersectionOverUnion
-    2  @sets        Array of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or hashes representing sets
+    2  @sets        Array of arrays of strings and/or hashes representing sets
 
 **Example:**
 
@@ -3890,7 +4181,7 @@ Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets*
 
        Parameter    Description
     1  $confidence  Minimum setIntersectionOverUnion
-    2  @sets        Array of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or hashes representing sets
+    2  @sets        Array of arrays of strings and/or hashes representing sets
 
 **Example:**
 
@@ -3908,11 +4199,12 @@ Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets*
 
 ## setPartitionOnIntersectionOverUnionOfStringSets ($confidence, @strings)
 
-Partition, at a level of **$confidence** between 0 and 1, a set of sets **@strings**, each set represented by a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
+Partition, at a level of **$confidence** between 0 and 1, a set of sets **@strings**, each set represented by a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
 
        Parameter    Description
     1  $confidence  Minimum setIntersectionOverUnion
-    2  @strings     Sets represented by [strings](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    2  @strings     Sets represented by strings
+
 **Example:**
 
     is_deeply [setPartitionOnIntersectionOverUnionOfStringSets  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -3930,11 +4222,12 @@ Partition, at a level of **$confidence** between 0 and 1, a set of sets **@strin
 
 ## setPartitionOnIntersectionOverUnionOfHashStringSets ($confidence, $hashSet)
 
-Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a [hash](https://en.wikipedia.org/wiki/Hash_table), each [hash](https://en.wikipedia.org/wiki/Hash_table) value being a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the [hash](https://en.wikipedia.org/wiki/Hash_table) keys of the [string](https://en.wikipedia.org/wiki/String_(computer_science)) sets.
+Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a hash, each hash value being a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the hash keys of the string sets.
 
        Parameter    Description
     1  $confidence  Minimum setIntersectionOverUnion
-    2  $hashSet     Sets represented by the [hash](https://en.wikipedia.org/wiki/Hash_table) value [strings](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    2  $hashSet     Sets represented by the hash value strings
+
 **Example:**
 
       is_deeply [setPartitionOnIntersectionOverUnionOfHashStringSets  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -3950,11 +4243,12 @@ Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashS
 
 ## setPartitionOnIntersectionOverUnionOfHashStringSetsInParallel   ($confidence, $hashSet)
 
-Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a [hash](https://en.wikipedia.org/wiki/Hash_table), each [hash](https://en.wikipedia.org/wiki/Hash_table) value being a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the [hash](https://en.wikipedia.org/wiki/Hash_table) keys of the [string](https://en.wikipedia.org/wiki/String_(computer_science)) sets. The partition is performed in square root parallel.
+Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a hash, each hash value being a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the hash keys of the string sets. The partition is performed in square root parallel.
 
        Parameter    Description
     1  $confidence  Minimum setIntersectionOverUnion
-    2  $hashSet     Sets represented by the [hash](https://en.wikipedia.org/wiki/Hash_table) value [strings](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    2  $hashSet     Sets represented by the hash value strings
+
 **Example:**
 
       my $N = 8;
@@ -4005,7 +4299,8 @@ Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashS
        [setPartitionOnIntersectionOverUnionOfHashStringSets          (0.50, \%s)];
     
       my $expectedInParallel =
-       ["a1 a2 a3 a4 a5 a6 a7 a8",                                                  # Same [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in multiple parallel [processes](https://en.wikipedia.org/wiki/Process_management_(computing))         "b1 b2 b3 b4 b5 b6 b7 b8",
+       ["a1 a2 a3 a4 a5 a6 a7 a8",                                                  # Same strings in multiple parallel processes
+        "b1 b2 b3 b4 b5 b6 b7 b8",
         "b1 b2 b3 b4 b5 b6 b7 b8",
         "c1 c2 c3 c4 c5 c6 c7 c8",
         "d1 d2 d3 d4 d5 d6 d7 d8",
@@ -4030,8 +4325,8 @@ Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashS
         "q1 q2 q3 q4 q5 q6 q7 q8",
         "q1 q2 q3 q4 q5 q6 q7 q8",
         "r1 r2 r3 r4 r5 r6 r7 r8",
-        "s1 s2 [S3](https://aws.amazon.com/s3/) s4 s5 s6 s7 s8",
-        "s1 s2 [S3](https://aws.amazon.com/s3/) s4 s5 s6 s7 s8",
+        "s1 s2 s3 s4 s5 s6 s7 s8",
+        "s1 s2 s3 s4 s5 s6 s7 s8",
         "t1 t2 t3 t4 t5 t6 t7 t8",
         "u1 u2 u3 u4 u5 u6 u7 u8",
         "u1 u2 u3 u4 u5 u6 u7 u8",
@@ -4056,7 +4351,8 @@ Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashS
 
 ## contains($item, @array)
 
-Returns the indices at which an **$item** matches elements of the specified **@array**. If the item is a regular expression then it is matched as one, else it is a number it is matched as a number, else as a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Returns the indices at which an **$item** matches elements of the specified **@array**. If the item is a regular expression then it is matched as one, else it is a number it is matched as a number, else as a string.
+
        Parameter  Description
     1  $item      Item
     2  @array     Array
@@ -4098,7 +4394,7 @@ Returns the number of occurrences in **$inString** of **$searchFor**.
 
 ## partitionStringsOnPrefixBySize  ()
 
-Partition a [hash](https://en.wikipedia.org/wiki/Hash_table) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and associated sizes into partitions with either a maximum size **$maxSize** or only one element; the [hash](https://en.wikipedia.org/wiki/Hash_table) **%Sizes** consisting of a mapping {string=>size}; with each partition being named with the shortest [string](https://en.wikipedia.org/wiki/String_(computer_science)) prefix that identifies just the [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in that partition. Returns a [list](https://en.wikipedia.org/wiki/Linked_list) of {prefix => size}... describing each partition.
+Partition a hash of strings and associated sizes into partitions with either a maximum size **$maxSize** or only one element; the hash **%Sizes** consisting of a mapping {string=>size}; with each partition being named with the shortest string prefix that identifies just the strings in that partition. Returns a list of {prefix => size}... describing each partition.
 
 **Example:**
 
@@ -4128,7 +4424,7 @@ Partition a [hash](https://en.wikipedia.org/wiki/Hash_table) of [strings](https:
 
 ## transitiveClosure   ($h)
 
-Transitive closure of a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes.
+Transitive closure of a hash of hashes.
 
        Parameter  Description
     1  $h         Hash of hashes
@@ -4147,7 +4443,7 @@ Transitive closure of a [hash](https://en.wikipedia.org/wiki/Hash_table) of hash
 
 # Format
 
-Format [data](https://en.wikipedia.org/wiki/Data) structures as tables.
+Format data structures as tables.
 
 ## maximumLineLength   ($string)
 
@@ -4168,10 +4464,11 @@ Find the longest line in a **$string**.
 
 ## formatTableBasic($data)
 
-Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of text.
+Tabularize an array of arrays of text.
 
        Parameter  Description
-    1  $data      Reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [data](https://en.wikipedia.org/wiki/Data) to be formatted as a [table](https://en.wikipedia.org/wiki/Table_(information)). 
+    1  $data      Reference to an array of arrays of data to be formatted as a table.
+
 **Example:**
 
       my $d = [[qw(a 1)], [qw(bb 22)], [qw(ccc 333)], [qw(dddd 4444)]];
@@ -4194,13 +4491,13 @@ Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](h
 
 ## formatTable ($data, $columnTitles, @options)
 
-Format various **$data** structures as a [table](https://en.wikipedia.org/wiki/Table_(information)) with titles as specified by **$columnTitles**: either a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of column titles or a [string](https://en.wikipedia.org/wiki/String_(computer_science)) each line of which contains the column title as the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) with the [REST](https://en.wikipedia.org/wiki/REST) of the line describing that column.
+Format various **$data** structures as a table with titles as specified by **$columnTitles**: either a reference to an array of column titles or a string each line of which contains the column title as the first word with the rest of the line describing that column.
 
-Optionally create a report from the [table](https://en.wikipedia.org/wiki/Table_(information)) using the report **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
+Optionally create a report from the table using the report **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
 
        Parameter      Description
     1  $data          Data to be formatted
-    2  $columnTitles  Optional reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of titles or [string](https://en.wikipedia.org/wiki/String_(computer_science)) of column descriptions
+    2  $columnTitles  Optional reference to an array of titles or string of column descriptions
     3  @options       Options
 
 **Example:**
@@ -4317,7 +4614,8 @@ Optionally create a report from the [table](https://en.wikipedia.org/wiki/Table_
 
        ([["a",undef], [undef, "b0ac"]],                                           # Data - please replace 0a with a new line
         [undef, "BC"],                                                              # Column titles
-        file=>$f,                                                                   # Output [file](https://en.wikipedia.org/wiki/Computer_file)         head=><<END);                                                               # Header
+        file=>$f,                                                                   # Output file
+        head=><<END);                                                               # Header
     Sample report.
     
     Table has NNNN rows.
@@ -4330,7 +4628,7 @@ Optionally create a report from the [table](https://en.wikipedia.org/wiki/Table_
     
     Table has 2 rows.
     
-    This [file](https://en.wikipedia.org/wiki/Computer_file): ${d}report.txt
+    This file: ${d}report.txt
     
           BC
     1  a
@@ -4372,10 +4670,11 @@ Report of all the reports created. The optional parameters are the same as for [
 
 ## summarizeColumn ($data, $column)
 
-Count the number of unique instances of each value a column in a [table](https://en.wikipedia.org/wiki/Table_(information)) assumes.
+Count the number of unique instances of each value a column in a table assumes.
 
        Parameter  Description
-    1  $data      Table == [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array)     2  $column    Column number to summarize.
+    1  $data      Table == array of arrays
+    2  $column    Column number to summarize.
 
 **Example:**
 
@@ -4390,7 +4689,8 @@ Count the number of unique instances of each value a column in a [table](https:/
         [qw(Col-1 Col-2)],
          summarize=>1)) eq nws(<<'END');
     
-    Summary_of_column                - Count of unique values found in each column                     Use the Geany flick capability by placing your cursor on the first [word](https://en.wikipedia.org/wiki/Doc_(computing))     Comma_Separated_Values_of_column - Comma separated [list](https://en.wikipedia.org/wiki/Linked_list) of the unique values found in each column  of these lines and pressing control + down arrow to see each [sub](https://perldoc.perl.org/perlsub.html) report.
+    Summary_of_column                - Count of unique values found in each column                     Use the Geany flick capability by placing your cursor on the first word
+    Comma_Separated_Values_of_column - Comma separated list of the unique values found in each column  of these lines and pressing control + down arrow to see each sub report.
     
         Col-1  Col-2
      1  A      A
@@ -4435,7 +4735,8 @@ Count keys down to the specified level.
 
        Parameter  Description
     1  $maxDepth  Maximum depth to count to
-    2  $ref       Reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) or a [hash](https://en.wikipedia.org/wiki/Hash_table) 
+    2  $ref       Reference to an array or a hash
+
 **Example:**
 
       my $a = [[1..3],       {map{$_=>1} 1..3}];                                    
@@ -4453,7 +4754,7 @@ Count keys down to the specified level.
 
 ## formatHtmlTable ($data, %options)
 
-Format an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of scalars as an [HTML](https://en.wikipedia.org/wiki/HTML) [table](https://en.wikipedia.org/wiki/Table_(information)) using the  **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
+Format an array of arrays of scalars as an html table using the  **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
 
        Parameter  Description
     1  $data      Data to be formatted
@@ -4469,7 +4770,7 @@ Format an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https
           [qw(1 a)],
           [qw(2 b)],
         ],
-       title  => q(Sample [HTML](https://en.wikipedia.org/wiki/HTML) table),
+       title  => q(Sample html table),
        head   => q(Head NNNN rows),
        foot   => q(Footer),
        columns=> <<END,
@@ -4479,7 +4780,7 @@ Format an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https
        );
     
       my $T = <<'END';
-    <h1>Sample [HTML](https://en.wikipedia.org/wiki/HTML) table</h1>
+    <h1>Sample html table</h1>
     
     <p>Head 2 rows</p>
     
@@ -4505,7 +4806,8 @@ Format an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https
       foot    => "Footer",
       head    => "Head NNNN rows",
       rows    => 2,
-      title   => "Sample [HTML](https://en.wikipedia.org/wiki/HTML) [table](https://en.wikipedia.org/wiki/Table_(information))",     }</span>
+      title   => "Sample html table",
+    }</span>
     END
     
       ok "$t
@@ -4515,10 +4817,11 @@ Format an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https
 
 ## formatHtmlTablesIndex   ($reports, $title, $url, $columns)
 
-Create an index of [HTML](https://en.wikipedia.org/wiki/HTML) reports.
+Create an index of html reports.
 
        Parameter  Description
-    1  $reports   Reports [folder](https://en.wikipedia.org/wiki/File_folder)     2  $title     Title of report of reports
+    1  $reports   Reports folder
+    2  $title     Title of report of reports
     3  $url       $url to get files
     4  $columns   Number of columns - defaults to 1
 
@@ -4535,7 +4838,7 @@ Create an index of [HTML](https://en.wikipedia.org/wiki/HTML) reports.
        title   => q(Bad files),
        head    => q(Head NNNN rows),
        foot    => q(Footer),
-       [file](https://en.wikipedia.org/wiki/Computer_file)    => q(bad.html),
+       file    => q(bad.html),
        facet   => q(files), aspectColor => "red",
        columns => <<END,
     source The source number
@@ -4552,7 +4855,7 @@ Create an index of [HTML](https://en.wikipedia.org/wiki/HTML) reports.
        title   => q(Good files),
        head    => q(Head NNNN rows),
        foot    => q(Footer),
-       [file](https://en.wikipedia.org/wiki/Computer_file)    => q(good.html),
+       file    => q(good.html),
        facet   => q(files), aspectColor => "green",
        columns => <<END,
     source The source number
@@ -4576,7 +4879,7 @@ Create an index of [HTML](https://en.wikipedia.org/wiki/HTML) reports.
 
 ## formatHtmlAndTextTablesWaitPids ()
 
-Wait on all [table](https://en.wikipedia.org/wiki/Table_(information)) formatting pids to complete.
+Wait on all table formatting pids to complete.
 
 **Example:**
 
@@ -4591,7 +4894,7 @@ Wait on all [table](https://en.wikipedia.org/wiki/Table_(information)) formattin
        title   => q(Bad files),
        head    => q(Head NNNN rows),
        foot    => q(Footer),
-       [file](https://en.wikipedia.org/wiki/Computer_file)    => q(bad.html),
+       file    => q(bad.html),
        facet   => q(files), aspectColor => "red",
        columns => <<END,
     source The source number
@@ -4608,7 +4911,7 @@ Wait on all [table](https://en.wikipedia.org/wiki/Table_(information)) formattin
        title   => q(Good files),
        head    => q(Head NNNN rows),
        foot    => q(Footer),
-       [file](https://en.wikipedia.org/wiki/Computer_file)    => q(good.html),
+       file    => q(good.html),
        facet   => q(files), aspectColor => "green",
        columns => <<END,
     source The source number
@@ -4632,13 +4935,13 @@ Wait on all [table](https://en.wikipedia.org/wiki/Table_(information)) formattin
 
 ## formatHtmlAndTextTables ($reports, $html, $getFile, $filePrefix, $data, %options)
 
-Create text and [HTML](https://en.wikipedia.org/wiki/HTML) versions of a tabular report.
+Create text and html versions of a tabular report.
 
        Parameter    Description
     1  $reports     Folder to contain text reports
-    2  $html        Folder to contain [HTML](https://en.wikipedia.org/wiki/HTML) reports
+    2  $html        Folder to contain html reports
     3  $getFile     L<url|https://en.wikipedia.org/wiki/URL> to get files
-    4  $filePrefix  File prefix to be removed from [file](https://en.wikipedia.org/wiki/Computer_file) entries or [array](https://en.wikipedia.org/wiki/Dynamic_array) of [file](https://en.wikipedia.org/wiki/Computer_file) prefixes
+    4  $filePrefix  File prefix to be removed from file entries or array of file prefixes
     5  $data        Data
     6  %options     Options
 
@@ -4657,7 +4960,7 @@ Create text and [HTML](https://en.wikipedia.org/wiki/HTML) versions of a tabular
        title   => q(Bad files),
        head    => q(Head NNNN rows),
        foot    => q(Footer),
-       [file](https://en.wikipedia.org/wiki/Computer_file)    => q(bad.html),
+       file    => q(bad.html),
        facet   => q(files), aspectColor => "red",
        columns => <<END,
     source The source number
@@ -4676,7 +4979,7 @@ Create text and [HTML](https://en.wikipedia.org/wiki/HTML) versions of a tabular
        title   => q(Good files),
        head    => q(Head NNNN rows),
        foot    => q(Footer),
-       [file](https://en.wikipedia.org/wiki/Computer_file)    => q(good.html),
+       file    => q(good.html),
        facet   => q(files), aspectColor => "green",
        columns => <<END,
     source The source number
@@ -4698,7 +5001,7 @@ Create text and [HTML](https://en.wikipedia.org/wiki/HTML) versions of a tabular
 
 # Lines
 
-Load [data](https://en.wikipedia.org/wiki/Data) structures from lines.
+Load data structures from lines.
 
 ## newLine ()
 
@@ -4715,9 +5018,11 @@ Return a new line - useful for writing [Perl](http://www.perl.org/) one liners
 
 ## loadArrayFromLines  ($string)
 
-Load an [array](https://en.wikipedia.org/wiki/Dynamic_array) from lines of text in a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Load an array from lines of text in a string.
+
        Parameter  Description
-    1  $string    The [string](https://en.wikipedia.org/wiki/String_(computer_science)) of lines from which to create an [array](https://en.wikipedia.org/wiki/Dynamic_array) 
+    1  $string    The string of lines from which to create an array
+
 **Example:**
 
       my $s = loadArrayFromLines <<END;                                               # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -4736,10 +5041,11 @@ Load an [array](https://en.wikipedia.org/wiki/Dynamic_array) from lines of text 
 
 ## loadHashFromLines   ($string)
 
-Load a [hash](https://en.wikipedia.org/wiki/Hash_table): first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key and the [REST](https://en.wikipedia.org/wiki/REST) is the value.
+Load a hash: first word of each line is the key and the rest is the value.
 
        Parameter  Description
-    1  $string    The [string](https://en.wikipedia.org/wiki/String_(computer_science)) of lines from which to create a [hash](https://en.wikipedia.org/wiki/Hash_table) 
+    1  $string    The string of lines from which to create a hash
+
 **Example:**
 
       my $s = loadHashFromLines <<END;                                                # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -4758,10 +5064,11 @@ Load a [hash](https://en.wikipedia.org/wiki/Hash_table): first [word](https://en
 
 ## loadArrayArrayFromLines ($string)
 
-Load an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) from lines of text: each line is an [array](https://en.wikipedia.org/wiki/Dynamic_array) of words.
+Load an array of arrays from lines of text: each line is an array of words.
 
        Parameter  Description
-    1  $string    The [string](https://en.wikipedia.org/wiki/String_(computer_science)) of lines from which to create an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) 
+    1  $string    The string of lines from which to create an array of arrays
+
 **Example:**
 
       my $s = loadArrayArrayFromLines <<END;                                          # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -4780,10 +5087,11 @@ Load an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https:/
 
 ## loadHashArrayFromLines  ($string)
 
-Load a [hash](https://en.wikipedia.org/wiki/Hash_table) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) from lines of text: the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key, the remaining words are the [array](https://en.wikipedia.org/wiki/Dynamic_array) contents.
+Load a hash of arrays from lines of text: the first word of each line is the key, the remaining words are the array contents.
 
        Parameter  Description
-    1  $string    The [string](https://en.wikipedia.org/wiki/String_(computer_science)) of lines from which to create a [hash](https://en.wikipedia.org/wiki/Hash_table) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) 
+    1  $string    The string of lines from which to create a hash of arrays
+
 **Example:**
 
       my $s = loadHashArrayFromLines <<END;                                           # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -4802,10 +5110,11 @@ Load a [hash](https://en.wikipedia.org/wiki/Hash_table) of [arrays](https://en.w
 
 ## loadArrayHashFromLines  ($string)
 
-Load an [array](https://en.wikipedia.org/wiki/Dynamic_array) of hashes from lines of text: each line is a [hash](https://en.wikipedia.org/wiki/Hash_table) of words.
+Load an array of hashes from lines of text: each line is a hash of words.
 
        Parameter  Description
-    1  $string    The [string](https://en.wikipedia.org/wiki/String_(computer_science)) of lines from which to create an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) 
+    1  $string    The string of lines from which to create an array of arrays
+
 **Example:**
 
       my $s = loadArrayHashFromLines <<END;                                           # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -4825,10 +5134,11 @@ Load an [array](https://en.wikipedia.org/wiki/Dynamic_array) of hashes from line
 
 ## loadHashHashFromLines   ($string)
 
-Load a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes from lines of text: the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key, the remaining words are the [sub](https://perldoc.perl.org/perlsub.html) [hash](https://en.wikipedia.org/wiki/Hash_table) contents.
+Load a hash of hashes from lines of text: the first word of each line is the key, the remaining words are the sub hash contents.
 
        Parameter  Description
-    1  $string    The [string](https://en.wikipedia.org/wiki/String_(computer_science)) of lines from which to create a [hash](https://en.wikipedia.org/wiki/Hash_table) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) 
+    1  $string    The string of lines from which to create a hash of arrays
+
 **Example:**
 
       my $s = loadHashHashFromLines <<END;                                            # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -4851,11 +5161,12 @@ Load a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes from lines of 
 Check the keys in a **hash** confirm to those **$permitted**.
 
        Parameter   Description
-    1  $hash       The [hash](https://en.wikipedia.org/wiki/Hash_table) to [test](https://en.wikipedia.org/wiki/Software_testing)     2  $permitted  A [hash](https://en.wikipedia.org/wiki/Hash_table) of the permitted keys and their meanings
+    1  $hash       The hash to test
+    2  $permitted  A hash of the permitted keys and their meanings
 
 **Example:**
 
-      [eval](http://perldoc.perl.org/functions/eval.html) q{checkKeys({a=>1, b=>2, d=>3}, {a=>1, b=>2, c=>3})};                      # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      eval q{checkKeys({a=>1, b=>2, d=>3}, {a=>1, b=>2, c=>3})};                      # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
       ok nws($@) =~ m(\AInvalid options chosen: d Permitted.+?: a 1 b 2 c 3);       
@@ -4863,11 +5174,11 @@ Check the keys in a **hash** confirm to those **$permitted**.
 
 # LVALUE methods
 
-Replace $a->{**value**} = $b with $a->**value** = $b which reduces the amount of typing required, is easier to [read](https://en.wikipedia.org/wiki/Reading_(computer)) and provides a hard check that {**value**} is spelled correctly.
+Replace $a->{**value**} = $b with $a->**value** = $b which reduces the amount of typing required, is easier to read and provides a hard check that {**value**} is spelled correctly.
 
 ## genLValueScalarMethods  (@names)
 
-Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) scalar methods in the current package, A method whose value has not yet been set will return a new scalar with value **undef**. Suffixing **X** to the scalar name will [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if a value has not been set.
+Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) scalar methods in the current package, A method whose value has not yet been set will return a new scalar with value **undef**. Suffixing **X** to the scalar name will confess if a value has not been set.
 
        Parameter  Description
     1  @names     List of method names
@@ -4890,14 +5201,14 @@ Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines
     
       Test::More::ok  $a->bbX eq q();                                               
     
-      $a->aa = [undef](https://perldoc.perl.org/functions/undef.html);                                                               
+      $a->aa = undef;                                                               
     
       Test::More::ok !$a->aa;                                                       
     
 
 ## addLValueScalarMethods  (@names)
 
-Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) scalar methods in the current package if they do not already exist. A method whose value has not yet been set will return a new scalar with value **undef**. Suffixing **X** to the scalar name will [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if a value has not been set.
+Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) scalar methods in the current package if they do not already exist. A method whose value has not yet been set will return a new scalar with value **undef**. Suffixing **X** to the scalar name will confess if a value has not been set.
 
        Parameter  Description
     1  @names     List of method names
@@ -4920,7 +5231,7 @@ Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines
     
       ok  $a->bbX eq q();                                                           
     
-      $a->aa = [undef](https://perldoc.perl.org/functions/undef.html);                                                               
+      $a->aa = undef;                                                               
     
       ok !$a->aa;                                                                   
     
@@ -4947,7 +5258,8 @@ Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines
 
 ## genLValueArrayMethods   (@names)
 
-Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) [array](https://en.wikipedia.org/wiki/Dynamic_array) methods in the current package. A reference to a method that has no yet been set will return a reference to an empty [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) array methods in the current package. A reference to a method that has no yet been set will return a reference to an empty array.
+
        Parameter  Description
     1  @names     List of method names
 
@@ -4968,7 +5280,8 @@ Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines
 
 ## genLValueHashMethods(@names)
 
-Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) [hash](https://en.wikipedia.org/wiki/Hash_table) methods in the current package. A reference to a method that has no yet been set will return a reference to an empty [hash](https://en.wikipedia.org/wiki/Hash_table). 
+Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) hash methods in the current package. A reference to a method that has no yet been set will return a reference to an empty hash.
+
        Parameter  Description
     1  @names     Method names
 
@@ -4989,7 +5302,7 @@ Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines
 
 ## genHash ($bless, %attributes)
 
-Return a **$bless**ed [hash](https://en.wikipedia.org/wiki/Hash_table) with the specified **$attributes** accessible via [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) method calls. [updateDocumentation](#updatedocumentation) will generate [documentation](https://en.wikipedia.org/wiki/Software_documentation) at ["Hash Definitions"](#hash-definitions) for the [hash](https://en.wikipedia.org/wiki/Hash_table) defined by the call to [genHash](#genhash) if the call is laid out as in the example below.
+Return a **$bless**ed hash with the specified **$attributes** accessible via [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) method calls. [updateDocumentation](#updatedocumentation) will generate documentation at ["Hash Definitions"](#hash-definitions) for the hash defined by the call to [genHash](#genhash) if the call is laid out as in the example below.
 
        Parameter    Description
     1  $bless       Package name
@@ -4997,7 +5310,7 @@ Return a **$bless**ed [hash](https://en.wikipedia.org/wiki/Hash_table) with the 
 
 **Example:**
 
-      my $o = genHash(q(TestHash),                                                  # Definition of a blessed [hash](https://en.wikipedia.org/wiki/Hash_table).  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      my $o = genHash(q(TestHash),                                                  # Definition of a blessed hash.  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
           a=>q(aa),                                                                 # Definition of attribute aa.
           b=>q(bb),                                                                 # Definition of attribute bb.
@@ -5014,9 +5327,11 @@ Return a **$bless**ed [hash](https://en.wikipedia.org/wiki/Hash_table) with the 
       ok $p->a eq q(aa);
       is_deeply $p, {a=>"aa", c=>"cc"};
     
-      loadHash($p, a=>11, b=>22);                                                   # Load the [hash](https://en.wikipedia.org/wiki/Hash_table)       is_deeply $p, {a=>11, b=>22, c=>"cc"};
+      loadHash($p, a=>11, b=>22);                                                   # Load the hash
+      is_deeply $p, {a=>11, b=>22, c=>"cc"};
     
-      my $r = [eval](http://perldoc.perl.org/functions/eval.html) {loadHash($p, d=>44)};                                           # Try to load the [hash](https://en.wikipedia.org/wiki/Hash_table)       ok $@ =~ m(Cannot load attribute: d);
+      my $r = eval {loadHash($p, d=>44)};                                           # Try to load the hash
+      ok $@ =~ m(Cannot load attribute: d);
     
 
 ## loadHash($hash, %attributes)
@@ -5029,7 +5344,8 @@ Load the specified blessed **$hash** generated with [genHash](#genhash) with **%
 
 **Example:**
 
-      my $o = genHash(q(TestHash),                                                  # Definition of a blessed [hash](https://en.wikipedia.org/wiki/Hash_table).           a=>q(aa),                                                                 # Definition of attribute aa.
+      my $o = genHash(q(TestHash),                                                  # Definition of a blessed hash.
+          a=>q(aa),                                                                 # Definition of attribute aa.
           b=>q(bb),                                                                 # Definition of attribute bb.
          );
       ok $o->a eq q(aa);
@@ -5043,19 +5359,19 @@ Load the specified blessed **$hash** generated with [genHash](#genhash) with **%
       is_deeply $p, {a=>"aa", c=>"cc"};
     
     
-      loadHash($p, a=>11, b=>22);                                                   # Load the [hash](https://en.wikipedia.org/wiki/Hash_table)  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      loadHash($p, a=>11, b=>22);                                                   # Load the hash  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       is_deeply $p, {a=>11, b=>22, c=>"cc"};
     
     
-      my $r = [eval](http://perldoc.perl.org/functions/eval.html) {loadHash($p, d=>44)};                                           # Try to load the [hash](https://en.wikipedia.org/wiki/Hash_table)  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      my $r = eval {loadHash($p, d=>44)};                                           # Try to load the hash  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       ok $@ =~ m(Cannot load attribute: d);
     
 
 ## reloadHashes($d)
 
-Ensures that all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures have LValue methods to get and set their current keys.
+Ensures that all the hashes within a tower of data structures have LValue methods to get and set their current keys.
 
        Parameter  Description
     1  $d         Data structure
@@ -5064,8 +5380,8 @@ Ensures that all the hashes within a tower of [data](https://en.wikipedia.org/wi
 
     if (1)                                                                          
      {my $a = bless [bless {aaa=>42}, "AAAA"], "BBBB";
-      [eval](http://perldoc.perl.org/functions/eval.html) {$a->[0]->aaa};
-      ok $@ =~ m(\ACan.t locate [object](https://en.wikipedia.org/wiki/Object_(computer_science)) method .aaa. via package .AAAA.);
+      eval {$a->[0]->aaa};
+      ok $@ =~ m(\ACan.t locate object method .aaa. via package .AAAA.);
     
       reloadHashes($a);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
@@ -5074,8 +5390,8 @@ Ensures that all the hashes within a tower of [data](https://en.wikipedia.org/wi
     
     if (1)                                                                          
      {my $a = bless [bless {ccc=>42}, "CCCC"], "DDDD";
-      [eval](http://perldoc.perl.org/functions/eval.html) {$a->[0]->ccc};
-      ok $@ =~ m(\ACan.t locate [object](https://en.wikipedia.org/wiki/Object_(computer_science)) method .ccc. via package .CCCC.);
+      eval {$a->[0]->ccc};
+      ok $@ =~ m(\ACan.t locate object method .ccc. via package .CCCC.);
     
       reloadHashes($a);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
@@ -5097,23 +5413,23 @@ Set a package search order for methods requested in the current package via AUTO
      {if (1)
        {package AAAA;
     
-        [sub](https://perldoc.perl.org/perlsub.html) aaaa{q(AAAAaaaa)}
-        [sub](https://perldoc.perl.org/perlsub.html) bbbb{q(AAAAbbbb)}
-        [sub](https://perldoc.perl.org/perlsub.html) cccc{q(AAAAcccc)}
+        sub aaaa{q(AAAAaaaa)}
+        sub bbbb{q(AAAAbbbb)}
+        sub cccc{q(AAAAcccc)}
        }
       if (1)
        {package BBBB;
     
-        [sub](https://perldoc.perl.org/perlsub.html) aaaa{q(BBBBaaaa)}
-        [sub](https://perldoc.perl.org/perlsub.html) bbbb{q(BBBBbbbb)}
-        [sub](https://perldoc.perl.org/perlsub.html) dddd{q(BBBBdddd)}
+        sub aaaa{q(BBBBaaaa)}
+        sub bbbb{q(BBBBbbbb)}
+        sub dddd{q(BBBBdddd)}
        }
       if (1)
        {package CCCC;
     
-        [sub](https://perldoc.perl.org/perlsub.html) aaaa{q(CCCCaaaa)}
-        [sub](https://perldoc.perl.org/perlsub.html) dddd{q(CCCCdddd)}
-        [sub](https://perldoc.perl.org/perlsub.html) eeee{q(CCCCeeee)}
+        sub aaaa{q(CCCCaaaa)}
+        sub dddd{q(CCCCdddd)}
+        sub eeee{q(CCCCeeee)}
        }
     
     
@@ -5161,8 +5477,8 @@ Test whether the specified **$package** contains the subroutine &lt;$sub>.
     if (1)                                                                           
      {sub AAAA::Call {q(AAAA)}
     
-      [sub](https://perldoc.perl.org/perlsub.html) BBBB::Call {q(BBBB)}
-      [sub](https://perldoc.perl.org/perlsub.html) BBBB::call {q(bbbb)}
+      sub BBBB::Call {q(BBBB)}
+      sub BBBB::call {q(bbbb)}
     
       if (1)
        {package BBBB;
@@ -5226,8 +5542,8 @@ For each method, if it exists in package **$from** then export it to package **$
     if (1)                                                                           
      {sub AAAA::Call {q(AAAA)}
     
-      [sub](https://perldoc.perl.org/perlsub.html) BBBB::Call {q(BBBB)}
-      [sub](https://perldoc.perl.org/perlsub.html) BBBB::call {q(bbbb)}
+      sub BBBB::Call {q(BBBB)}
+      sub BBBB::call {q(bbbb)}
     
       if (1)
        {package BBBB;
@@ -5265,7 +5581,7 @@ This is a static method and so should either be imported or invoked as:
 
 ## overrideAndReabsorbMethods  (@packages)
 
-Override methods down the [list](https://en.wikipedia.org/wiki/Linked_list) of **@packages** then reabsorb any unused methods back up the [list](https://en.wikipedia.org/wiki/Linked_list) of packages so that all the packages have the same methods as the last package with methods from packages mentioned earlier overriding methods from packages mentioned later.  The methods to override and reabsorb are listed by the [sub](https://perldoc.perl.org/perlsub.html) **overridableMethods** in the last package in the packages [list](https://en.wikipedia.org/wiki/Linked_list). Confess to any errors.
+Override methods down the list of **@packages** then reabsorb any unused methods back up the list of packages so that all the packages have the same methods as the last package with methods from packages mentioned earlier overriding methods from packages mentioned later.  The methods to override and reabsorb are listed by the sub **overridableMethods** in the last package in the packages list. Confess to any errors.
 
        Parameter  Description
     1  @packages  List of packages
@@ -5290,7 +5606,7 @@ Confirm that the specified references are to the specified package.
 
 **Example:**
 
-      [eval](http://perldoc.perl.org/functions/eval.html) q{assertPackageRefs(q(bbb), bless {}, q(aaa))};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      eval q{assertPackageRefs(q(bbb), bless {}, q(aaa))};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       ok $@ =~ m(\AWanted reference to bbb, but got aaa);
     
@@ -5304,14 +5620,15 @@ Confirm that the specified references are to the package into which this routine
 
 **Example:**
 
-      [eval](http://perldoc.perl.org/functions/eval.html) q{assertRef(bless {}, q(aaa))};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      eval q{assertRef(bless {}, q(aaa))};  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       ok $@ =~ m(\AWanted reference to Data::Table::Text, but got aaa);
     
 
 ## arrayToHash (@array)
 
-Create a [hash](https://en.wikipedia.org/wiki/Hash_table) reference from an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Create a hash reference from an array.
+
        Parameter  Description
     1  @array     Array
 
@@ -5323,7 +5640,7 @@ Create a [hash](https://en.wikipedia.org/wiki/Hash_table) reference from an [arr
 
 ## flattenArrayAndHashValues   (@array)
 
-Flatten an [array](https://en.wikipedia.org/wiki/Dynamic_array) of scalars, [array](https://en.wikipedia.org/wiki/Dynamic_array) and [hash](https://en.wikipedia.org/wiki/Hash_table) references to make an [array](https://en.wikipedia.org/wiki/Dynamic_array) of scalars by flattening the [array](https://en.wikipedia.org/wiki/Dynamic_array) references and [hash](https://en.wikipedia.org/wiki/Hash_table) values.
+Flatten an array of scalars, array and hash references to make an array of scalars by flattening the array references and hash values.
 
        Parameter  Description
     1  @array     Array to flatten
@@ -5336,10 +5653,10 @@ Flatten an [array](https://en.wikipedia.org/wiki/Dynamic_array) of scalars, [arr
 
 ## getSubName  ($sub)
 
-Returns the (package, name, [file](https://en.wikipedia.org/wiki/Computer_file), line) of a [Perl](http://www.perl.org/) **$sub** reference.
+Returns the (package, name, file, line) of a perl **$sub** reference.
 
        Parameter  Description
-    1  $sub       Reference to a [sub](https://perldoc.perl.org/perlsub.html) with a name.
+    1  $sub       Reference to a sub with a name.
 
 **Example:**
 
@@ -5349,10 +5666,11 @@ Returns the (package, name, [file](https://en.wikipedia.org/wiki/Computer_file),
 
 # Strings
 
-Actions on [strings](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Actions on strings.
+
 ## stringMd5Sum($string)
 
-Get the Md5 sum of a **$string** that might contain [utf8](https://en.wikipedia.org/wiki/UTF-8) [code](https://en.wikipedia.org/wiki/Computer_program) points.
+Get the Md5 sum of a **$string** that might contain [utf8](https://en.wikipedia.org/wiki/UTF-8) code points.
 
        Parameter  Description
     1  $string    String
@@ -5394,10 +5712,12 @@ Get the Md5 sum of a **$string** that might contain [utf8](https://en.wikipedia.
 
 ## indentString($string, $indent)
 
-Indent lines contained in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) or formatted [table](https://en.wikipedia.org/wiki/Table_(information)) by the specified [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Indent lines contained in a string or formatted table by the specified string.
+
        Parameter  Description
-    1  $string    The [string](https://en.wikipedia.org/wiki/String_(computer_science)) of lines to indent
-    2  $indent    The indenting [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    1  $string    The string of lines to indent
+    2  $indent    The indenting string
+
 **Example:**
 
       my $t = [qw(aa bb cc)];
@@ -5421,8 +5741,9 @@ Replace all instances in **$string** of **$source** with **$target**.
 
        Parameter  Description
     1  $string    String in which to replace substrings
-    2  $source    The [string](https://en.wikipedia.org/wiki/String_(computer_science)) to be replaced
-    3  $target    The replacement [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    2  $source    The string to be replaced
+    3  $target    The replacement string
+
 **Example:**
 
     ok replaceStringWithString(q(abababZ), q(ab), q(c)) eq q(cccZ), 'eee';            # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -5434,7 +5755,7 @@ Replace all instances in **$string** of **$source** with **$target**.
 Format the specified **$string** so it can be displayed in **$width** columns.
 
        Parameter  Description
-    1  $string    The [string](https://en.wikipedia.org/wiki/String_(computer_science)) of text to format
+    1  $string    The string of text to format
     2  $width     The formatted width.
 
 **Example:**
@@ -5449,7 +5770,7 @@ Format the specified **$string** so it can be displayed in **$width** columns.
 
 ## isBlank ($string)
 
-Test whether a [string](https://en.wikipedia.org/wiki/String_(computer_science)) is blank.
+Test whether a string is blank.
 
        Parameter  Description
     1  $string    String
@@ -5467,7 +5788,8 @@ Test whether a [string](https://en.wikipedia.org/wiki/String_(computer_science))
 
 ## trim($string)
 
-Remove any white space from the front and end of a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Remove any white space from the front and end of a string.
+
        Parameter  Description
     1  $string    String
 
@@ -5484,7 +5806,8 @@ Pad the specified **$string** to a multiple of the specified **$length**  with b
        Parameter  Description
     1  $string    String
     2  $length    Tab width
-    3  $padding   Padding [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    3  $padding   Padding string
+
 **Example:**
 
       is_deeply pad('abc  ', 2).'='         , "abc =";  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -5522,7 +5845,8 @@ Left Pad the specified **$string** to a multiple of the specified **$length**  w
        Parameter  Description
     1  $string    String
     2  $length    Tab width
-    3  $padding   Padding [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    3  $padding   Padding string
+
 **Example:**
 
       is_deeply pad('abc  ', 2).'='         , "abc =";
@@ -5561,7 +5885,8 @@ Pad the specified **$string** to a multiple of the specified **$length**  with b
        Parameter  Description
     1  $length    Tab width
     2  $string    String
-    3  $padding   Padding [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    3  $padding   Padding string
+
 **Example:**
 
       is_deeply pad('abc  ', 2).'='         , "abc =";
@@ -5595,7 +5920,8 @@ Pad the specified **$string** to a multiple of the specified **$length**  with b
 
 ## firstNChars ($string, $length)
 
-First N characters of a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+First N characters of a string.
+
        Parameter  Description
     1  $string    String
     2  $length    Length
@@ -5612,7 +5938,8 @@ First N characters of a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## nws ($string, $length)
 
-Normalize white space in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to make comparisons easier. Leading and trailing white space is removed; blocks of white space in the interior are reduced to a single space.  In effect: this puts everything on one long line with never more than one space at a time. Optionally a maximum length is applied to the normalized [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Normalize white space in a string to make comparisons easier. Leading and trailing white space is removed; blocks of white space in the interior are reduced to a single space.  In effect: this puts everything on one long line with never more than one space at a time. Optionally a maximum length is applied to the normalized string.
+
        Parameter  Description
     1  $string    String to normalize
     2  $length    Maximum length of result
@@ -5625,7 +5952,8 @@ Normalize white space in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## deduplicateSequentialWordsInString  ($s)
 
-Remove sequentially duplicate words in a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Remove sequentially duplicate words in a string.
+
        Parameter  Description
     1  $s         String to deduplicate
 
@@ -5640,7 +5968,8 @@ Remove sequentially duplicate words in a [string](https://en.wikipedia.org/wiki/
 
 ## detagString ($string)
 
-Remove [HTML](https://en.wikipedia.org/wiki/HTML) or [Xml](https://en.wikipedia.org/wiki/XML) tags from a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Remove [HTML](https://en.wikipedia.org/wiki/HTML) or [Xml](https://en.wikipedia.org/wiki/XML) tags from a string.
+
        Parameter  Description
     1  $string    String to detag
 
@@ -5652,9 +5981,11 @@ Remove [HTML](https://en.wikipedia.org/wiki/HTML) or [Xml](https://en.wikipedia.
 
 ## parseIntoWordsAndStrings($string)
 
-Parse a **$string** into words and quoted [strings](https://en.wikipedia.org/wiki/String_(computer_science)). A quote following a space introduces a [string](https://en.wikipedia.org/wiki/String_(computer_science)), else a quote is just part of the containing [word](https://en.wikipedia.org/wiki/Doc_(computing)). 
+Parse a **$string** into words and quoted strings. A quote following a space introduces a string, else a quote is just part of the containing word.
+
        Parameter  Description
-    1  $string    String to [parse](https://en.wikipedia.org/wiki/Parsing) 
+    1  $string    String to parse
+
 **Example:**
 
     if (1)                                                                          
@@ -5669,10 +6000,12 @@ Parse a **$string** into words and quoted [strings](https://en.wikipedia.org/wik
 
 ## stringsAreNotEqual  ($a, $b)
 
-Return the common start followed by the two non equal tails of two non equal [strings](https://en.wikipedia.org/wiki/String_(computer_science)) or an empty [list](https://en.wikipedia.org/wiki/Linked_list) if the [strings](https://en.wikipedia.org/wiki/String_(computer_science)) are equal.
+Return the common start followed by the two non equal tails of two non equal strings or an empty list if the strings are equal.
 
        Parameter  Description
-    1  $a         First [string](https://en.wikipedia.org/wiki/String_(computer_science))     2  $b         Second [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    1  $a         First string
+    2  $b         Second string
+
 **Example:**
 
       ok        !stringsAreNotEqual(q(abc), q(abc));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -5715,9 +6048,12 @@ Return the common start followed by the two non equal tails of two non equal [st
 
 ## showGotVersusWanted ($g, $e)
 
-Show the difference between the wanted [string](https://en.wikipedia.org/wiki/String_(computer_science)) and the wanted [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Show the difference between the wanted string and the wanted string.
+
        Parameter  Description
-    1  $g         First [string](https://en.wikipedia.org/wiki/String_(computer_science))     2  $e         Second [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    1  $g         First string
+    2  $e         Second string
+
 **Example:**
 
       ok        !stringsAreNotEqual(q(abc), q(abc));
@@ -5755,7 +6091,7 @@ Show the difference between the wanted [string](https://en.wikipedia.org/wiki/St
 
 ## printQw (@words)
 
-Print an [array](https://en.wikipedia.org/wiki/Dynamic_array) of words in qw() format.
+Print an array of words in qw() format.
 
        Parameter  Description
     1  @words     Array of words
@@ -5768,7 +6104,8 @@ Print an [array](https://en.wikipedia.org/wiki/Dynamic_array) of words in qw() f
 
 ## numberOfLinesInString   ($string)
 
-The number of lines in a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+The number of lines in a string.
+
        Parameter  Description
     1  $string    String
 
@@ -5782,9 +6119,11 @@ The number of lines in a [string](https://en.wikipedia.org/wiki/String_(computer
 
 ## javaPackage ($java)
 
-Extract the package name from a [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) [string](https://en.wikipedia.org/wiki/String_(computer_science)) or [file](https://en.wikipedia.org/wiki/Computer_file). 
+Extract the package name from a java string or file.
+
        Parameter  Description
-    1  $java      Java [file](https://en.wikipedia.org/wiki/Computer_file) if it exists else the [string](https://en.wikipedia.org/wiki/String_(computer_science)) of [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) 
+    1  $java      Java file if it exists else the string of java
+
 **Example:**
 
       my $j = writeFile(undef, <<END);
@@ -5806,10 +6145,11 @@ Extract the package name from a [Java](https://en.wikipedia.org/wiki/Java_(progr
 
 ## javaPackageAsFileName   ($java)
 
-Extract the package name from a [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) [string](https://en.wikipedia.org/wiki/String_(computer_science)) or [file](https://en.wikipedia.org/wiki/Computer_file) and convert it to a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Extract the package name from a java string or file and convert it to a file name.
 
        Parameter  Description
-    1  $java      Java [file](https://en.wikipedia.org/wiki/Computer_file) if it exists else the [string](https://en.wikipedia.org/wiki/String_(computer_science)) of [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) 
+    1  $java      Java file if it exists else the string of java
+
 **Example:**
 
       my $j = writeFile(undef, <<END);
@@ -5831,9 +6171,11 @@ Extract the package name from a [Java](https://en.wikipedia.org/wiki/Java_(progr
 
 ## perlPackage ($perl)
 
-Extract the package name from a [Perl](http://www.perl.org/) [string](https://en.wikipedia.org/wiki/String_(computer_science)) or [file](https://en.wikipedia.org/wiki/Computer_file). 
+Extract the package name from a perl string or file.
+
        Parameter  Description
-    1  $perl      Perl [file](https://en.wikipedia.org/wiki/Computer_file) if it exists else the [string](https://en.wikipedia.org/wiki/String_(computer_science)) of [Perl](http://www.perl.org/) 
+    1  $perl      Perl file if it exists else the string of perl
+
 **Example:**
 
       my $j = writeFile(undef, <<END);
@@ -5863,22 +6205,23 @@ Extract the package name from a [Perl](http://www.perl.org/) [string](https://en
 
 ## javaScriptExports   ($fileOrString)
 
-Extract the Javascript functions marked for export in a [file](https://en.wikipedia.org/wiki/Computer_file) or [string](https://en.wikipedia.org/wiki/String_(computer_science)).  Functions are marked for export by placing [function](https://en.wikipedia.org/wiki/Function_(computer_programming)) in column 1 followed by //E on the same line.  The end of the exported [function](https://en.wikipedia.org/wiki/Function_(computer_programming)) is located by 
+Extract the Javascript functions marked for export in a file or string.  Functions are marked for export by placing function in column 1 followed by //E on the same line.  The end of the exported function is located by 
  }.
 
        Parameter      Description
-    1  $fileOrString  File or [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    1  $fileOrString  File or string
+
 **Example:**
 
       ok javaScriptExports(<<END) eq <<END;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-    [function](https://en.wikipedia.org/wiki/Function_(computer_programming)) aaa()            //E
+    function aaa()            //E
      {console.log('aaa');
     
 
 ## chooseStringAtRandom(@strings)
 
-Choose a [string](https://en.wikipedia.org/wiki/String_(computer_science)) at random from the [list](https://en.wikipedia.org/wiki/Linked_list) of **@strings** supplied.
+Choose a string at random from the list of **@strings** supplied.
 
        Parameter  Description
     1  @strings   Strings to chose from
@@ -5891,7 +6234,8 @@ Choose a [string](https://en.wikipedia.org/wiki/String_(computer_science)) at ra
 
 ## randomizeArray  (@a)
 
-Randomize an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Randomize an array.
+
        Parameter  Description
     1  @a         Array to randomize
 
@@ -5903,11 +6247,12 @@ Randomize an [array](https://en.wikipedia.org/wiki/Dynamic_array).
 
 # Arrays and Hashes
 
-Operations on [arrays](https://en.wikipedia.org/wiki/Dynamic_array) and hashes and [array](https://en.wikipedia.org/wiki/Dynamic_array) of of hashesh and ghashes of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) and  so on a infinitum.
+Operations on arrays and hashes and array of of hashesh and ghashes of arrays and  so on a infinitum.
 
 ## lengthOfLongestSubArray ($a)
 
-Given an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) [find](https://en.wikipedia.org/wiki/Find_(Unix)) the length of the longest [sub](https://perldoc.perl.org/perlsub.html) [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Given an array of arrays find the length of the longest sub array.
+
        Parameter  Description
     1  $a         Array reference
 
@@ -5922,7 +6267,8 @@ Given an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https:
 
 ## cmpArrays   ($a, $b)
 
-Compare two [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Compare two arrays of strings.
+
        Parameter  Description
     1  $a         Array A
     2  $b         Array B
@@ -5947,7 +6293,7 @@ Compare two [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](h
   b
   B
   ");
-      ok dump(compareArraysAndExplain([qw(a b)],   [qw(a b c)])) eq dump("Second [array](https://en.wikipedia.org/wiki/Dynamic_array) has an additional line at index: 2
+      ok dump(compareArraysAndExplain([qw(a b)],   [qw(a b c)])) eq dump("Second array has an additional line at index: 2
   c
   ")
       ;
@@ -5955,7 +6301,7 @@ Compare two [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](h
 
 ## compareArraysAndExplain ($A, $B)
 
-Compare two [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and provide an explanation as to why they differ if they differ or [undef](https://perldoc.perl.org/functions/undef.html) if they do not.
+Compare two arrays of strings and provide an explanation as to why they differ if they differ or undef if they do not.
 
        Parameter  Description
     1  $A         Array A
@@ -5975,7 +6321,7 @@ Compare two [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](h
   ");  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
-      ok dump(compareArraysAndExplain([qw(a b)],   [qw(a b c)])) eq dump("Second [array](https://en.wikipedia.org/wiki/Dynamic_array) has an additional line at index: 2
+      ok dump(compareArraysAndExplain([qw(a b)],   [qw(a b c)])) eq dump("Second array has an additional line at index: 2
   c
   ")  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
@@ -5984,7 +6330,7 @@ Compare two [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](h
 
 ## forEachKeyAndValue  ($body, %hash)
 
-Iterate over a [hash](https://en.wikipedia.org/wiki/Hash_table) for each key and value.
+Iterate over a hash for each key and value.
 
        Parameter  Description
     1  $body      Body to be executed
@@ -6032,17 +6378,17 @@ Iterate over a [hash](https://en.wikipedia.org/wiki/Hash_table) for each key and
     #latest:;
     if (1) {                                                                        
       ok evalOrConfess("1") == 1;
-      my $r = [eval](http://perldoc.perl.org/functions/eval.html) {evalOrConfess "++ ++"};
+      my $r = eval {evalOrConfess "++ ++"};
       ok $@ =~ m(syntax error);
     
 
 ## validateHash($hash, @keys)
 
-Confess if the specified [hash](https://en.wikipedia.org/wiki/Hash_table) does not have all of the specified keys.
+Confess if the specified hash does not have all of the specified keys.
 
        Parameter  Description
     1  $hash      Hash
-    2  @keys      List of keys that the [hash](https://en.wikipedia.org/wiki/Hash_table) must contain
+    2  @keys      List of keys that the hash must contain
 
 **Example:**
 
@@ -6057,11 +6403,11 @@ Confess if the specified [hash](https://en.wikipedia.org/wiki/Hash_table) does n
 
 # Unicode
 
-Translate [Ascii](https://en.wikipedia.org/wiki/ASCII) alphanumerics in [strings](https://en.wikipedia.org/wiki/String_(computer_science)) to various [Unicode](https://en.wikipedia.org/wiki/Unicode) blocks.
+Translate [Ascii](https://en.wikipedia.org/wiki/ASCII) alphanumerics in strings to various [Unicode](https://en.wikipedia.org/wiki/Unicode) blocks.
 
 ## mathematicalItalicString($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Italic.
+Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Italic.
 
        Parameter  Description
     1  $string    String to convert
@@ -6074,7 +6420,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## mathematicalBoldString  ($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
+Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
 
        Parameter  Description
     1  $string    String to convert
@@ -6087,7 +6433,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## mathematicalBoldStringUndo  ($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
+Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
 
        Parameter  Description
     1  $string    String to convert
@@ -6100,7 +6446,7 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## mathematicalBoldItalicString($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
+Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
 
        Parameter  Description
     1  $string    String to convert
@@ -6113,7 +6459,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## mathematicalBoldItalicStringUndo($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
+Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
 
        Parameter  Description
     1  $string    String to convert
@@ -6126,7 +6472,7 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## mathematicalSansSerifString ($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
+Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
 
        Parameter  Description
     1  $string    String to convert
@@ -6139,7 +6485,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## mathematicalSansSerifStringUndo ($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
+Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
 
        Parameter  Description
     1  $string    String to convert
@@ -6152,7 +6498,7 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## mathematicalSansSerifBoldString ($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
+Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
 
        Parameter  Description
     1  $string    String to convert
@@ -6165,7 +6511,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## mathematicalSansSerifBoldStringUndo ($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
+Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
 
        Parameter  Description
     1  $string    String to convert
@@ -6178,7 +6524,7 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## mathematicalSansSerifItalicString   ($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
+Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
 
        Parameter  Description
     1  $string    String to convert
@@ -6191,7 +6537,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## mathematicalSansSerifItalicStringUndo   ($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
+Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
 
        Parameter  Description
     1  $string    String to convert
@@ -6204,7 +6550,7 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## mathematicalSansSerifBoldItalicString   ($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
+Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
 
        Parameter  Description
     1  $string    String to convert
@@ -6217,7 +6563,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## mathematicalSansSerifBoldItalicStringUndo   ($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
+Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
 
        Parameter  Description
     1  $string    String to convert
@@ -6230,7 +6576,7 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## mathematicalMonoSpaceString ($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
+Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
 
        Parameter  Description
     1  $string    String to convert
@@ -6243,7 +6589,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## mathematicalMonoSpaceStringUndo ($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
+Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
 
        Parameter  Description
     1  $string    String to convert
@@ -6256,7 +6602,7 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## boldString  ($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to bold.
+Convert alphanumerics in a string to bold.
 
        Parameter  Description
     1  $string    String to convert
@@ -6269,7 +6615,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## boldStringUndo  ($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to bold.
+Undo alphanumerics in a string to bold.
 
        Parameter  Description
     1  $string    String to convert
@@ -6290,7 +6636,7 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## enclosedString  ($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to enclosed alphanumerics.
+Convert alphanumerics in a string to enclosed alphanumerics.
 
        Parameter  Description
     1  $string    String to convert
@@ -6303,7 +6649,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## enclosedStringUndo  ($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to enclosed alphanumerics.
+Undo alphanumerics in a string to enclosed alphanumerics.
 
        Parameter  Description
     1  $string    String to convert
@@ -6324,7 +6670,7 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## enclosedReversedString  ($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to enclosed reversed alphanumerics.
+Convert alphanumerics in a string to enclosed reversed alphanumerics.
 
        Parameter  Description
     1  $string    String to convert
@@ -6337,7 +6683,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## enclosedReversedStringUndo  ($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to enclosed reversed alphanumerics.
+Undo alphanumerics in a string to enclosed reversed alphanumerics.
 
        Parameter  Description
     1  $string    String to convert
@@ -6358,7 +6704,7 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## superScriptString   ($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to super scripts.
+Convert alphanumerics in a string to super scripts.
 
        Parameter  Description
     1  $string    String to convert
@@ -6371,7 +6717,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## superScriptStringUndo   ($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to super scripts.
+Undo alphanumerics in a string to super scripts.
 
        Parameter  Description
     1  $string    String to convert
@@ -6392,7 +6738,7 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## subScriptString ($string)
 
-Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [sub](https://perldoc.perl.org/perlsub.html) scripts.
+Convert alphanumerics in a string to sub scripts.
 
        Parameter  Description
     1  $string    String to convert
@@ -6405,7 +6751,7 @@ Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(comput
 
 ## subScriptStringUndo ($string)
 
-Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [sub](https://perldoc.perl.org/perlsub.html) scripts.
+Undo alphanumerics in a string to sub scripts.
 
        Parameter  Description
     1  $string    String to convert
@@ -6426,9 +6772,11 @@ Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_
 
 ## isFileUtf8  ($file)
 
-Return the [file](https://en.wikipedia.org/wiki/Computer_file) name quoted if its contents are in [utf8](https://en.wikipedia.org/wiki/UTF-8) else return [undef](https://perldoc.perl.org/functions/undef.html). 
+Return the file name quoted if its contents are in utf8 else return undef.
+
        Parameter  Description
-    1  $file      File to [test](https://en.wikipedia.org/wiki/Software_testing) 
+    1  $file      File to test
+
 **Example:**
 
       my $f = writeFile(undef, "aaa");
@@ -6439,10 +6787,11 @@ Return the [file](https://en.wikipedia.org/wiki/Computer_file) name quoted if it
 
 ## convertUtf8ToUtf32  ($c)
 
-Convert a number representing a single [Unicode](https://en.wikipedia.org/wiki/Unicode) point coded in [utf8](https://en.wikipedia.org/wiki/UTF-8) to utf32.
+Convert a number representing a single unicode point coded in utf8 to utf32.
 
        Parameter  Description
-    1  $c         Unicode point encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) 
+    1  $c         Unicode point encoded as utf8
+
 **Example:**
 
       is_deeply convertUtf8ToUtf32(0x24),          0x24;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -6481,13 +6830,13 @@ Convert a number representing a single [Unicode](https://en.wikipedia.org/wiki/U
     #latest:;
     if (1) {                                                                        
       ok evalOrConfess("1") == 1;
-      my $r = [eval](http://perldoc.perl.org/functions/eval.html) {evalOrConfess "++ ++"};
+      my $r = eval {evalOrConfess "++ ++"};
       ok $@ =~ m(syntax error);
     
 
 ## convertUtf32ToUtf8  ($c)
 
-Convert a number representing a single [Unicode](https://en.wikipedia.org/wiki/Unicode) point coded in utf32 to [utf8](https://en.wikipedia.org/wiki/UTF-8) big endian.
+Convert a number representing a single unicode point coded in utf32 to utf8 big endian.
 
        Parameter  Description
     1  $c         Unicode point encoded as utf32
@@ -6500,7 +6849,7 @@ Convert a number representing a single [Unicode](https://en.wikipedia.org/wiki/U
 
 ## convertUtf32ToUtf8LE($c)
 
-Convert a number representing a single [Unicode](https://en.wikipedia.org/wiki/Unicode) point coded in utf32 to [utf8](https://en.wikipedia.org/wiki/UTF-8) little endian.
+Convert a number representing a single unicode point coded in utf32 to utf8 little endian.
 
        Parameter  Description
     1  $c         Unicode point encoded as utf32
@@ -6517,9 +6866,11 @@ Extract system constants
 
 ## getSystemConstantsFromIncludeFile   ($file, @constants)
 
-Get the value of the named system constants from an include [file](https://en.wikipedia.org/wiki/Computer_file). 
+Get the value of the named system constants from an include file.
+
        Parameter   Description
-    1  $file       File to [read](https://en.wikipedia.org/wiki/Reading_(computer))     2  @constants  Constants to get
+    1  $file       File to read
+    2  @constants  Constants to get
 
 **Example:**
 
@@ -6537,9 +6888,11 @@ Get the value of the named system constants from an include [file](https://en.wi
 
 ## getStructureSizeFromIncludeFile ($file, $structure)
 
-Get the size of a system structure from an include [file](https://en.wikipedia.org/wiki/Computer_file). 
+Get the size of a system structure from an include file.
+
        Parameter   Description
-    1  $file       File to [read](https://en.wikipedia.org/wiki/Reading_(computer))     2  $structure  Structure name
+    1  $file       File to read
+    2  $structure  Structure name
 
 **Example:**
 
@@ -6551,9 +6904,11 @@ Get the size of a system structure from an include [file](https://en.wikipedia.o
 
 ## getFieldOffsetInStructureFromIncludeFile($file, $structure, $field)
 
-Get the offset of a field in a system structures from an include [file](https://en.wikipedia.org/wiki/Computer_file). 
+Get the offset of a field in a system structures from an include file.
+
        Parameter   Description
-    1  $file       File to [read](https://en.wikipedia.org/wiki/Reading_(computer))     2  $structure  Structure name
+    1  $file       File to read
+    2  $structure  Structure name
     3  $field      Field name
 
 **Example:**
@@ -6564,12 +6919,13 @@ Get the offset of a field in a system structures from an include [file](https://
      }
     
 
-# Unix [domain name](https://en.wikipedia.org/wiki/Domain_name) communications
+# Unix domain communications
 
-Send messages between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) via a [Unix](https://en.wikipedia.org/wiki/Unix) [domain name](https://en.wikipedia.org/wiki/Domain_name) [socket](https://en.wikipedia.org/wiki/Network_socket). 
+Send messages between processes via a unix domain socket.
+
 ## newUdsrServer   (@parms)
 
-Create a communications [server](https://en.wikipedia.org/wiki/Server_(computing)) - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+Create a communications server - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
        Parameter  Description
     1  @parms     Attributes per L<Udsr Definition|/Udsr Definition>
@@ -6582,7 +6938,7 @@ Create a communications [server](https://en.wikipedia.org/wiki/Server_(computing
 
        {my ($u) = @_;
         my $r = $u->read;
-        $u->write(qq(Hello from [server](https://en.wikipedia.org/wiki/Server_(computing)) $r));
+        $u->write(qq(Hello from server $r));
        });
     
       my $p = newProcessStarter(min(100, $N));                                      # Run some clients
@@ -6594,7 +6950,7 @@ Create a communications [server](https://en.wikipedia.org/wiki/Server_(computing
             my $m = qq(Hello from client $i x $j);
             $c->write($m);
             my $r = $c->read;
-            ++$count if $r eq qq(Hello from [server](https://en.wikipedia.org/wiki/Server_(computing)) $m);
+            ++$count if $r eq qq(Hello from server $m);
            }
           [$count]
          });
@@ -6612,7 +6968,7 @@ Create a communications [server](https://en.wikipedia.org/wiki/Server_(computing
 
 ## newUdsrClient   (@parms)
 
-Create a new communications client - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+Create a new communications client - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
        Parameter  Description
     1  @parms     Attributes per L<Udsr Definition|/Udsr Definition>
@@ -6623,7 +6979,7 @@ Create a new communications client - a means to communicate between [processes](
       my $s = newUdsrServer(serverAction=>sub
        {my ($u) = @_;
         my $r = $u->read;
-        $u->write(qq(Hello from [server](https://en.wikipedia.org/wiki/Server_(computing)) $r));
+        $u->write(qq(Hello from server $r));
        });
     
       my $p = newProcessStarter(min(100, $N));                                      # Run some clients
@@ -6637,7 +6993,7 @@ Create a new communications client - a means to communicate between [processes](
             my $m = qq(Hello from client $i x $j);
             $c->write($m);
             my $r = $c->read;
-            ++$count if $r eq qq(Hello from [server](https://en.wikipedia.org/wiki/Server_(computing)) $m);
+            ++$count if $r eq qq(Hello from server $m);
            }
           [$count]
          });
@@ -6667,7 +7023,7 @@ Write a communications message to the [newUdsrServer](#newudsrserver) or the [ne
       my $s = newUdsrServer(serverAction=>sub
        {my ($u) = @_;
         my $r = $u->read;
-        $u->write(qq(Hello from [server](https://en.wikipedia.org/wiki/Server_(computing)) $r));
+        $u->write(qq(Hello from server $r));
        });
     
       my $p = newProcessStarter(min(100, $N));                                      # Run some clients
@@ -6679,7 +7035,7 @@ Write a communications message to the [newUdsrServer](#newudsrserver) or the [ne
             my $m = qq(Hello from client $i x $j);
             $c->write($m);
             my $r = $c->read;
-            ++$count if $r eq qq(Hello from [server](https://en.wikipedia.org/wiki/Server_(computing)) $m);
+            ++$count if $r eq qq(Hello from server $m);
            }
           [$count]
          });
@@ -6708,7 +7064,7 @@ Read a message from the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#
       my $s = newUdsrServer(serverAction=>sub
        {my ($u) = @_;
         my $r = $u->read;
-        $u->write(qq(Hello from [server](https://en.wikipedia.org/wiki/Server_(computing)) $r));
+        $u->write(qq(Hello from server $r));
        });
     
       my $p = newProcessStarter(min(100, $N));                                      # Run some clients
@@ -6720,7 +7076,7 @@ Read a message from the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#
             my $m = qq(Hello from client $i x $j);
             $c->write($m);
             my $r = $c->read;
-            ++$count if $r eq qq(Hello from [server](https://en.wikipedia.org/wiki/Server_(computing)) $m);
+            ++$count if $r eq qq(Hello from server $m);
            }
           [$count]
          });
@@ -6738,7 +7094,8 @@ Read a message from the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#
 
 ## Udsr::kill  ($u)
 
-Kill a communications [server](https://en.wikipedia.org/wiki/Server_(computing)). 
+Kill a communications server.
+
        Parameter  Description
     1  $u         Communicator
 
@@ -6748,7 +7105,7 @@ Kill a communications [server](https://en.wikipedia.org/wiki/Server_(computing))
       my $s = newUdsrServer(serverAction=>sub
        {my ($u) = @_;
         my $r = $u->read;
-        $u->write(qq(Hello from [server](https://en.wikipedia.org/wiki/Server_(computing)) $r));
+        $u->write(qq(Hello from server $r));
        });
     
       my $p = newProcessStarter(min(100, $N));                                      # Run some clients
@@ -6760,7 +7117,7 @@ Kill a communications [server](https://en.wikipedia.org/wiki/Server_(computing))
             my $m = qq(Hello from client $i x $j);
             $c->write($m);
             my $r = $c->read;
-            ++$count if $r eq qq(Hello from [server](https://en.wikipedia.org/wiki/Server_(computing)) $m);
+            ++$count if $r eq qq(Hello from server $m);
            }
           [$count]
          });
@@ -6778,18 +7135,21 @@ Kill a communications [server](https://en.wikipedia.org/wiki/Server_(computing))
 
 ## Udsr::webUser   ($u, $folder)
 
-Create a [systemd](https://en.wikipedia.org/wiki/Systemd) installed [server](https://en.wikipedia.org/wiki/Server_(computing)) that [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) [HTTP](https://en.wikipedia.org/wiki/HTTP) requests using a specified [userid](https://en.wikipedia.org/wiki/User_identifier). The [systemd](https://en.wikipedia.org/wiki/Systemd) and CGI files plus an installation script are written to the specified [folder](https://en.wikipedia.org/wiki/File_folder) after it has been cleared. The [serverAction](https://metacpan.org/pod/serverAction) attribute contains the [code](https://en.wikipedia.org/wiki/Computer_program) to be executed by the [server](https://en.wikipedia.org/wiki/Server_(computing)): it should contain a [sub](https://perldoc.perl.org/perlsub.html) **genResponse($hash)** which will be called with a [hash](https://en.wikipedia.org/wiki/Hash_table) of the CGI variables. This [sub](https://perldoc.perl.org/perlsub.html) should return the response to be sent back to the client. Returns the installation script [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Create a systemd installed server that processes http requests using a specified userid. The systemd and CGI files plus an installation script are written to the specified folder after it has been cleared. The [serverAction](https://metacpan.org/pod/serverAction) attribute contains the code to be executed by the server: it should contain a [sub](https://perldoc.perl.org/perlsub.html) **genResponse($hash)** which will be called with a hash of the CGI variables. This [sub](https://perldoc.perl.org/perlsub.html) should return the response to be sent back to the client. Returns the installation script file name.
 
        Parameter  Description
     1  $u         Communicator
-    2  $folder    Folder to contain [server](https://en.wikipedia.org/wiki/Server_(computing)) [code](https://en.wikipedia.org/wiki/Computer_program) 
+    2  $folder    Folder to contain server code
+
 **Example:**
 
     if (0)                                                                          
-     {my $fold = fpd(qw(/home phil zzz));                                           # Folder to contain [server](https://en.wikipedia.org/wiki/Server_(computing)) [code](https://en.wikipedia.org/wiki/Computer_program)       my $name = q(test);                                                           # Service
+     {my $fold = fpd(qw(/home phil zzz));                                           # Folder to contain server code
+      my $name = q(test);                                                           # Service
       my $user = q(phil);                                                           # User
     
-      my $udsr = newUdsr                                                            # Create a Udsr parameter [list](https://en.wikipedia.org/wiki/Linked_list)        (serviceName => $name,
+      my $udsr = newUdsr                                                            # Create a Udsr parameter list
+       (serviceName => $name,
         serviceUser => $user,
         socketPath  => qq(/home/phil/$name.socket),
         serverAction=> <<'END'
@@ -6809,7 +7169,7 @@ Create a [systemd](https://en.wikipedia.org/wiki/Systemd) installed [server](htt
        );
     
     
-      Udsr::webUser($udsr, $fold);                                                  # Create and [install](https://en.wikipedia.org/wiki/Installation_(computer_programs)) web service interface  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      Udsr::webUser($udsr, $fold);                                                  # Create and install web service interface  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       my $ip = awsIp;
       say STDERR qx(curl http://$ip/cgi-bin/$name/client.pl);                       # Enable port 80 on AWS first
@@ -6822,13 +7182,15 @@ Web processing
 
 ### wwwGitHubAuth   ($saveUserDetails, $clientId, $clientSecret, $code, $state)
 
-Logon as a [GitHub](https://github.com/philiprbrenan) [Oauth](https://en.wikipedia.org/wiki/OAuth) app per: [https://github.com/settings/developers](https://github.com/settings/developers). If no [Oauth](https://en.wikipedia.org/wiki/OAuth) [code](https://en.wikipedia.org/wiki/Computer_program) is supplied then a web page is printed that allows the [user](https://en.wikipedia.org/wiki/User_(computing)) to request that such a [code](https://en.wikipedia.org/wiki/Computer_program) be sent to the [server](https://en.wikipedia.org/wiki/Server_(computing)).  If a valid [code](https://en.wikipedia.org/wiki/Computer_program) is received, by the [server](https://en.wikipedia.org/wiki/Server_(computing)) then it is converted to a [Oauth](https://en.wikipedia.org/wiki/OAuth) token which is handed to [sub](https://perldoc.perl.org/perlsub.html) [saveUserDetails](https://metacpan.org/pod/saveUserDetails).
+Logon as a [GitHub](https://github.com/philiprbrenan) [Oauth](https://en.wikipedia.org/wiki/OAuth) app per: [https://github.com/settings/developers](https://github.com/settings/developers). If no [Oauth](https://en.wikipedia.org/wiki/OAuth) code is supplied then a web page is printed that allows the user to request that such a code be sent to the server.  If a valid code is received, by the server then it is converted to a [Oauth](https://en.wikipedia.org/wiki/OAuth) token which is handed to [sub](https://perldoc.perl.org/perlsub.html) [saveUserDetails](https://metacpan.org/pod/saveUserDetails).
 
        Parameter         Description
-    1  $saveUserDetails  Process [user](https://en.wikipedia.org/wiki/User_(computing)) token once obtained from GitHub
+    1  $saveUserDetails  Process user token once obtained from GitHub
     2  $clientId         Client id
     3  $clientSecret     Client secret
-    4  $code             Authorization [code](https://en.wikipedia.org/wiki/Computer_program)     5  $state            Random [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    4  $code             Authorization code
+    5  $state            Random string
+
 **Example:**
 
       wwwHeader;
@@ -6848,7 +7210,7 @@ Useful for operating across the cloud.
 
 ## makeDieConfess  ()
 
-Force [die](http://perldoc.perl.org/functions/die.html) to [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) where the death occurred.
+Force die to confess where the death occurred.
 
 **Example:**
 
@@ -6858,7 +7220,7 @@ Force [die](http://perldoc.perl.org/functions/die.html) to [confess](http://perl
 
 ## ipAddressOfHost ($host)
 
-Get the first [IP address](https://en.wikipedia.org/wiki/IP_address) address of the specified host via Domain Name Services.
+Get the first ip address of the specified host via Domain Name Services.
 
        Parameter  Description
     1  $host      Host name
@@ -6874,7 +7236,7 @@ Get the first [IP address](https://en.wikipedia.org/wiki/IP_address) address of 
 
 ## awsIp   ()
 
-Get [IP address](https://en.wikipedia.org/wiki/IP_address) address of [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon Web Services](http://aws.amazon.com).
+Get ip address of server at [Amazon Web Services](http://aws.amazon.com).
 
 **Example:**
 
@@ -6888,7 +7250,7 @@ Get [IP address](https://en.wikipedia.org/wiki/IP_address) address of [server](h
 
 ## saveAwsIp   ()
 
-Make the [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon Web Services](http://aws.amazon.com) with the given IP address the default primary [server](https://en.wikipedia.org/wiki/Server_(computing)) as used by all the methods whose names end in **r** or **Remote**. Returns the given IP address.
+Make the server at [Amazon Web Services](http://aws.amazon.com) with the given IP address the default primary server as used by all the methods whose names end in **r** or **Remote**. Returns the given IP address.
 
 **Example:**
 
@@ -6904,7 +7266,7 @@ Make the [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon W
 
 ## saveAwsDomain   ()
 
-Make the [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon Web Services](http://aws.amazon.com) with the given [domain name](https://en.wikipedia.org/wiki/Domain_name) name the default primary [server](https://en.wikipedia.org/wiki/Server_(computing)) as used by all the methods whose names end in **r** or **Remote**. Returns the given IP address.
+Make the server at [Amazon Web Services](http://aws.amazon.com) with the given domain name the default primary server as used by all the methods whose names end in **r** or **Remote**. Returns the given IP address.
 
 **Example:**
 
@@ -6919,9 +7281,10 @@ Make the [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon W
 
 ## awsMetaData ($item)
 
-Get an item of meta [data](https://en.wikipedia.org/wiki/Data) for the [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Get an item of meta data for the [Amazon Web Services](http://aws.amazon.com) server we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
+
        Parameter  Description
-    1  $item      Meta [data](https://en.wikipedia.org/wiki/Data) field
+    1  $item      Meta data field
 
 **Example:**
 
@@ -6931,7 +7294,8 @@ Get an item of meta [data](https://en.wikipedia.org/wiki/Data) for the [Amazon W
 
 ## awsCurrentIp()
 
-Get the [IP address](https://en.wikipedia.org/wiki/IP_address) address of the AWS [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Get the ip address of the AWS server we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
+
 **Example:**
 
       awsCurrentIp;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -6945,7 +7309,8 @@ Get the [IP address](https://en.wikipedia.org/wiki/IP_address) address of the AW
 
 ## awsCurrentInstanceId()
 
-Get the instance id of the [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Get the instance id of the [Amazon Web Services](http://aws.amazon.com) server we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
+
 **Example:**
 
       ok awsCurrentInstanceId           eq q(i-06a4b221b30bf7a37);                    # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -6954,7 +7319,8 @@ Get the instance id of the [Amazon Web Services](http://aws.amazon.com) [server]
 
 ## awsCurrentAvailabilityZone  ()
 
-Get the availability zone of the [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Get the availability zone of the [Amazon Web Services](http://aws.amazon.com) server we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
+
 **Example:**
 
       ok awsCurrentAvailabilityZone     eq q(us-east-2a);                             # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -6963,7 +7329,8 @@ Get the availability zone of the [Amazon Web Services](http://aws.amazon.com) [s
 
 ## awsCurrentRegion()
 
-Get the region of the [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Get the region of the [Amazon Web Services](http://aws.amazon.com) server we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
+
 **Example:**
 
       ok awsCurrentRegion               eq q(us-east-2);                              # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -6972,7 +7339,8 @@ Get the region of the [Amazon Web Services](http://aws.amazon.com) [server](http
 
 ## awsCurrentInstanceType  ()
 
-Get the instance type of the [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Get the instance type of the [Amazon Web Services](http://aws.amazon.com) server if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
+
 **Example:**
 
       ok awsCurrentInstanceType         eq q(r4.4xlarge);                             # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -6989,15 +7357,15 @@ Execute an AWs command and return its response.
 
 **Example:**
 
-      ok awsExecCli(q(aws [S3](https://aws.amazon.com/s3/) ls)) =~ m(ryffine)i;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      ok awsExecCli(q(aws s3 ls)) =~ m(ryffine)i;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-      my $p = awsExecCliJson(q(aws [EC2](https://aws.amazon.com/ec2/) describe-vpcs), region=>q(us-east-1));
+      my $p = awsExecCliJson(q(aws ec2 describe-vpcs), region=>q(us-east-1));
       ok $p->Vpcs->[0]->VpcId =~ m(\Avpc-)i;
     
 
 ## awsExecCliJson  ($command, %options)
 
-Execute an AWs command and decode the [Json](https://en.wikipedia.org/wiki/JSON) so produced.
+Execute an AWs command and decode the json so produced.
 
        Parameter  Description
     1  $command   Command to execute
@@ -7005,9 +7373,9 @@ Execute an AWs command and decode the [Json](https://en.wikipedia.org/wiki/JSON)
 
 **Example:**
 
-      ok awsExecCli(q(aws [S3](https://aws.amazon.com/s3/) ls)) =~ m(ryffine)i;
+      ok awsExecCli(q(aws s3 ls)) =~ m(ryffine)i;
     
-      my $p = awsExecCliJson(q(aws [EC2](https://aws.amazon.com/ec2/) describe-vpcs), region=>q(us-east-1));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      my $p = awsExecCliJson(q(aws ec2 describe-vpcs), region=>q(us-east-1));  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
       ok $p->Vpcs->[0]->VpcId =~ m(\Avpc-)i;
     
@@ -7031,7 +7399,7 @@ Describe the [Amazon Web Services](http://aws.amazon.com) instances running in a
 
 ## awsEc2DescribeInstancesGetIPAddresses   (%options)
 
-Return a [hash](https://en.wikipedia.org/wiki/Hash_table) of {instanceId => public [IP address](https://en.wikipedia.org/wiki/IP_address) address} for all running instances on [Amazon Web Services](http://aws.amazon.com) with [IP address](https://en.wikipedia.org/wiki/IP_address) addresses.
+Return a hash of {instanceId => public ip address} for all running instances on [Amazon Web Services](http://aws.amazon.com) with ip addresses.
 
        Parameter  Description
     1  %options   Options
@@ -7063,7 +7431,7 @@ Return the IP address of a named instance on [Amazon Web Services](http://aws.am
 
 ## awsEc2CreateImage   ($name, %options)
 
-Create an image snap shot with the specified **$name** of the AWS [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an AWS [server](https://en.wikipedia.org/wiki/Server_(computing)) else return false. It is safe to shut down the instance immediately after initiating the snap shot - the snap continues even though the instance has terminated.
+Create an image snap shot with the specified **$name** of the AWS server we are currently running on if we are running on an AWS server else return false. It is safe to shut down the instance immediately after initiating the snap shot - the snap continues even though the instance has terminated.
 
        Parameter  Description
     1  $name      Image name
@@ -7108,7 +7476,7 @@ Describe images available.
 
 ## awsCurrentLinuxSpotPrices   (%options)
 
-Return {instance type} = cheapest [spot](https://aws.amazon.com/ec2/spot/) price in dollars per hour for the given region.
+Return {instance type} = cheapest spot price in dollars per hour for the given region.
 
        Parameter  Description
     1  %options   Options
@@ -7144,7 +7512,7 @@ Return details of the specified instance type.
 
 ## awsEc2ReportSpotInstancePrices  ($instanceTypeRe, %options)
 
-Report the prices of all the [spot](https://aws.amazon.com/ec2/spot/) instances whose type matches a regular expression **$instanceTypeRe**. The report is sorted by price in millidollars per [CPU](https://en.wikipedia.org/wiki/Central_processing_unit) ascending.
+Report the prices of all the spot instances whose type matches a regular expression **$instanceTypeRe**. The report is sorted by price in millidollars per cpu ascending.
 
        Parameter        Description
     1  $instanceTypeRe  Regular expression for instance type name
@@ -7185,7 +7553,7 @@ Report the prices of all the [spot](https://aws.amazon.com/ec2/spot/) instances 
 
 ## awsEc2RequestSpotInstances  ($count, $instanceType, $ami, $price, $securityGroup, $key, %options)
 
-Request [spot](https://aws.amazon.com/ec2/spot/) instances as long as they can be started within the next minute. Return a [list](https://en.wikipedia.org/wiki/Linked_list) of [spot](https://aws.amazon.com/ec2/spot/) instance request ids one for each instance requested.
+Request spot instances as long as they can be started within the next minute. Return a list of spot instance request ids one for each instance requested.
 
        Parameter       Description
     1  $count          Number of instances
@@ -7206,7 +7574,7 @@ Request [spot](https://aws.amazon.com/ec2/spot/) instances as long as they can b
 
 ## awsEc2DescribeSpotInstances (%options)
 
-Return a [hash](https://en.wikipedia.org/wiki/Hash_table) {spot instance request => [spot](https://aws.amazon.com/ec2/spot/) instance details} describing the status of active [spot](https://aws.amazon.com/ec2/spot/) instances.
+Return a hash {spot instance request => spot instance details} describing the status of active spot instances.
 
        Parameter  Description
     1  %options   Options.
@@ -7219,10 +7587,11 @@ Return a [hash](https://en.wikipedia.org/wiki/Hash_table) {spot instance request
 
 ## awsR53a ($zone, $server, $ip, %options)
 
-Create/Update a **A** [Domain Name System](https://en.wikipedia.org/wiki/Domain_Name_System) record for the specified [server](https://en.wikipedia.org/wiki/Server_(computing)). 
+Create/Update a **A** [Domain Name System](https://en.wikipedia.org/wiki/Domain_Name_System) record for the specified server.
+
        Parameter  Description
     1  $zone      Zone id from R53
-    2  $server    Fully qualified [domain name](https://en.wikipedia.org/wiki/Domain_name) name
+    2  $server    Fully qualified domain name
     3  $ip        Ip address
     4  %options   AWS CLI global options
 
@@ -7239,10 +7608,11 @@ Create/Update a **A** [Domain Name System](https://en.wikipedia.org/wiki/Domain_
 
 ## awsR53aaaa  ($zone, $server, $ip, %options)
 
-Create/Update a **AAAA** [Domain Name System](https://en.wikipedia.org/wiki/Domain_Name_System) record for the specified [server](https://en.wikipedia.org/wiki/Server_(computing)). 
+Create/Update a **AAAA** [Domain Name System](https://en.wikipedia.org/wiki/Domain_Name_System) record for the specified server.
+
        Parameter  Description
     1  $zone      Zone id from R53
-    2  $server    Fully qualified [domain name](https://en.wikipedia.org/wiki/Domain_name) name
+    2  $server    Fully qualified domain name
     3  $ip        Ip6 address
     4  %options   AWS CLI global options
 
@@ -7292,7 +7662,7 @@ Check that the specified b&lt;$cmd> is present on the current system.  Use $ENV{
 
 ## numberOfCpus($scale)
 
-Number of [CPUs](https://en.wikipedia.org/wiki/Central_processing_unit) scaled by an optional factor - but only if you have nproc. If you do not have nproc but do have a convenient way for determining the number of [CPUs](https://en.wikipedia.org/wiki/Central_processing_unit) on your system please let me know.
+Number of cpus scaled by an optional factor - but only if you have nproc. If you do not have nproc but do have a convenient way for determining the number of cpus on your system please let me know.
 
        Parameter  Description
     1  $scale     Scale factor
@@ -7305,7 +7675,7 @@ Number of [CPUs](https://en.wikipedia.org/wiki/Central_processing_unit) scaled b
 
 ## ipAddressViaArp ($hostName)
 
-Get the [IP address](https://en.wikipedia.org/wiki/IP_address) address of a [server](https://en.wikipedia.org/wiki/Server_(computing)) on the local [network](https://en.wikipedia.org/wiki/Computer_network) by hostname via arp.
+Get the ip address of a server on the local network by hostname via arp.
 
        Parameter  Description
     1  $hostName  Host name
@@ -7318,7 +7688,7 @@ Get the [IP address](https://en.wikipedia.org/wiki/IP_address) address of a [ser
 
 ## parseS3BucketAndFolderName  ($name)
 
-Parse an [S3](https://aws.amazon.com/s3/) bucket/folder name into a bucket and a [folder](https://en.wikipedia.org/wiki/File_folder) name removing any initial s3://.
+Parse an [S3](https://aws.amazon.com/s3/) bucket/folder name into a bucket and a folder name removing any initial s3://.
 
        Parameter  Description
     1  $name      Bucket/folder name
@@ -7343,14 +7713,15 @@ Parse an [S3](https://aws.amazon.com/s3/) bucket/folder name into a bucket and a
 
 ## saveCodeToS3($saveCodeEvery, $folder, $zipFileName, $bucket, $S3Parms)
 
-Save source [code](https://en.wikipedia.org/wiki/Computer_program) every **$saveCodeEvery** seconds by zipping [folder](https://en.wikipedia.org/wiki/File_folder) **$folder** to [zip](https://linux.die.net/man/1/zip) [file](https://en.wikipedia.org/wiki/Computer_file) **$zipFileName** then saving this [zip](https://linux.die.net/man/1/zip) [file](https://en.wikipedia.org/wiki/Computer_file) in the specified [S3](https://aws.amazon.com/s3/) **$bucket** using any additional [S3](https://aws.amazon.com/s3/) parameters in **$S3Parms**.
+Save source code every **$saveCodeEvery** seconds by zipping folder **$folder** to zip file **$zipFileName** then saving this zip file in the specified [S3](https://aws.amazon.com/s3/) **$bucket** using any additional [S3](https://aws.amazon.com/s3/) parameters in **$S3Parms**.
 
        Parameter       Description
     1  $saveCodeEvery  Save every seconds
     2  $folder         Folder to save
-    3  $zipFileName    Zip [file](https://en.wikipedia.org/wiki/Computer_file) name
+    3  $zipFileName    Zip file name
     4  $bucket         Bucket/key
-    5  $S3Parms        Additional S3 parameters like profile or region as a [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    5  $S3Parms        Additional S3 parameters like profile or region as a string
+
 **Example:**
 
       saveCodeToS3(1200, q(.), q(projectName), q(bucket/folder), q(--quiet));         # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -7359,7 +7730,7 @@ Save source [code](https://en.wikipedia.org/wiki/Computer_program) every **$save
 
 ## addCertificate  ($file)
 
-Add a certificate to the current [Secure Shell](https://www.ssh.com/ssh) session.
+Add a certificate to the current ssh session.
 
        Parameter  Description
     1  $file      File containing certificate
@@ -7382,7 +7753,7 @@ The name of the host we are running on.
 
 ## userId  ($user)
 
-Get or confirm the [userid](https://en.wikipedia.org/wiki/User_identifier) we are currently running under.
+Get or confirm the userid we are currently running under.
 
        Parameter  Description
     1  $user      Userid to confirm
@@ -7395,11 +7766,14 @@ Get or confirm the [userid](https://en.wikipedia.org/wiki/User_identifier) we ar
 
 ## awsTranslateText($string, $language, $cacheFolder, $Options)
 
-Translate **$text** from English to a specified **$language** using AWS Translate with the specified global **$options** and return the translated [string](https://en.wikipedia.org/wiki/String_(computer_science)).  Translations are cached in the specified **$cacheFolder** for reuse where feasible.
+Translate **$text** from English to a specified **$language** using AWS Translate with the specified global **$options** and return the translated string.  Translations are cached in the specified **$cacheFolder** for reuse where feasible.
 
        Parameter     Description
     1  $string       String to translate
-    2  $language     Language [code](https://en.wikipedia.org/wiki/Computer_program)     3  $cacheFolder  Cache [folder](https://en.wikipedia.org/wiki/File_folder)     4  $Options      Aws global options [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    2  $language     Language code
+    3  $cacheFolder  Cache folder
+    4  $Options      Aws global options string
+
 **Example:**
 
       ok awsTranslateText("Hello", "it", ".translations/") eq q(Ciao);                # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -7450,7 +7824,7 @@ Return 1 if we are on [Amazon Web Services](http://aws.amazon.com) but we are no
 
 ## awsParallelPrimaryInstanceId(%options)
 
-Return the instance id of the primary instance. The primary instance is the instance at [Amazon Web Services](http://aws.amazon.com) that we communicate with - it controls all the secondary instances that form part of the parallel session. The primary instance is located by finding the first running instance in instance Id order whose Name tag contains the [word](https://en.wikipedia.org/wiki/Doc_(computing)) _primary_. If no running instance has been identified as the primary instance, then the first viable instance is made the primary. The [IP address](https://en.wikipedia.org/wiki/IP_address) address of the primary is recorded in `/tmp/awsPrimaryIpAddress.data` so that it can be quickly reused by [xxxr](https://metacpan.org/pod/xxxr), [copyFolderToRemote](https://metacpan.org/pod/copyFolderToRemote), [mergeFolderFromRemote](https://metacpan.org/pod/mergeFolderFromRemote) etc. Returns the instanceId of the primary instance or **undef** if no suitable instance exists.
+Return the instance id of the primary instance. The primary instance is the instance at [Amazon Web Services](http://aws.amazon.com) that we communicate with - it controls all the secondary instances that form part of the parallel session. The primary instance is located by finding the first running instance in instance Id order whose Name tag contains the word _primary_. If no running instance has been identified as the primary instance, then the first viable instance is made the primary. The ip address of the primary is recorded in `/tmp/awsPrimaryIpAddress.data` so that it can be quickly reused by [xxxr](https://metacpan.org/pod/xxxr), [copyFolderToRemote](https://metacpan.org/pod/copyFolderToRemote), [mergeFolderFromRemote](https://metacpan.org/pod/mergeFolderFromRemote) etc. Returns the instanceId of the primary instance or **undef** if no suitable instance exists.
 
        Parameter  Description
     1  %options   Options
@@ -7464,10 +7838,10 @@ Return the instance id of the primary instance. The primary instance is the inst
 
 ## awsParallelSpreadFolder ($folder, %options)
 
-On [Amazon Web Services](http://aws.amazon.com): copies a specified **$folder** from the primary instance, see: [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), in parallel, to all the secondary instances in the session. If running locally: copies the specified [folder](https://en.wikipedia.org/wiki/File_folder) to all [Amazon Web Services](http://aws.amazon.com) session instances both primary and secondary.
+On [Amazon Web Services](http://aws.amazon.com): copies a specified **$folder** from the primary instance, see: [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), in parallel, to all the secondary instances in the session. If running locally: copies the specified folder to all [Amazon Web Services](http://aws.amazon.com) session instances both primary and secondary.
 
        Parameter  Description
-    1  $folder    Fully qualified [folder](https://en.wikipedia.org/wiki/File_folder) name
+    1  $folder    Fully qualified folder name
     2  %options   Options
 
 **Example:**
@@ -7490,10 +7864,10 @@ On [Amazon Web Services](http://aws.amazon.com): copies a specified **$folder** 
 
 ## awsParallelGatherFolder ($folder, %options)
 
-On [Amazon Web Services](http://aws.amazon.com): merges all the files in the specified **$folder** on each secondary instance to the corresponding [folder](https://en.wikipedia.org/wiki/File_folder) on the primary instance in parallel.  If running locally: merges all the files in the specified [folder](https://en.wikipedia.org/wiki/File_folder) on each [Amazon Web Services](http://aws.amazon.com) session instance (primary and secondary) to the corresponding [folder](https://en.wikipedia.org/wiki/File_folder) on the local machine.  The [folder](https://en.wikipedia.org/wiki/File_folder) merges are done in parallel which makes it impossible to rely on the order of the merges.
+On [Amazon Web Services](http://aws.amazon.com): merges all the files in the specified **$folder** on each secondary instance to the corresponding folder on the primary instance in parallel.  If running locally: merges all the files in the specified folder on each [Amazon Web Services](http://aws.amazon.com) session instance (primary and secondary) to the corresponding folder on the local machine.  The folder merges are done in parallel which makes it impossible to rely on the order of the merges.
 
        Parameter  Description
-    1  $folder    Fully qualified [folder](https://en.wikipedia.org/wiki/File_folder) name
+    1  $folder    Fully qualified folder name
     2  %options   Options
 
 **Example:**
@@ -7533,7 +7907,7 @@ Return the IP addresses of any primary instance on [Amazon Web Services](http://
 
 ## awsParallelSecondaryIpAddresses (%options)
 
-Return a [list](https://en.wikipedia.org/wiki/Linked_list) containing the IP addresses of any secondary instances on [Amazon Web Services](http://aws.amazon.com).
+Return a list containing the IP addresses of any secondary instances on [Amazon Web Services](http://aws.amazon.com).
 
        Parameter  Description
     1  %options   Options
@@ -7569,7 +7943,8 @@ Return the IP addresses of all the [Amazon Web Services](http://aws.amazon.com) 
 
 ## getCodeContext  ($sub)
 
-Recreate the [code](https://en.wikipedia.org/wiki/Computer_program) context for a referenced [sub](https://perldoc.perl.org/perlsub.html). 
+Recreate the code context for a referenced sub.
+
        Parameter  Description
     1  $sub       Sub reference
 
@@ -7588,8 +7963,8 @@ Recreate the [code](https://en.wikipedia.org/wiki/Computer_program) context for 
       ok -e $f;
     
       my $a = callSubInOverlappedParallel
-        [sub](https://perldoc.perl.org/perlsub.html) {$a{a}++; owf($f, "Hello World")},
-        [sub](https://perldoc.perl.org/perlsub.html) {q(aaaa)};
+        sub {$a{a}++; owf($f, "Hello World")},
+        sub {q(aaaa)};
     
       ok $a           =~ m(aaaa)i;
       ok $a{a}        == 1;
@@ -7598,70 +7973,84 @@ Recreate the [code](https://en.wikipedia.org/wiki/Computer_program) context for 
 
 ## awsParallelProcessFiles ($userData, $parallel, $results, $files, %options)
 
-Process files in parallel across multiple [Amazon Web Services](http://aws.amazon.com) instances if available or in series if not.  The [data](https://en.wikipedia.org/wiki/Data) located by **$userData** is transferred from the primary instance, as determined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), to all the secondary instances. **$parallel** contains a reference to a [sub](https://perldoc.perl.org/perlsub.html), parameterized by [array](https://en.wikipedia.org/wiki/Dynamic_array) @\_ = (a copy of the [user](https://en.wikipedia.org/wiki/User_(computing)) [data](https://en.wikipedia.org/wiki/Data), the name of the [file](https://en.wikipedia.org/wiki/Computer_file) to process), which will be executed upon each session instance including the primary instance to update $userData. **$results** contains a reference to a [sub](https://perldoc.perl.org/perlsub.html), parameterized by [array](https://en.wikipedia.org/wiki/Dynamic_array) @\_ = (the [user](https://en.wikipedia.org/wiki/User_(computing)) [data](https://en.wikipedia.org/wiki/Data), an [array](https://en.wikipedia.org/wiki/Dynamic_array) of results returned by each execution of $parallel), that will be called on the primary instance to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) the results folders from each instance once their results folders have been copied back and merged into the results [folder](https://en.wikipedia.org/wiki/File_folder) of the primary instance. $results should update its copy of $userData with the information received from each instance. **$files** is a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of the files to be processed: each [file](https://en.wikipedia.org/wiki/Computer_file) will be copied from the primary instance to each of the secondary instances before parallel processing starts. **%options** contains any parameters needed to interact with [EC2](https://aws.amazon.com/ec2/)  via the [Amazon Web Services Command Line Interface](https://aws.amazon.com/cli/).  The returned result is that returned by [sub](https://perldoc.perl.org/perlsub.html) $results.
+Process files in parallel across multiple [Amazon Web Services](http://aws.amazon.com) instances if available or in series if not.  The data located by **$userData** is transferred from the primary instance, as determined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), to all the secondary instances. **$parallel** contains a reference to a sub, parameterized by array @\_ = (a copy of the user data, the name of the file to process), which will be executed upon each session instance including the primary instance to update $userData. **$results** contains a reference to a sub, parameterized by array @\_ = (the user data, an array of results returned by each execution of $parallel), that will be called on the primary instance to process the results folders from each instance once their results folders have been copied back and merged into the results folder of the primary instance. $results should update its copy of $userData with the information received from each instance. **$files** is a reference to an array of the files to be processed: each file will be copied from the primary instance to each of the secondary instances before parallel processing starts. **%options** contains any parameters needed to interact with [EC2](https://aws.amazon.com/ec2/)  via the [Amazon Web Services Command Line Interface](https://aws.amazon.com/cli/).  The returned result is that returned by sub $results.
 
        Parameter  Description
-    1  $userData  User [data](https://en.wikipedia.org/wiki/Data) or [undef](https://perldoc.perl.org/functions/undef.html)     2  $parallel  Parallel [sub](https://perldoc.perl.org/perlsub.html) reference
-    3  $results   Series [sub](https://perldoc.perl.org/perlsub.html) reference
+    1  $userData  User data or undef
+    2  $parallel  Parallel sub reference
+    3  $results   Series sub reference
     4  $files     [files to process]
     5  %options   Aws cli options.
 
 **Example:**
 
-      my $N = 2001;                                                                 # Number of files to [process](https://en.wikipedia.org/wiki/Process_management_(computing))       my $options = q(region => q(us-east-2), profile=>q(fmc));                     # Aws cli options
-      my %options = [eval](http://perldoc.perl.org/functions/eval.html) "($options)";
+      my $N = 2001;                                                                 # Number of files to process
+      my $options = q(region => q(us-east-2), profile=>q(fmc));                     # Aws cli options
+      my %options = eval "($options)";
     
-      for my $dir(q(/home/phil/perl/cpan/DataTableText/lib/Data/Table/),            # Folders we will need on [Amazon Web Services](http://aws.amazon.com)                   q(/home/phil/.aws/))
+      for my $dir(q(/home/phil/perl/cpan/DataTableText/lib/Data/Table/),            # Folders we will need on aws
+                  q(/home/phil/.aws/))
        {awsParallelSpreadFolder($dir, %options);
        }
     
-      my $d = temporaryFolder;                                                      # Create a temporary [folder](https://en.wikipedia.org/wiki/File_folder)       my $resultsFile = fpe($d, qw(results data));                                  # Save results in this temporary [file](https://en.wikipedia.org/wiki/Computer_file)     
+      my $d = temporaryFolder;                                                      # Create a temporary folder
+      my $resultsFile = fpe($d, qw(results data));                                  # Save results in this temporary file
+    
       if (my $r = execPerlOnRemote(join "
-  ",                                       # Execute some [code](https://en.wikipedia.org/wiki/Computer_program) on a [server](https://en.wikipedia.org/wiki/Server_(computing))         getCodeContext(\&awsParallelProcessFilesTestParallel),                      # Get [code](https://en.wikipedia.org/wiki/Computer_program) context of the [sub](https://perldoc.perl.org/perlsub.html) we want to call.
-        <<SESSIONLEADER))                                                           # Launch [code](https://en.wikipedia.org/wiki/Computer_program) on session leader
+  ",                                       # Execute some code on a server
+        getCodeContext(\&awsParallelProcessFilesTestParallel),                      # Get code context of the sub we want to call.
+        <<SESSIONLEADER))                                                           # Launch code on session leader
     use Data::Table::Text qw(:all);
     
     
     my \$r = awsParallelProcessFiles                                                # Process files on multiple L<Amazon Web Services|http://aws.amazon.com> instances in parallel  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-     ({file=>4, time=>timeStamp},                                                   # User [data](https://en.wikipedia.org/wiki/Data)       \\\&Data::Table::Text::awsParallelProcessFilesTestParallel,                   # Reference to [code](https://en.wikipedia.org/wiki/Computer_program) to execute in parallel on each session instance
-      \\\&Data::Table::Text::awsParallelProcessFilesTestResults,                    # Reference to [code](https://en.wikipedia.org/wiki/Computer_program) to execute in series to merge the results of each parallel computation
-      [map {writeFile(fpe(q($d), \$_, qw(txt)), \$_)} 1..$N],                       # Files to [process](https://en.wikipedia.org/wiki/Process_management_(computing))       $options);                                                                    # Aws cli options as we will be running on Aws
+     ({file=>4, time=>timeStamp},                                                   # User data
+      \\\&Data::Table::Text::awsParallelProcessFilesTestParallel,                   # Reference to code to execute in parallel on each session instance
+      \\\&Data::Table::Text::awsParallelProcessFilesTestResults,                    # Reference to code to execute in series to merge the results of each parallel computation
+      [map {writeFile(fpe(q($d), \$_, qw(txt)), \$_)} 1..$N],                       # Files to process
+      $options);                                                                    # Aws cli options as we will be running on Aws
     
-    storeFile(q($resultsFile), \$r);                                                # Save results in a [file](https://en.wikipedia.org/wiki/Computer_file)     
+    storeFile(q($resultsFile), \$r);                                                # Save results in a file
+    
     SESSIONLEADER
     
-       {copyFileFromRemote($resultsFile);                                           # Retrieve [user](https://en.wikipedia.org/wiki/User_(computing)) [data](https://en.wikipedia.org/wiki/Data)     
-        my $userData = retrieveFile($resultsFile);                                  # Recover [user](https://en.wikipedia.org/wiki/User_(computing)) [data](https://en.wikipedia.org/wiki/Data)         my @i = awsParallelSecondaryIpAddresses(%options);                          # Ip addresses of secondary instances
-        my @I = keys $userData->{ip}->%*;
-        is_deeply [sort @i], [sort @I];                                             # Each secondary [IP address](https://en.wikipedia.org/wiki/IP_address) address was used
+       {copyFileFromRemote($resultsFile);                                           # Retrieve user data
     
-        ok $userData->{file}  == 4;                                                 # Prove we can pass [data](https://en.wikipedia.org/wiki/Data) in and get it back
+        my $userData = retrieveFile($resultsFile);                                  # Recover user data
+        my @i = awsParallelSecondaryIpAddresses(%options);                          # Ip addresses of secondary instances
+        my @I = keys $userData->{ip}->%*;
+        is_deeply [sort @i], [sort @I];                                             # Each secondary ip address was used
+    
+        ok $userData->{file}  == 4;                                                 # Prove we can pass data in and get it back
         ok $userData->{merge} == 1 + @i, 'ii';                                      # Number of merges
     
-        my %f; my %i;                                                               # Files processed on each [IP address](https://en.wikipedia.org/wiki/IP_address)         for   my $i(sort keys $userData->{ipFile}->%*)                              # Ip
+        my %f; my %i;                                                               # Files processed on each ip
+        for   my $i(sort keys $userData->{ipFile}->%*)                              # Ip
          {for my $f(sort keys $userData->{ipFile}{$i}->%*)                          # File
            {$f{fn($f)}++;                                                           # Files processed
-            $i{$i}++;                                                               # Count files on each [IP address](https://en.wikipedia.org/wiki/IP_address)            }
+            $i{$i}++;                                                               # Count files on each ip
+           }
          }
     
-        is_deeply \%f, {map {$_=>1} 1..$N};                                         # Check each [file](https://en.wikipedia.org/wiki/Computer_file) was processed
+        is_deeply \%f, {map {$_=>1} 1..$N};                                         # Check each file was processed
     
         if (1)
-         {my @rc; my @ra;                                                           # Range of number of files processed on each [IP address](https://en.wikipedia.org/wiki/IP_address) - computed, actually counted
+         {my @rc; my @ra;                                                           # Range of number of files processed on each ip - computed, actually counted
           my $l = $N/@i-1;                                                          # Lower limit of number of files per IP address
           my $h = $N/@i+1;                                                          # Upper limit of number of files per IP address
           for   my $i(keys %i)
-           {my $nc = $i{$i};                                                        # Number of files processed on this [IP address](https://en.wikipedia.org/wiki/IP_address) - computed
-            my $na = $userData->{ip}{$i};                                           # Number of files processed on this [IP address](https://en.wikipedia.org/wiki/IP_address) - actually counted
+           {my $nc = $i{$i};                                                        # Number of files processed on this ip - computed
+            my $na = $userData->{ip}{$i};                                           # Number of files processed on this ip - actually counted
             push @rc, ($nc >= $l and $nc <= $h) ? 1 : 0;                            # 1 - in range, 0 - out of range
             push @ra, ($na >= $l and $na <= $h) ? 1 : 0;                            # 1 - in range, 0 - out of range
            }
-          ok @i == [grep](https://en.wikipedia.org/wiki/Grep) {$_} @ra;                                                   # Check each [IP address](https://en.wikipedia.org/wiki/IP_address) processed the expected number of files
-          ok @i == [grep](https://en.wikipedia.org/wiki/Grep) {$_} @rc;
+          ok @i == grep {$_} @ra;                                                   # Check each ip processed the expected number of files
+          ok @i == grep {$_} @rc;
          }
     
-        ok $userData->{files}{&fpe($d, qw(4 txt))} eq                               # Check the computed MD5 sum for the specified [file](https://en.wikipedia.org/wiki/Computer_file)            q(a87ff679a2f3e71d9181a67b7542122c);
+        ok $userData->{files}{&fpe($d, qw(4 txt))} eq                               # Check the computed MD5 sum for the specified file
+           q(a87ff679a2f3e71d9181a67b7542122c);
        }
     
     if (0)                                                                           # Process files in series on local machine
@@ -7671,30 +8060,33 @@ Process files in parallel across multiple [Amazon Web Services](http://aws.amazo
     
       my $r = awsParallelProcessFiles                                               # Process files in series on local machine  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-       ({file => 4},                                                                # User [data](https://en.wikipedia.org/wiki/Data)         \&Data::Table::Text::awsParallelProcessFilesTestParallel,                   # Code to execute on each session instance including the session leader written as a [string](https://en.wikipedia.org/wiki/String_(computer_science)) because it has to be shipped to each instance
+       ({file => 4},                                                                # User data
+        \&Data::Table::Text::awsParallelProcessFilesTestParallel,                   # Code to execute on each session instance including the session leader written as a string because it has to be shipped to each instance
         \&Data::Table::Text::awsParallelProcessFilesTestResults,                    # Code to execute in series on the session leader to analyze the results of the parallel runs
-        [map {writeFile(fpe($d, $_, qw(txt)), $_)} 1..$N],                          # Files to [process](https://en.wikipedia.org/wiki/Process_management_(computing))         ());                                                                        # No Aws cli options as we are running locally
+        [map {writeFile(fpe($d, $_, qw(txt)), $_)} 1..$N],                          # Files to process
+        ());                                                                        # No Aws cli options as we are running locally
     
-      ok $r->{file}            ==  4, 'aaa';                                        # Prove we can pass [data](https://en.wikipedia.org/wiki/Data) in and get it back
+      ok $r->{file}            ==  4, 'aaa';                                        # Prove we can pass data in and get it back
       ok $r->{merge}           ==  1, 'bbb';                                        # Only one merge as we are running locally
     
       ok $r->{ip}{localHost}   == $N, 'ccc';                                        # Number of files processed locally
       ok keys($r->{files}->%*) == $N;                                               # Number of files processed
-      ok $r->{files}{fpe($d, qw(4 txt))} eq q(a87ff679a2f3e71d9181a67b7542122c);    # Check the computed MD5 sum for the specified [file](https://en.wikipedia.org/wiki/Computer_file)     
+      ok $r->{files}{fpe($d, qw(4 txt))} eq q(a87ff679a2f3e71d9181a67b7542122c);    # Check the computed MD5 sum for the specified file
+    
       clearFolder($d, $N+2);
      }
     
 
 # S3
 
-Work with S3 as if it were a [file](https://en.wikipedia.org/wiki/Computer_file) system.
+Work with S3 as if it were a file system.
 
 ## s3ListFilesAndSizes ($folderOrFile, %options)
 
 Return {file=>size} for all the files in a specified **$folderOrFile** on S3 using the specified **%options** if any.
 
        Parameter      Description
-    1  $folderOrFile  Source on S3 - which will be truncated to a [folder](https://en.wikipedia.org/wiki/File_folder) name
+    1  $folderOrFile  Source on S3 - which will be truncated to a folder name
     2  %options       Options
 
 **Example:**
@@ -7759,7 +8151,7 @@ Return {file=>size} for all the files in a specified **$folderOrFile** on S3 usi
 Return (name, size, date, time) for a **$file** that exists on S3 else () using the specified **%options** if any.
 
        Parameter  Description
-    1  $file      File on S3 - which will be truncated to a [folder](https://en.wikipedia.org/wiki/File_folder) name
+    1  $file      File on S3 - which will be truncated to a folder name
     2  %options   Options
 
 **Example:**
@@ -7821,11 +8213,12 @@ Return (name, size, date, time) for a **$file** that exists on S3 else () using 
 
 ## s3WriteFile ($fileS3, $fileLocal, %options)
 
-Write to a [file](https://en.wikipedia.org/wiki/Computer_file) **$fileS3** on S3 the contents of a local [file](https://en.wikipedia.org/wiki/Computer_file) **$fileLocal** using the specified **%options** if any.  $fileLocal will be removed if %options contains a key cleanUp with a true value.
+Write to a file **$fileS3** on S3 the contents of a local file **$fileLocal** using the specified **%options** if any.  $fileLocal will be removed if %options contains a key cleanUp with a true value.
 
        Parameter   Description
-    1  $fileS3     File to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to on S3
-    2  $fileLocal  String to [write](https://en.wikipedia.org/wiki/Write_(system_call)) into [file](https://en.wikipedia.org/wiki/Computer_file)     3  %options    Options
+    1  $fileS3     File to write to on S3
+    2  $fileLocal  String to write into file
+    3  %options    Options
 
 **Example:**
 
@@ -7889,8 +8282,9 @@ Write to a [file](https://en.wikipedia.org/wiki/Computer_file) **$fileS3** on S3
 Write to a **$file** on S3 the contents of **$string** using the specified **%options** if any.
 
        Parameter  Description
-    1  $file      File to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to on S3
-    2  $string    String to [write](https://en.wikipedia.org/wiki/Write_(system_call)) into [file](https://en.wikipedia.org/wiki/Computer_file)     3  %options   Options
+    1  $file      File to write to on S3
+    2  $string    String to write into file
+    3  %options   Options
 
 **Example:**
 
@@ -7951,11 +8345,11 @@ Write to a **$file** on S3 the contents of **$string** using the specified **%op
 
 ## s3ReadFile  ($file, $local, %options)
 
-Read from a **$file** on S3 and [write](https://en.wikipedia.org/wiki/Write_(system_call)) the contents to a local [file](https://en.wikipedia.org/wiki/Computer_file) **$local** using the specified **%options** if any.  Any pre existing [version](https://en.wikipedia.org/wiki/Software_versioning) of the local [file](https://en.wikipedia.org/wiki/Computer_file) $local will be deleted.  Returns whether the local [file](https://en.wikipedia.org/wiki/Computer_file) exists after completion of the download.
+Read from a **$file** on S3 and write the contents to a local file **$local** using the specified **%options** if any.  Any pre existing version of the local file $local will be deleted.  Returns whether the local file exists after completion of the download.
 
        Parameter  Description
-    1  $file      File to [read](https://en.wikipedia.org/wiki/Reading_(computer)) from on S3
-    2  $local     Local [file](https://en.wikipedia.org/wiki/Computer_file) to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to
+    1  $file      File to read from on S3
+    2  $local     Local file to write to
     3  %options   Options
 
 **Example:**
@@ -8017,10 +8411,10 @@ Read from a **$file** on S3 and [write](https://en.wikipedia.org/wiki/Write_(sys
 
 ## s3ReadString($file, %options)
 
-Read from a **$file** on S3 and return the contents as a [string](https://en.wikipedia.org/wiki/String_(computer_science)) using specified **%options** if any.  Any pre existing [version](https://en.wikipedia.org/wiki/Software_versioning) of $local will be deleted.  Returns whether the local [file](https://en.wikipedia.org/wiki/Computer_file) exists after completion of the download.
+Read from a **$file** on S3 and return the contents as a string using specified **%options** if any.  Any pre existing version of $local will be deleted.  Returns whether the local file exists after completion of the download.
 
        Parameter  Description
-    1  $file      File to [read](https://en.wikipedia.org/wiki/Reading_(computer)) from on S3
+    1  $file      File to read from on S3
     2  %options   Options
 
 **Example:**
@@ -8082,11 +8476,11 @@ Read from a **$file** on S3 and return the contents as a [string](https://en.wik
 
 ## s3DownloadFolder($folder, $local, %options)
 
-Download a specified **$folder** on S3 to a **$local** [folder](https://en.wikipedia.org/wiki/File_folder) using the specified **%options** if any.  Any existing [data](https://en.wikipedia.org/wiki/Data) in the $local [folder](https://en.wikipedia.org/wiki/File_folder) will be will be deleted if delete=>1 is specified as an option. Returns **undef on failure** else the name of the **$local** on success.
+Download a specified **$folder** on S3 to a **$local** folder using the specified **%options** if any.  Any existing data in the $local folder will be will be deleted if delete=>1 is specified as an option. Returns **undef on failure** else the name of the **$local** on success.
 
        Parameter  Description
-    1  $folder    Folder to [read](https://en.wikipedia.org/wiki/Reading_(computer)) from on S3
-    2  $local     Local [folder](https://en.wikipedia.org/wiki/File_folder) to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to
+    1  $folder    Folder to read from on S3
+    2  $local     Local folder to write to
     3  %options   Options
 
 **Example:**
@@ -8148,10 +8542,11 @@ Download a specified **$folder** on S3 to a **$local** [folder](https://en.wikip
 
 ## s3ZipFolder ($source, $target, %options)
 
-Zip the specified **$source** [folder](https://en.wikipedia.org/wiki/File_folder) and [write](https://en.wikipedia.org/wiki/Write_(system_call)) it to the named **$target** [file](https://en.wikipedia.org/wiki/Computer_file) on S3.
+Zip the specified **$source** folder and write it to the named **$target** file on S3.
 
        Parameter  Description
-    1  $source    Source [folder](https://en.wikipedia.org/wiki/File_folder)     2  $target    Target [file](https://en.wikipedia.org/wiki/Computer_file) on S3
+    1  $source    Source folder
+    2  $target    Target file on S3
     3  %options   S3 options
 
 **Example:**
@@ -8216,10 +8611,10 @@ Zip the specified **$source** [folder](https://en.wikipedia.org/wiki/File_folder
 
 ## s3ZipFolders($map, %options)
 
-Zip local folders and [upload](https://en.wikipedia.org/wiki/Upload) them to S3 in parallel.  **$map** maps source [folder](https://en.wikipedia.org/wiki/File_folder) names on the local machine to target folders on S3. **%options** contains any additional [Amazon Web Services](http://aws.amazon.com) cli options.
+Zip local folders and upload them to S3 in parallel.  **$map** maps source folder names on the local machine to target folders on S3. **%options** contains any additional [Amazon Web Services](http://aws.amazon.com) cli options.
 
        Parameter  Description
-    1  $map       Source [folder](https://en.wikipedia.org/wiki/File_folder) to S3 mapping
+    1  $map       Source folder to S3 mapping
     2  %options   S3 options
 
 **Example:**
@@ -8285,10 +8680,11 @@ Simple interactions with [GitHub](https://github.com/philiprbrenan) - for more c
 
 ## downloadGitHubPublicRepo($user, $repo)
 
-Get the contents of a public repo on GitHub and place them in a temporary [folder](https://en.wikipedia.org/wiki/File_folder) whose name is returned to the caller or [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if no such repo exists.
+Get the contents of a public repo on GitHub and place them in a temporary folder whose name is returned to the caller or confess if no such repo exists.
 
        Parameter  Description
-    1  $user      GitHub [user](https://en.wikipedia.org/wiki/User_(computing))     2  $repo      GitHub repo
+    1  $user      GitHub user
+    2  $repo      GitHub repo
 
 **Example:**
 
@@ -8298,9 +8694,11 @@ Get the contents of a public repo on GitHub and place them in a temporary [folde
 
 ## downloadGitHubPublicRepoFile($user, $repo, $file)
 
-Get the contents of a **$user** **$repo** **$file** from  a public repo on GitHub and return them as a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Get the contents of a **$user** **$repo** **$file** from  a public repo on GitHub and return them as a string.
+
        Parameter  Description
-    1  $user      GitHub [user](https://en.wikipedia.org/wiki/User_(computing))     2  $repo      GitHub repository
+    1  $user      GitHub user
+    2  $repo      GitHub repository
     3  $file      File name in repository
 
 **Example:**
@@ -8311,19 +8709,20 @@ Get the contents of a **$user** **$repo** **$file** from  a public repo on GitHu
 
 # FPGAs
 
-Load [Verilog](https://en.wikipedia.org/wiki/Verilog) into a field programmable [digital logic gate](https://en.wikipedia.org/wiki/Logic_gate) [array](https://en.wikipedia.org/wiki/Dynamic_array) 
+Load verilog into a field programmable gate array
+
 # Processes
 
-Start [processes](https://en.wikipedia.org/wiki/Process_management_(computing)), wait for them to terminate and retrieve their results
+Start processes, wait for them to terminate and retrieve their results
 
 ## startProcess($sub, $pids, $maximum)
 
-Start new [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) while the number of child [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) recorded in **%$pids** is less than the specified **$maximum**.  Use [waitForAllStartedProcessesToFinish](#waitforallstartedprocessestofinish) to wait for all these [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to finish.
+Start new processes while the number of child processes recorded in **%$pids** is less than the specified **$maximum**.  Use [waitForAllStartedProcessesToFinish](#waitforallstartedprocessestofinish) to wait for all these processes to finish.
 
        Parameter  Description
     1  $sub       Sub to start
-    2  $pids      Hash in which to record the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) ids
-    3  $maximum   Maximum number of [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to run at a time
+    2  $pids      Hash in which to record the process ids
+    3  $maximum   Maximum number of processes to run at a time
 
 **Example:**
 
@@ -8337,10 +8736,10 @@ Start new [processes](https://en.wikipedia.org/wiki/Process_management_(computin
 
 ## waitForAllStartedProcessesToFinish  ($pids)
 
-Wait until all the [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) started by [startProcess](#startprocess) have finished.
+Wait until all the processes started by [startProcess](#startprocess) have finished.
 
        Parameter  Description
-    1  $pids      Hash of started [process](https://en.wikipedia.org/wiki/Process_management_(computing)) ids
+    1  $pids      Hash of started process ids
 
 **Example:**
 
@@ -8354,10 +8753,10 @@ Wait until all the [processes](https://en.wikipedia.org/wiki/Process_management_
 
 ## newProcessStarter   ($maximumNumberOfProcesses, %options)
 
-Create a new [process starter](#data-table-text-starter-definition) with which to start parallel [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) up to a specified **$maximumNumberOfProcesses** maximum number of parallel [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) at a time, wait for all the started [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to finish and then optionally retrieve their saved results as an [array](https://en.wikipedia.org/wiki/Dynamic_array) from the [folder](https://en.wikipedia.org/wiki/File_folder) named by **$transferArea**.
+Create a new [process starter](#data-table-text-starter-definition) with which to start parallel processes up to a specified **$maximumNumberOfProcesses** maximum number of parallel processes at a time, wait for all the started processes to finish and then optionally retrieve their saved results as an array from the folder named by **$transferArea**.
 
        Parameter                  Description
-    1  $maximumNumberOfProcesses  Maximum number of [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to start
+    1  $maximumNumberOfProcesses  Maximum number of processes to start
     2  %options                   Options
 
 **Example:**
@@ -8381,7 +8780,7 @@ Create a new [process starter](#data-table-text-starter-definition) with which t
        [sort {$a <=> $b} Data::Table::Text::Starter::finish($s)],
        [map {$_**2} 1..$N];
     
-      ok readFile($l) =~ m(Finished $N [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) for: Test processes)s;
+      ok readFile($l) =~ m(Finished $N processes for: Test processes)s;
       clearFolder($s->transferArea, 1e3);
       unlink $l;
      }
@@ -8389,7 +8788,7 @@ Create a new [process starter](#data-table-text-starter-definition) with which t
 
 ## Data::Table::Text::Starter::start   ($starter, $sub)
 
-Start a new [process](https://en.wikipedia.org/wiki/Process_management_(computing)) to run the specified **$sub**.
+Start a new process to run the specified **$sub**.
 
        Parameter  Description
     1  $starter   Starter
@@ -8416,7 +8815,7 @@ Start a new [process](https://en.wikipedia.org/wiki/Process_management_(computin
        [sort {$a <=> $b} Data::Table::Text::Starter::finish($s)],
        [map {$_**2} 1..$N];
     
-      ok readFile($l) =~ m(Finished $N [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) for: Test processes)s;
+      ok readFile($l) =~ m(Finished $N processes for: Test processes)s;
       clearFolder($s->transferArea, 1e3);
       unlink $l;
      }
@@ -8424,7 +8823,8 @@ Start a new [process](https://en.wikipedia.org/wiki/Process_management_(computin
 
 ## Data::Table::Text::Starter::finish  ($starter)
 
-Wait for all started [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to finish and return their results as an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Wait for all started processes to finish and return their results as an array.
+
        Parameter  Description
     1  $starter   Starter
 
@@ -8449,7 +8849,7 @@ Wait for all started [processes](https://en.wikipedia.org/wiki/Process_managemen
 
        [map {$_**2} 1..$N];
     
-      ok readFile($l) =~ m(Finished $N [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) for: Test processes)s;
+      ok readFile($l) =~ m(Finished $N processes for: Test processes)s;
       clearFolder($s->transferArea, 1e3);
       unlink $l;
      }
@@ -8457,7 +8857,8 @@ Wait for all started [processes](https://en.wikipedia.org/wiki/Process_managemen
 
 ## squareArray (@array)
 
-Create a two dimensional square [array](https://en.wikipedia.org/wiki/Dynamic_array) from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Create a two dimensional square array from a one dimensional linear array.
+
        Parameter  Description
     1  @array     Array
 
@@ -8508,9 +8909,11 @@ Create a two dimensional square [array](https://en.wikipedia.org/wiki/Dynamic_ar
 
 ## deSquareArray   (@square)
 
-Create a one dimensional [array](https://en.wikipedia.org/wiki/Dynamic_array) from a two dimensional [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array). 
+Create a one dimensional array from a two dimensional array of arrays.
+
        Parameter  Description
-    1  @square    Array of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) 
+    1  @square    Array of arrays
+
 **Example:**
 
       is_deeply [squareArray @{[1..4]} ], [[1, 2], [3, 4]];
@@ -8553,7 +8956,8 @@ Create a one dimensional [array](https://en.wikipedia.org/wiki/Dynamic_array) fr
 
 ## rectangularArray($first, @array)
 
-Create a two dimensional rectangular [array](https://en.wikipedia.org/wiki/Dynamic_array) whose first dimension is **$first** from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Create a two dimensional rectangular array whose first dimension is **$first** from a one dimensional linear array.
+
        Parameter  Description
     1  $first     First dimension size
     2  @array     Array
@@ -8604,7 +9008,8 @@ Create a two dimensional rectangular [array](https://en.wikipedia.org/wiki/Dynam
 
 ## rectangularArray2   ($second, @array)
 
-Create a two dimensional rectangular [array](https://en.wikipedia.org/wiki/Dynamic_array) whose second dimension is **$second** from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Create a two dimensional rectangular array whose second dimension is **$second** from a one dimensional linear array.
+
        Parameter  Description
     1  $second    Second dimension size
     2  @array     Array
@@ -8655,7 +9060,7 @@ Create a two dimensional rectangular [array](https://en.wikipedia.org/wiki/Dynam
 
 ## callSubInParallel   ($sub)
 
-Call a [sub](https://perldoc.perl.org/perlsub.html) reference in parallel to avoid [memory](https://en.wikipedia.org/wiki/Computer_memory) fragmentation and return its results.
+Call a sub reference in parallel to avoid memory fragmentation and return its results.
 
        Parameter  Description
     1  $sub       Sub reference
@@ -8672,8 +9077,8 @@ Call a [sub](https://perldoc.perl.org/perlsub.html) reference in parallel to avo
       ok -e $f;
     
       my $a = callSubInOverlappedParallel
-        [sub](https://perldoc.perl.org/perlsub.html) {$a{a}++; owf($f, "Hello World")},
-        [sub](https://perldoc.perl.org/perlsub.html) {q(aaaa)};
+        sub {$a{a}++; owf($f, "Hello World")},
+        sub {q(aaaa)};
     
       ok $a           =~ m(aaaa)i;
       ok $a{a}        == 1;
@@ -8682,10 +9087,12 @@ Call a [sub](https://perldoc.perl.org/perlsub.html) reference in parallel to avo
 
 ## callSubInOverlappedParallel ($child, $parent)
 
-Call the **$child** [sub](https://perldoc.perl.org/perlsub.html) reference in parallel in a separate child [process](https://en.wikipedia.org/wiki/Process_management_(computing)) and ignore its results while calling the **$parent** [sub](https://perldoc.perl.org/perlsub.html) reference in the parent [process](https://en.wikipedia.org/wiki/Process_management_(computing)) and returning its results.
+Call the **$child** sub reference in parallel in a separate child process and ignore its results while calling the **$parent** sub reference in the parent process and returning its results.
 
        Parameter  Description
-    1  $child     Sub reference to call in child [process](https://en.wikipedia.org/wiki/Process_management_(computing))     2  $parent    Sub reference to call in parent [process](https://en.wikipedia.org/wiki/Process_management_(computing)) 
+    1  $child     Sub reference to call in child process
+    2  $parent    Sub reference to call in parent process
+
 **Example:**
 
       my %a = (a=>1, b=>2);
@@ -8698,8 +9105,8 @@ Call the **$child** [sub](https://perldoc.perl.org/perlsub.html) reference in pa
     
       my $a = callSubInOverlappedParallel  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-        [sub](https://perldoc.perl.org/perlsub.html) {$a{a}++; owf($f, "Hello World")},
-        [sub](https://perldoc.perl.org/perlsub.html) {q(aaaa)};
+        sub {$a{a}++; owf($f, "Hello World")},
+        sub {q(aaaa)};
     
       ok $a           =~ m(aaaa)i;
       ok $a{a}        == 1;
@@ -8708,11 +9115,14 @@ Call the **$child** [sub](https://perldoc.perl.org/perlsub.html) reference in pa
 
 ## runInParallel   ($maximumNumberOfProcesses, $parallel, $results, @array)
 
-Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) in parallel using a maximum of **$maximumNumberOfProcesses** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). [sub](https://perldoc.perl.org/perlsub.html) **&$parallel** is forked to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each [array](https://en.wikipedia.org/wiki/Dynamic_array) element in parallel. The results returned by the forked copies of &$parallel are presented as a single [array](https://en.wikipedia.org/wiki/Dynamic_array) to [sub](https://perldoc.perl.org/perlsub.html) **&$results** which is run in series. **@array** contains the elements to be processed. Returns the result returned by &$results.
+Process the elements of an array in parallel using a maximum of **$maximumNumberOfProcesses** processes. sub **&$parallel** is forked to process each array element in parallel. The results returned by the forked copies of &$parallel are presented as a single array to sub **&$results** which is run in series. **@array** contains the elements to be processed. Returns the result returned by &$results.
 
        Parameter                  Description
-    1  $maximumNumberOfProcesses  Maximum number of [processes](https://en.wikipedia.org/wiki/Process_management_(computing))     2  $parallel                  Parallel [sub](https://perldoc.perl.org/perlsub.html)     3  $results                   Optional [sub](https://perldoc.perl.org/perlsub.html) to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) results
-    4  @array                     Array of items to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) 
+    1  $maximumNumberOfProcesses  Maximum number of processes
+    2  $parallel                  Parallel sub
+    3  $results                   Optional sub to process results
+    4  @array                     Array of items to process
+
 **Example:**
 
       my @N = 1..100;
@@ -8723,8 +9133,8 @@ Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) 
     
       ok $R == runInSquareRootParallel
          (4,
-          [sub](https://perldoc.perl.org/perlsub.html) {my ($p) = @_; $p * $p},
-          [sub](https://perldoc.perl.org/perlsub.html) {my $p = 0; $p += $_ for @_; $p},
+          sub {my ($p) = @_; $p * $p},
+          sub {my $p = 0; $p += $_ for @_; $p},
           @{[1..$N]}
          );
     
@@ -8732,18 +9142,22 @@ Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) 
       ok $R == runInParallel  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
          (4,
-          [sub](https://perldoc.perl.org/perlsub.html) {my ($p) = @_; $p * $p},
-          [sub](https://perldoc.perl.org/perlsub.html) {my $p = 0; $p += $_ for @_; $p},
+          sub {my ($p) = @_; $p * $p},
+          sub {my $p = 0; $p += $_ for @_; $p},
           @{[1..$N]}
          );
     
 
 ## runInSquareRootParallel ($maximumNumberOfProcesses, $parallel, $results, @array)
 
-Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) in square root parallel using a maximum of **$maximumNumberOfProcesses** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). [sub](https://perldoc.perl.org/perlsub.html) **&$parallel** is forked to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each block of [array](https://en.wikipedia.org/wiki/Dynamic_array) elements in parallel. The results returned by the forked copies of &$parallel are presented as a single [array](https://en.wikipedia.org/wiki/Dynamic_array) to [sub](https://perldoc.perl.org/perlsub.html) **&$results** which is run in series. **@array** contains the elements to be processed. Returns the result returned by &$results.
+Process the elements of an array in square root parallel using a maximum of **$maximumNumberOfProcesses** processes. sub **&$parallel** is forked to process each block of array elements in parallel. The results returned by the forked copies of &$parallel are presented as a single array to sub **&$results** which is run in series. **@array** contains the elements to be processed. Returns the result returned by &$results.
 
        Parameter                  Description
-    1  $maximumNumberOfProcesses  Maximum number of [processes](https://en.wikipedia.org/wiki/Process_management_(computing))     2  $parallel                  Parallel [sub](https://perldoc.perl.org/perlsub.html)     3  $results                   Results [sub](https://perldoc.perl.org/perlsub.html)     4  @array                     Array of items to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) 
+    1  $maximumNumberOfProcesses  Maximum number of processes
+    2  $parallel                  Parallel sub
+    3  $results                   Results sub
+    4  @array                     Array of items to process
+
 **Example:**
 
       my @N = 1..100;
@@ -8756,22 +9170,22 @@ Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) 
       ok $R == runInSquareRootParallel  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
          (4,
-          [sub](https://perldoc.perl.org/perlsub.html) {my ($p) = @_; $p * $p},
-          [sub](https://perldoc.perl.org/perlsub.html) {my $p = 0; $p += $_ for @_; $p},
+          sub {my ($p) = @_; $p * $p},
+          sub {my $p = 0; $p += $_ for @_; $p},
           @{[1..$N]}
          );
     
       ok $R == runInParallel
          (4,
-          [sub](https://perldoc.perl.org/perlsub.html) {my ($p) = @_; $p * $p},
-          [sub](https://perldoc.perl.org/perlsub.html) {my $p = 0; $p += $_ for @_; $p},
+          sub {my ($p) = @_; $p * $p},
+          sub {my $p = 0; $p += $_ for @_; $p},
           @{[1..$N]}
          );
     
 
 ## packBySize  ($N, @sizes)
 
-Given **$N** buckets and a [list](https://en.wikipedia.org/wiki/Linked_list) **@sizes** of (\[size of [file](https://en.wikipedia.org/wiki/Computer_file), name of file\]...) pack the [file](https://en.wikipedia.org/wiki/Computer_file) names into buckets so that each bucket contains approximately the same number of bytes.  In general this is an NP problem.  Packing largest first into emptiest bucket produces an N\*\*2 heuristic if the buckets are scanned linearly, or N\*log(N) if a binary [tree](https://en.wikipedia.org/wiki/Tree_(data_structure)) is used.  This solution is a compromise at N\*\*3/2 which has the benefits of simple [code](https://en.wikipedia.org/wiki/Computer_program) yet good performance.  Returns (\[file names ...\]).
+Given **$N** buckets and a list **@sizes** of (\[size of file, name of file\]...) pack the file names into buckets so that each bucket contains approximately the same number of bytes.  In general this is an NP problem.  Packing largest first into emptiest bucket produces an N\*\*2 heuristic if the buckets are scanned linearly, or N\*log(N) if a binary tree is used.  This solution is a compromise at N\*\*3/2 which has the benefits of simple code yet good performance.  Returns (\[file names ...\]).
 
        Parameter  Description
     1  $N         Number of buckets
@@ -8799,12 +9213,14 @@ Given **$N** buckets and a [list](https://en.wikipedia.org/wiki/Linked_list) **@
 
 ## processSizesInParallel  ($parallel, $results, @sizes)
 
-Process items of known size in parallel using (8 \* the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each item is assigned to depending on the size of the item so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the items it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+Process items of known size in parallel using (8 \* the number of CPUs) processes with the process each item is assigned to depending on the size of the item so that each process is loaded with approximately the same number of bytes of data in total from the items it processes. 
 
-Each item is processed by [sub](https://perldoc.perl.org/perlsub.html) **$parallel** and the results of processing all items is processed by **$results** where the items are taken from **@sizes**. Each &$parallel() receives an item from @files. &$results() receives an [array](https://en.wikipedia.org/wiki/Dynamic_array) of all the results returned by &$parallel().
+Each item is processed by sub **$parallel** and the results of processing all items is processed by **$results** where the items are taken from **@sizes**. Each &$parallel() receives an item from @files. &$results() receives an array of all the results returned by &$parallel().
 
        Parameter  Description
-    1  $parallel  Parallel [sub](https://perldoc.perl.org/perlsub.html)     2  $results   Results [sub](https://perldoc.perl.org/perlsub.html)     3  @sizes     Array of [size; item] to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) by size
+    1  $parallel  Parallel sub
+    2  $results   Results sub
+    3  @sizes     Array of [size; item] to process by size
 
 **Example:**
 
@@ -8818,10 +9234,12 @@ Each item is processed by [sub](https://perldoc.perl.org/perlsub.html) **$parall
     #  ok $b > 0, 'bbb';
     
       my $c = processFilesInParallel(
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, (@f) x 12);
     
       ok 108 == $c, 'cc11';
@@ -8829,19 +9247,23 @@ Each item is processed by [sub](https://perldoc.perl.org/perlsub.html) **$parall
     
       my $C = processSizesInParallel  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, map {[fileSize($_), $_]} (@f) x 12;
     
       ok 108 == $C, 'cc2';
     
       my $J = processJavaFilesInParallel
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, (@f) x 12;
     
       ok 108 == $J, 'cc3';
@@ -8851,12 +9273,14 @@ Each item is processed by [sub](https://perldoc.perl.org/perlsub.html) **$parall
 
 ## processFilesInParallel  ($parallel, $results, @files)
 
-Process files in parallel using (8 \* the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each [file](https://en.wikipedia.org/wiki/Computer_file) is assigned to depending on the size of the [file](https://en.wikipedia.org/wiki/Computer_file) so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+Process files in parallel using (8 \* the number of CPUs) processes with the process each file is assigned to depending on the size of the file so that each process is loaded with approximately the same number of bytes of data in total from the files it processes. 
 
-Each [file](https://en.wikipedia.org/wiki/Computer_file) is processed by [sub](https://perldoc.perl.org/perlsub.html) **$parallel** and the results of processing all files is processed by **$results** where the files are taken from **@files**. Each **&$parallel** receives a [file](https://en.wikipedia.org/wiki/Computer_file) from **@files**. **&$results** receives an [array](https://en.wikipedia.org/wiki/Dynamic_array) of all the results returned by **&$parallel**.
+Each file is processed by sub **$parallel** and the results of processing all files is processed by **$results** where the files are taken from **@files**. Each **&$parallel** receives a file from **@files**. **&$results** receives an array of all the results returned by **&$parallel**.
 
        Parameter  Description
-    1  $parallel  Parallel [sub](https://perldoc.perl.org/perlsub.html)     2  $results   Results [sub](https://perldoc.perl.org/perlsub.html)     3  @files     Array of files to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) by size
+    1  $parallel  Parallel sub
+    2  $results   Results sub
+    3  @files     Array of files to process by size
 
 **Example:**
 
@@ -8872,28 +9296,34 @@ Each [file](https://en.wikipedia.org/wiki/Computer_file) is processed by [sub](h
     
       my $c = processFilesInParallel(  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, (@f) x 12);
     
       ok 108 == $c, 'cc11';
     
       my $C = processSizesInParallel
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, map {[fileSize($_), $_]} (@f) x 12;
     
       ok 108 == $C, 'cc2';
     
       my $J = processJavaFilesInParallel
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, (@f) x 12;
     
       ok 108 == $J, 'cc3';
@@ -8903,12 +9333,14 @@ Each [file](https://en.wikipedia.org/wiki/Computer_file) is processed by [sub](h
 
 ## processJavaFilesInParallel  ($parallel, $results, @files)
 
-Process [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) files of known size in parallel using (the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each item is assigned to depending on the size of the [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) item so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+Process java files of known size in parallel using (the number of CPUs) processes with the process each item is assigned to depending on the size of the java item so that each process is loaded with approximately the same number of bytes of data in total from the java files it processes. 
 
-Each [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) item is processed by [sub](https://perldoc.perl.org/perlsub.html) **$parallel** and the results of processing all [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) files is processed by **$results** where the [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) files are taken from **@sizes**. Each &$parallel() receives a [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) item from @files. &$results() receives an [array](https://en.wikipedia.org/wiki/Dynamic_array) of all the results returned by &$parallel().
+Each java item is processed by sub **$parallel** and the results of processing all java files is processed by **$results** where the java files are taken from **@sizes**. Each &$parallel() receives a java item from @files. &$results() receives an array of all the results returned by &$parallel().
 
        Parameter  Description
-    1  $parallel  Parallel [sub](https://perldoc.perl.org/perlsub.html)     2  $results   Results [sub](https://perldoc.perl.org/perlsub.html)     3  @files     Array of [size; [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) item] to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) by size
+    1  $parallel  Parallel sub
+    2  $results   Results sub
+    3  @files     Array of [size; java item] to process by size
 
 **Example:**
 
@@ -8922,19 +9354,23 @@ Each [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) item is p
     #  ok $b > 0, 'bbb';
     
       my $c = processFilesInParallel(
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, (@f) x 12);
     
       ok 108 == $c, 'cc11';
     
       my $C = processSizesInParallel
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, map {[fileSize($_), $_]} (@f) x 12;
     
       ok 108 == $C, 'cc2';
@@ -8942,10 +9378,12 @@ Each [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) item is p
     
       my $J = processJavaFilesInParallel  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-        [sub](https://perldoc.perl.org/perlsub.html)          {my ($file) = @_;
+        sub
+         {my ($file) = @_;
           [&fileSize($file), $file]
          },
-        [sub](https://perldoc.perl.org/perlsub.html)          {scalar @_;
+        sub
+         {scalar @_;
          }, (@f) x 12;
     
       ok 108 == $J, 'cc3';
@@ -8955,12 +9393,12 @@ Each [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) item is p
 
 ## syncFromS3InParallel($maxSize, $source, $target, $Profile, $options)
 
-Download from [S3](https://aws.amazon.com/s3/) by using "aws [S3](https://aws.amazon.com/s3/) sync --exclude '\*' --include '...'" in parallel to sync collections of two or more files no greater then **$maxSize** or single files greater than $maxSize from the **$source** [folder](https://en.wikipedia.org/wiki/File_folder) on [S3](https://aws.amazon.com/s3/) to the local [folder](https://en.wikipedia.org/wiki/File_folder) **$target** using the specified **$Profile** and **$options** - then execute the entire command again without the --exclude and --include options in series which might now run faster due to the prior downloads.
+Download from [S3](https://aws.amazon.com/s3/) by using "aws s3 sync --exclude '\*' --include '...'" in parallel to sync collections of two or more files no greater then **$maxSize** or single files greater than $maxSize from the **$source** folder on [S3](https://aws.amazon.com/s3/) to the local folder **$target** using the specified **$Profile** and **$options** - then execute the entire command again without the --exclude and --include options in series which might now run faster due to the prior downloads.
 
        Parameter  Description
     1  $maxSize   The maximum collection size
-    2  $source    The source [folder](https://en.wikipedia.org/wiki/File_folder) on S3
-    3  $target    The target [folder](https://en.wikipedia.org/wiki/File_folder) locally
+    2  $source    The source folder on S3
+    3  $target    The target folder locally
     4  $Profile   Aws cli profile
     5  $options   Aws cli options
 
@@ -8983,12 +9421,12 @@ Download from [S3](https://aws.amazon.com/s3/) by using "aws [S3](https://aws.am
 
 ## syncToS3InParallel  ($maxSize, $source, $target, $Profile, $options)
 
-Upload to [S3](https://aws.amazon.com/s3/) by using "aws [S3](https://aws.amazon.com/s3/) sync --exclude '\*' --include '...'" in parallel to sync collections of two or more files no greater then **$maxSize** or single files greater than $maxSize from the **$source** [folder](https://en.wikipedia.org/wiki/File_folder) locally to the target [folder](https://en.wikipedia.org/wiki/File_folder) **$target** on [S3](https://aws.amazon.com/s3/) using the specified **$Profile** and **$options** - then execute the entire command again without the --exclude and --include options in series which might now run faster due to the prior uploads.
+Upload to [S3](https://aws.amazon.com/s3/) by using "aws s3 sync --exclude '\*' --include '...'" in parallel to sync collections of two or more files no greater then **$maxSize** or single files greater than $maxSize from the **$source** folder locally to the target folder **$target** on [S3](https://aws.amazon.com/s3/) using the specified **$Profile** and **$options** - then execute the entire command again without the --exclude and --include options in series which might now run faster due to the prior uploads.
 
        Parameter  Description
     1  $maxSize   The maximum collection size
-    2  $source    The target [folder](https://en.wikipedia.org/wiki/File_folder) locally
-    3  $target    The source [folder](https://en.wikipedia.org/wiki/File_folder) on S3
+    2  $source    The target folder locally
+    3  $target    The source folder on S3
     4  $Profile   Aws cli profile
     5  $options   Aws cli options
 
@@ -9011,7 +9449,8 @@ Upload to [S3](https://aws.amazon.com/s3/) by using "aws [S3](https://aws.amazon
 
 ## childPids   ($p)
 
-Recursively [find](https://en.wikipedia.org/wiki/Find_(Unix)) the pids of all the [sub](https://perldoc.perl.org/perlsub.html) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) of a **$process** and all their [sub](https://perldoc.perl.org/perlsub.html) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) and so on returning the specified pid and all its child pids as a [list](https://en.wikipedia.org/wiki/Linked_list). 
+Recursively find the pids of all the sub processes of a **$process** and all their sub processes and so on returning the specified pid and all its child pids as a list.
+
        Parameter  Description
     1  $p         Process
 
@@ -9027,7 +9466,8 @@ Create a new service incarnation to record the start up of a new instance of a s
 
        Parameter  Description
     1  $service   Service name
-    2  $file      Optional details [file](https://en.wikipedia.org/wiki/Computer_file) 
+    2  $file      Optional details file
+
 **Example:**
 
     if (1)                                                                           
@@ -9047,11 +9487,11 @@ Create a new service incarnation to record the start up of a new instance of a s
 
 ## Data::Exchange::Service::check  ($service, $continue)
 
-Check that we are the current incarnation of the named service with details obtained from [newServiceIncarnation](#newserviceincarnation). If the optional **$continue** flag has been set then return the service details if this is the current service incarnation else **undef**. Otherwise if the **$continue** flag is false [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) unless this is the current service incarnation thus bringing the earlier [version](https://en.wikipedia.org/wiki/Software_versioning) of this service to an abrupt end.
+Check that we are the current incarnation of the named service with details obtained from [newServiceIncarnation](#newserviceincarnation). If the optional **$continue** flag has been set then return the service details if this is the current service incarnation else **undef**. Otherwise if the **$continue** flag is false confess unless this is the current service incarnation thus bringing the earlier version of this service to an abrupt end.
 
        Parameter  Description
     1  $service   Current service details
-    2  $continue  Return result if B<$continue> is true else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if the service has been replaced
+    2  $continue  Return result if B<$continue> is true else confess if the service has been replaced
 
 **Example:**
 
@@ -9075,26 +9515,31 @@ Perform various conversions from STDIN to STDOUT
 Convert Perl to Javascript.
 
        Parameter  Description
-    1  $in        Input [file](https://en.wikipedia.org/wiki/Computer_file) name or STDIN if [undef](https://perldoc.perl.org/functions/undef.html)     2  $out       Output [file](https://en.wikipedia.org/wiki/Computer_file) name or STDOUT if undefined
+    1  $in        Input file name or STDIN if undef
+    2  $out       Output file name or STDOUT if undefined
 
 **Example:**
 
     if (1)                                                                          
      {my $i = writeTempFile(<<'END');
-    [sub](https://perldoc.perl.org/perlsub.html) test($$)                                                                    #P A [test](https://en.wikipedia.org/wiki/Software_testing) method.
+    sub test($$)                                                                    #P A test method.
      {my ($file, $data) = @_;                                                       # Parameter 1, parameter 2
       if (fullyQualifiedFile($file)) {return qq($data)}                             # File is already fully qualified
-     } # [test](https://en.wikipedia.org/wiki/Software_testing)     
+     } # test
+    
 
 # Documentation
 
-Extract, format and update [documentation](https://en.wikipedia.org/wiki/Software_documentation) for a [Perl](http://www.perl.org/) [module](https://en.wikipedia.org/wiki/Modular_programming). 
+Extract, format and update documentation for a perl module.
+
 ## parseDitaRef($ref, $File, $TopicId)
 
-Parse a [Dita](http://docs.oasis-open.org/dita/dita/v1.3/os/part2-tech-content/dita-v1.3-os-part2-tech-content.html) reference **$ref** into its components (file name, topic id, id) . Optionally supply a base [file](https://en.wikipedia.org/wiki/Computer_file) name **$File**> to make the the [file](https://en.wikipedia.org/wiki/Computer_file) component absolute and/or a a default the topic id **$TopicId** to use if the topic id is not present in the reference.
+Parse a dita reference **$ref** into its components (file name, topic id, id) . Optionally supply a base file name **$File**> to make the the file component absolute and/or a a default the topic id **$TopicId** to use if the topic id is not present in the reference.
 
        Parameter  Description
-    1  $ref       Reference to [parse](https://en.wikipedia.org/wiki/Parsing)     2  $File      Default absolute [file](https://en.wikipedia.org/wiki/Computer_file)     3  $TopicId   Default topic id
+    1  $ref       Reference to parse
+    2  $File      Default absolute file
+    3  $TopicId   Default topic id
 
 **Example:**
 
@@ -9128,7 +9573,7 @@ Parse a [Dita](http://docs.oasis-open.org/dita/dita/v1.3/os/part2-tech-content/d
 
 ## parseXmlDocType ($string)
 
-Parse an [Xml](https://en.wikipedia.org/wiki/XML) DOCTYPE and return a [hash](https://en.wikipedia.org/wiki/Hash_table) indicating its components.
+Parse an [Xml](https://en.wikipedia.org/wiki/XML) DOCTYPE and return a hash indicating its components.
 
        Parameter  Description
     1  $string    String containing a DOCTYPE
@@ -9152,7 +9597,7 @@ Parse an [Xml](https://en.wikipedia.org/wiki/XML) DOCTYPE and return a [hash](ht
       is_deeply parseXmlDocType(<<END),  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     .
-    <!DOCTYPE [concept](http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/langRef/technicalContent/concept.html#concept) PUBLIC "-//OASIS//DTD DITA Task//EN" "concept.dtd" []>
+    <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Task//EN" "concept.dtd" []>
     .
     )),
     END
@@ -9169,7 +9614,9 @@ Parse an [Xml](https://en.wikipedia.org/wiki/XML) DOCTYPE and return a [hash](ht
 Report the current values of parameterless subs.
 
        Parameter    Description
-    1  $sourceFile  Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $reportFile  Optional report [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $sourceFile  Source file
+    2  $reportFile  Optional report file
+
 **Example:**
 
     reportSettings($0);                                                               # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -9181,7 +9628,8 @@ Report the current values of parameterless subs.
 Report the attributes present in a **$sourceFile**.
 
        Parameter    Description
-    1  $sourceFile  Source [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $sourceFile  Source file
+
 **Example:**
 
       my $d = temporaryFile;
@@ -9189,17 +9637,18 @@ Report the attributes present in a **$sourceFile**.
       my $f = writeFile(undef, <<'END'.<<END2);
     #!perl -I/home/phil/perl/cpan/DataTableText/lib/
     use Data::Table::Text qw(reportAttributeSettings);
-    [sub](https://perldoc.perl.org/perlsub.html) attribute {1}                                                               # An attribute.
-    [sub](https://perldoc.perl.org/perlsub.html) replaceable($)                                                              #r A replaceable method.
+    sub attribute {1}                                                               # An attribute.
+    sub replaceable($)                                                              #r A replaceable method.
      {
     
 
 ## reportAttributeSettings ($reportFile)
 
-Report the current values of the attribute methods in the calling [file](https://en.wikipedia.org/wiki/Computer_file) and optionally [write](https://en.wikipedia.org/wiki/Write_(system_call)) the report to **$reportFile**. Return the text of the report.
+Report the current values of the attribute methods in the calling file and optionally write the report to **$reportFile**. Return the text of the report.
 
        Parameter    Description
-    1  $reportFile  Optional report [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $reportFile  Optional report file
+
 **Example:**
 
       my $d = temporaryFile;
@@ -9209,8 +9658,8 @@ Report the current values of the attribute methods in the calling [file](https:/
     
     use Data::Table::Text qw(reportAttributeSettings);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-    [sub](https://perldoc.perl.org/perlsub.html) attribute {1}                                                               # An attribute.
-    [sub](https://perldoc.perl.org/perlsub.html) replaceable($)                                                              #r A replaceable method.
+    sub attribute {1}                                                               # An attribute.
+    sub replaceable($)                                                              #r A replaceable method.
      {
     
 
@@ -9219,7 +9668,8 @@ Report the current values of the attribute methods in the calling [file](https:/
 Report the replaceable methods marked with #r in a **$sourceFile**.
 
        Parameter    Description
-    1  $sourceFile  Source [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $sourceFile  Source file
+
 **Example:**
 
       my $d = temporaryFile;
@@ -9227,14 +9677,15 @@ Report the replaceable methods marked with #r in a **$sourceFile**.
       my $f = writeFile(undef, <<'END'.<<END2);
     #!perl -I/home/phil/perl/cpan/DataTableText/lib/
     use Data::Table::Text qw(reportAttributeSettings);
-    [sub](https://perldoc.perl.org/perlsub.html) attribute {1}                                                               # An attribute.
-    [sub](https://perldoc.perl.org/perlsub.html) replaceable($)                                                              #r A replaceable method.
+    sub attribute {1}                                                               # An attribute.
+    sub replaceable($)                                                              #r A replaceable method.
      {
     
     
-    [sub](https://perldoc.perl.org/perlsub.html) reportReplacableMethods($)                                                   # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+    sub reportReplacableMethods($)                                                   # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-     {my ($sourceFile) = @_;                                                        # Source [file](https://en.wikipedia.org/wiki/Computer_file)       my $s = readFile($sourceFile);
+     {my ($sourceFile) = @_;                                                        # Source file
+      my $s = readFile($sourceFile);
       my %s;
       for my $l(split /
   /, $s)                                                     # Find the attribute subs
@@ -9251,7 +9702,8 @@ Report the replaceable methods marked with #r in a **$sourceFile**.
 Report the exportable methods marked with #e in a **$sourceFile**.
 
        Parameter    Description
-    1  $sourceFile  Source [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $sourceFile  Source file
+
 **Example:**
 
       my $d = temporaryFile;
@@ -9259,17 +9711,18 @@ Report the exportable methods marked with #e in a **$sourceFile**.
       my $f = writeFile(undef, <<'END'.<<END2);
     #!perl -I/home/phil/perl/cpan/DataTableText/lib/
     use Data::Table::Text qw(reportAttributeSettings);
-    [sub](https://perldoc.perl.org/perlsub.html) attribute {1}                                                               # An attribute.
-    [sub](https://perldoc.perl.org/perlsub.html) replaceable($)                                                              #r A replaceable method.
+    sub attribute {1}                                                               # An attribute.
+    sub replaceable($)                                                              #r A replaceable method.
      {
     
 
 ## htmlToc ($key, $value)
 
-Generate a [table](https://en.wikipedia.org/wiki/Table_(information)) of contents for some [HTML](https://en.wikipedia.org/wiki/HTML) held in a [file](https://en.wikipedia.org/wiki/Computer_file) or a [string](https://en.wikipedia.org/wiki/String_(computer_science)). If the given parameter is a [file](https://en.wikipedia.org/wiki/Computer_file) the [file](https://en.wikipedia.org/wiki/Computer_file) is [read](https://en.wikipedia.org/wiki/Reading_(computer)), a [table](https://en.wikipedia.org/wiki/Table_(information)) of contents constructed and the the [file](https://en.wikipedia.org/wiki/Computer_file) updated with the new [table](https://en.wikipedia.org/wiki/Table_(information)) of contents. Otherwise a [table](https://en.wikipedia.org/wiki/Table_(information)) of contents is created for the [HTML](https://en.wikipedia.org/wiki/HTML) in the supplied [string](https://en.wikipedia.org/wiki/String_(computer_science)).  Each head level to be included in the [table](https://en.wikipedia.org/wiki/Table_(information)) of contents must have a unique id, put there by you, as its first attribute. The [table](https://en.wikipedia.org/wiki/Table_(information)) of contents will replace &lt;div id=toc>...&lt;/div>.  In either cae this [function](https://en.wikipedia.org/wiki/Function_(computer_programming)) retires the [table](https://en.wikipedia.org/wiki/Table_(information)) of contents as a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Generate a table of contents for some html held in a file or a string. If the given parameter is a file the file is read, a table of contents constructed and the the file updated with the new table of contents. Otherwise a table of contents is created for the html in the supplied string.  Each head level to be included in the table of contents must have a unique id, put there by you, as its first attribute. The table of contents will replace &lt;div id=toc>...&lt;/div>.  In either cae this function retires the table of contents as a string.
+
        Parameter  Description
-    1  $key       Either : "file" from [file](https://en.wikipedia.org/wiki/Computer_file)  or "string" from [string](https://en.wikipedia.org/wiki/String_(computer_science)) or "update" for from [file](https://en.wikipedia.org/wiki/Computer_file) with update in place
-    2  $value     The [file](https://en.wikipedia.org/wiki/Computer_file) or [string](https://en.wikipedia.org/wiki/String_(computer_science)) of [HTML](https://en.wikipedia.org/wiki/HTML) to be processed
+    1  $key       Either : "file" from file  or "string" from string or "update" for from file with update in place
+    2  $value     The file or string of html to be processed
 
 **Example:**
 
@@ -9337,16 +9790,17 @@ Generate a [table](https://en.wikipedia.org/wiki/Table_(information)) of content
 
 ## expandWellKnownWordsAsUrlsInHtmlFormat  ($string)
 
-Expand words found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) using the [HTML](https://en.wikipedia.org/wiki/HTML) **a** tag to supply a definition of that [word](https://en.wikipedia.org/wiki/Doc_(computing)). 
+Expand words found in a string using the html **a** tag to supply a definition of that word.
+
        Parameter  Description
-    1  $string    String containing [url](https://en.wikipedia.org/wiki/URL) names to expand
+    1  $string    String containing url names to expand
 
 **Example:**
 
-      ok expandWellKnownUrlsInDitaFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInDitaFormat(q(L[github])) eq
         q(<xref scope="external" format="html" href="https://github.com/philiprbrenan">GitHub</xref>);
     
-      ok expandWellKnownUrlsInHtmlFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInHtmlFormat(q(L[github])) eq
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
       ok expandWellKnownUrlsInPerlFormat(q(L<GitHub|https://github.com/philiprbrenan>)) eq
@@ -9358,14 +9812,14 @@ Expand words found in a [string](https://en.wikipedia.org/wiki/String_(computer_
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
     
-      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to gitHub and press w[enter].)),  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
         q(go to <a href="https://github.com/philiprbrenan">GitHub</a> and press enter.), 'ex1';
     
-      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to gitHub and press w[enter].)),
         q(go to [GitHub](https://github.com/philiprbrenan) and press enter.), 'ex2';
     
-      ok expandWellKnownUrlsInPod2Html(<<END) eq [eval](http://perldoc.perl.org/functions/eval.html) '"aaa
+      ok expandWellKnownUrlsInPod2Html(<<END) eq eval '"aaa
 
 bbb
 "';
@@ -9374,7 +9828,8 @@ bbb
 
 ## expandWellKnownWordsAsUrlsAndAddTocToMakeANewHtmlFile   ($file)
 
-Expand well known words found in a '.htm' [file](https://en.wikipedia.org/wiki/Computer_file) of [HTML](https://en.wikipedia.org/wiki/HTML) and add a [table](https://en.wikipedia.org/wiki/Table_(information)) of contents to create a new '.html' [file](https://en.wikipedia.org/wiki/Computer_file). 
+Expand well known words found in a '.htm' file of html and add a table of contents to create a new '.html' file.
+
        Parameter  Description
     1  $file      File
 
@@ -9409,16 +9864,17 @@ Expand well known words found in a '.htm' [file](https://en.wikipedia.org/wiki/C
 
 ## expandWellKnownWordsAsUrlsInMdFormat($string)
 
-Expand words found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) using the md [url](https://en.wikipedia.org/wiki/URL) to supply a definition of that [word](https://en.wikipedia.org/wiki/Doc_(computing)). 
+Expand words found in a string using the md url to supply a definition of that word.
+
        Parameter  Description
-    1  $string    String containing [url](https://en.wikipedia.org/wiki/URL) names to expand
+    1  $string    String containing url names to expand
 
 **Example:**
 
-      ok expandWellKnownUrlsInDitaFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInDitaFormat(q(L[github])) eq
         q(<xref scope="external" format="html" href="https://github.com/philiprbrenan">GitHub</xref>);
     
-      ok expandWellKnownUrlsInHtmlFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInHtmlFormat(q(L[github])) eq
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
       ok expandWellKnownUrlsInPerlFormat(q(L<GitHub|https://github.com/philiprbrenan>)) eq
@@ -9429,15 +9885,15 @@ Expand words found in a [string](https://en.wikipedia.org/wiki/String_(computer_
       ok expandWellKnownUrlsInHtmlFromPerl(q(L<GitHub|https://github.com/philiprbrenan>)) eq
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
-      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to gitHub and press w[enter].)),
         q(go to <a href="https://github.com/philiprbrenan">GitHub</a> and press enter.), 'ex1';
     
     
-      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to gitHub and press w[enter].)),  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
         q(go to [GitHub](https://github.com/philiprbrenan) and press enter.), 'ex2';
     
-      ok expandWellKnownUrlsInPod2Html(<<END) eq [eval](http://perldoc.perl.org/functions/eval.html) '"aaa
+      ok expandWellKnownUrlsInPod2Html(<<END) eq eval '"aaa
 
 bbb
 "';
@@ -9446,17 +9902,17 @@ bbb
 
 ## expandWellKnownUrlsInPerlFormat ($string)
 
-Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) in the format L&lt;url-name> using the Perl POD syntax.
+Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L&lt;url-name> using the Perl POD syntax.
 
        Parameter  Description
-    1  $string    String containing [url](https://en.wikipedia.org/wiki/URL) names to expand
+    1  $string    String containing url names to expand
 
 **Example:**
 
-      ok expandWellKnownUrlsInDitaFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInDitaFormat(q(L[github])) eq
         q(<xref scope="external" format="html" href="https://github.com/philiprbrenan">GitHub</xref>);
     
-      ok expandWellKnownUrlsInHtmlFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInHtmlFormat(q(L[github])) eq
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
     
@@ -9471,13 +9927,13 @@ Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](
       ok expandWellKnownUrlsInHtmlFromPerl(q(L<GitHub|https://github.com/philiprbrenan>)) eq
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
-      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to gitHub and press w[enter].)),
         q(go to <a href="https://github.com/philiprbrenan">GitHub</a> and press enter.), 'ex1';
     
-      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to gitHub and press w[enter].)),
         q(go to [GitHub](https://github.com/philiprbrenan) and press enter.), 'ex2';
     
-      ok expandWellKnownUrlsInPod2Html(<<END) eq [eval](http://perldoc.perl.org/functions/eval.html) '"aaa
+      ok expandWellKnownUrlsInPod2Html(<<END) eq eval '"aaa
 
 bbb
 "';
@@ -9486,18 +9942,18 @@ bbb
 
 ## expandWellKnownUrlsInHtmlFormat ($string)
 
-Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) in the format L\[url-name\] using the [HTML](https://en.wikipedia.org/wiki/HTML) **a** tag.
+Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] using the html **a** tag.
 
        Parameter  Description
-    1  $string    String containing [url](https://en.wikipedia.org/wiki/URL) names to expand
+    1  $string    String containing url names to expand
 
 **Example:**
 
-      ok expandWellKnownUrlsInDitaFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInDitaFormat(q(L[github])) eq
         q(<xref scope="external" format="html" href="https://github.com/philiprbrenan">GitHub</xref>);
     
     
-      ok expandWellKnownUrlsInHtmlFormat(q([GitHub](https://github.com/philiprbrenan))) eq  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      ok expandWellKnownUrlsInHtmlFormat(q(L[github])) eq  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
@@ -9509,13 +9965,13 @@ Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](
       ok expandWellKnownUrlsInHtmlFromPerl(q(L<GitHub|https://github.com/philiprbrenan>)) eq
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
-      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to gitHub and press w[enter].)),
         q(go to <a href="https://github.com/philiprbrenan">GitHub</a> and press enter.), 'ex1';
     
-      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to gitHub and press w[enter].)),
         q(go to [GitHub](https://github.com/philiprbrenan) and press enter.), 'ex2';
     
-      ok expandWellKnownUrlsInPod2Html(<<END) eq [eval](http://perldoc.perl.org/functions/eval.html) '"aaa
+      ok expandWellKnownUrlsInPod2Html(<<END) eq eval '"aaa
 
 bbb
 "';
@@ -9524,17 +9980,17 @@ bbb
 
 ## expandWellKnownUrlsInHtmlFromPerl   ($string)
 
-Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) in the format L\[url-name\] using the [HTML](https://en.wikipedia.org/wiki/HTML) **a** tag.
+Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] using the html **a** tag.
 
        Parameter  Description
-    1  $string    String containing [url](https://en.wikipedia.org/wiki/URL) names to expand
+    1  $string    String containing url names to expand
 
 **Example:**
 
-      ok expandWellKnownUrlsInDitaFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInDitaFormat(q(L[github])) eq
         q(<xref scope="external" format="html" href="https://github.com/philiprbrenan">GitHub</xref>);
     
-      ok expandWellKnownUrlsInHtmlFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInHtmlFormat(q(L[github])) eq
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
       ok expandWellKnownUrlsInPerlFormat(q(L<GitHub|https://github.com/philiprbrenan>)) eq
@@ -9547,13 +10003,13 @@ Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](
 
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
-      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to gitHub and press w[enter].)),
         q(go to <a href="https://github.com/philiprbrenan">GitHub</a> and press enter.), 'ex1';
     
-      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to gitHub and press w[enter].)),
         q(go to [GitHub](https://github.com/philiprbrenan) and press enter.), 'ex2';
     
-      ok expandWellKnownUrlsInPod2Html(<<END) eq [eval](http://perldoc.perl.org/functions/eval.html) '"aaa
+      ok expandWellKnownUrlsInPod2Html(<<END) eq eval '"aaa
 
 bbb
 "';
@@ -9562,17 +10018,17 @@ bbb
 
 ## expandWellKnownUrlsInPod2Html   ($string)
 
-Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) in the format =begin [HTML](https://en.wikipedia.org/wiki/HTML) format.
+Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format =begin html format.
 
        Parameter  Description
-    1  $string    String containing [url](https://en.wikipedia.org/wiki/URL) names to expand
+    1  $string    String containing url names to expand
 
 **Example:**
 
-      ok expandWellKnownUrlsInDitaFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInDitaFormat(q(L[github])) eq
         q(<xref scope="external" format="html" href="https://github.com/philiprbrenan">GitHub</xref>);
     
-      ok expandWellKnownUrlsInHtmlFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInHtmlFormat(q(L[github])) eq
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
       ok expandWellKnownUrlsInPerlFormat(q(L<GitHub|https://github.com/philiprbrenan>)) eq
@@ -9583,14 +10039,14 @@ Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](
       ok expandWellKnownUrlsInHtmlFromPerl(q(L<GitHub|https://github.com/philiprbrenan>)) eq
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
-      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to gitHub and press w[enter].)),
         q(go to <a href="https://github.com/philiprbrenan">GitHub</a> and press enter.), 'ex1';
     
-      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to gitHub and press w[enter].)),
         q(go to [GitHub](https://github.com/philiprbrenan) and press enter.), 'ex2';
     
     
-      ok expandWellKnownUrlsInPod2Html(<<END) eq [eval](http://perldoc.perl.org/functions/eval.html) '"aaa
+      ok expandWellKnownUrlsInPod2Html(<<END) eq eval '"aaa
 
 bbb
 "';  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
@@ -9601,18 +10057,18 @@ bbb
 
 ## expandWellKnownUrlsInDitaFormat ($string)
 
-Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) in the format L\[url-name\] in the L\[Dita\] **xref**format.
+Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] in the L\[Dita\] **xref**format.
 
        Parameter  Description
-    1  $string    String containing [url](https://en.wikipedia.org/wiki/URL) names to expand
+    1  $string    String containing url names to expand
 
 **Example:**
 
-      ok expandWellKnownUrlsInDitaFormat(q([GitHub](https://github.com/philiprbrenan))) eq  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      ok expandWellKnownUrlsInDitaFormat(q(L[github])) eq  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
         q(<xref scope="external" format="html" href="https://github.com/philiprbrenan">GitHub</xref>);
     
-      ok expandWellKnownUrlsInHtmlFormat(q([GitHub](https://github.com/philiprbrenan))) eq
+      ok expandWellKnownUrlsInHtmlFormat(q(L[github])) eq
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
       ok expandWellKnownUrlsInPerlFormat(q(L<GitHub|https://github.com/philiprbrenan>)) eq
@@ -9623,13 +10079,13 @@ Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](
       ok expandWellKnownUrlsInHtmlFromPerl(q(L<GitHub|https://github.com/philiprbrenan>)) eq
         q(<a format="html" href="https://github.com/philiprbrenan">GitHub</a>);
     
-      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInHtmlFormat(q(go to gitHub and press w[enter].)),
         q(go to <a href="https://github.com/philiprbrenan">GitHub</a> and press enter.), 'ex1';
     
-      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to [GitHub](https://github.com/philiprbrenan) and press enter.)),
+      is_deeply expandWellKnownWordsAsUrlsInMdFormat(q(go to gitHub and press w[enter].)),
         q(go to [GitHub](https://github.com/philiprbrenan) and press enter.), 'ex2';
     
-      ok expandWellKnownUrlsInPod2Html(<<END) eq [eval](http://perldoc.perl.org/functions/eval.html) '"aaa
+      ok expandWellKnownUrlsInPod2Html(<<END) eq eval '"aaa
 
 bbb
 "';
@@ -9638,7 +10094,7 @@ bbb
 
 ## expandNewLinesInDocumentation   ($s)
 
-Expand new lines in [documentation](https://en.wikipedia.org/wiki/Software_documentation), specifically 
+Expand new lines in documentation, specifically 
  for new line and 
 
     for two new lines.
@@ -9663,10 +10119,11 @@ Expand new lines in [documentation](https://en.wikipedia.org/wiki/Software_docum
 
 ## extractCodeBlock($comment, $file)
 
-Extract the block of [code](https://en.wikipedia.org/wiki/Computer_program) delimited by **$comment**, starting at qq($comment-begin), ending at qq($comment-end) from the named **$file** else the current Perl [program](https://en.wikipedia.org/wiki/Computer_program) $0 and return it as a [string](https://en.wikipedia.org/wiki/String_(computer_science)) or [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if this is not possible.
+Extract the block of code delimited by **$comment**, starting at qq($comment-begin), ending at qq($comment-end) from the named **$file** else the current Perl program $0 and return it as a string or confess if this is not possible.
 
        Parameter  Description
-    1  $comment   Comment delimiting the block of [code](https://en.wikipedia.org/wiki/Computer_program)     2  $file      File to [read](https://en.wikipedia.org/wiki/Reading_(computer)) from if not $0
+    1  $comment   Comment delimiting the block of code
+    2  $file      File to read from if not $0
 
 **Example:**
 
@@ -9679,7 +10136,7 @@ Extract the block of [code](https://en.wikipedia.org/wiki/Computer_program) deli
 
 ## updateDocumentation ($perlModule)
 
-Update the [documentation](https://en.wikipedia.org/wiki/Software_documentation) for a Perl [module](https://en.wikipedia.org/wiki/Modular_programming) from the comments in its source [code](https://en.wikipedia.org/wiki/Computer_program). Comments between the lines marked with:
+Update the documentation for a Perl module from the comments in its source code. Comments between the lines marked with:
 
     #Dn title # description
 
@@ -9691,7 +10148,7 @@ where n is either 1, 2 or 3 indicating the heading level of the section and the 
 
 Methods are formatted as:
 
-    [sub](https://perldoc.perl.org/perlsub.html) name(signature)      #FLAGS [comment](https://en.wikipedia.org/wiki/Comment_(computer_programming)) describing method
+    sub name(signature)      #FLAGS comment describing method
      {my ($parameters) = @_; # comments for each parameter separated by commas.
 
 FLAGS can be chosen from:
@@ -9718,11 +10175,11 @@ FLAGS can be chosen from:
 
 - X
 
-    [die](http://perldoc.perl.org/functions/die.html) rather than received a returned **undef** result
+    die rather than received a returned **undef** result
 
-Other flags will be handed to the method extractDocumentationFlags(flags to [process](https://en.wikipedia.org/wiki/Process_management_(computing)), method name) found in the [file](https://en.wikipedia.org/wiki/Computer_file) being documented, this method should return \[the additional [documentation](https://en.wikipedia.org/wiki/Software_documentation) for the method, the [code](https://en.wikipedia.org/wiki/Computer_program) to implement the flag\].
+Other flags will be handed to the method extractDocumentationFlags(flags to process, method name) found in the file being documented, this method should return \[the additional documentation for the method, the code to implement the flag\].
 
-Text following 'Example:' in the [comment](https://en.wikipedia.org/wiki/Comment_(computer_programming)) (if present) will be placed after the parameters [list](https://en.wikipedia.org/wiki/Linked_list) as an example. Lines containing comments consisting of '#\[T#\]'.methodName will also be aggregated and displayed as examples for that method.
+Text following 'Example:' in the comment (if present) will be placed after the parameters list as an example. Lines containing comments consisting of '#\[T#\]'.methodName will also be aggregated and displayed as examples for that method.
 
 Lines formatted as:
 
@@ -9734,14 +10191,17 @@ Lines formatted as:
 
     #C emailAddress text
 
-will be aggregated in the acknowledgments section at the end of the [documentation](https://en.wikipedia.org/wiki/Software_documentation). 
-The character sequence **\\n** in the [comment](https://en.wikipedia.org/wiki/Comment_(computer_programming)) will be expanded to one new line, **\\m** to two new lines and **L****&lt;$\_**>,**L****&lt;confess**>,**L****&lt;die**>,**L****&lt;eval**>,**L****&lt;lvalueMethod**> to links to the [Perl](http://www.perl.org/) [documentation](https://en.wikipedia.org/wiki/Software_documentation). 
-Search for '#D1': in [https://metacpan.org/source/PRBRENAN/Data-Table-Text-20180810/lib/Data/Table/Text.pm](https://metacpan.org/source/PRBRENAN/Data-Table-Text-20180810/lib/Data/Table/Text.pm) to see  more examples of such [documentation](https://en.wikipedia.org/wiki/Software_documentation) in action - although it is quite difficult to see as it looks just like normal comments placed in the [code](https://en.wikipedia.org/wiki/Computer_program). 
+will be aggregated in the acknowledgments section at the end of the documentation.
+
+The character sequence **\\n** in the comment will be expanded to one new line, **\\m** to two new lines and **L****&lt;$\_**>,**L****&lt;confess**>,**L****&lt;die**>,**L****&lt;eval**>,**L****&lt;lvalueMethod**> to links to the perl documentation.
+
+Search for '#D1': in [https://metacpan.org/source/PRBRENAN/Data-Table-Text-20180810/lib/Data/Table/Text.pm](https://metacpan.org/source/PRBRENAN/Data-Table-Text-20180810/lib/Data/Table/Text.pm) to see  more examples of such documentation in action - although it is quite difficult to see as it looks just like normal comments placed in the code.
+
 Parameters:
 .
 
        Parameter    Description
-    1  $perlModule  Optional [file](https://en.wikipedia.org/wiki/Computer_file) name with caller's [file](https://en.wikipedia.org/wiki/Computer_file) being the default
+    1  $perlModule  Optional file name with caller's file being the default
 
 **Example:**
 
@@ -9751,14 +10211,14 @@ Parameters:
     
     #D1 Samples                                                                      # Sample methods.
     
-    [sub](https://perldoc.perl.org/perlsub.html) sample($@)                                                                  #R Documentation for the:  sample() method.  See also L<Data::Table::Text::sample2|/Data::Table::Text::sample2>. #Tsample .
+    sub sample($@)                                                                  #R Documentation for the:  sample() method.  See also L<Data::Table::Text::sample2|/Data::Table::Text::sample2>. #Tsample .
      {my ($node, @context) = @_;                                                    # Node, optional context
       1
      }
     
     ~BEGIN{*smpl=*sample}
     
-    [sub](https://perldoc.perl.org/perlsub.html) Data::Table::Text::sample2(\&@)                                             #PS Documentation for the sample2() method.
+    sub Data::Table::Text::sample2(\&@)                                             #PS Documentation for the sample2() method.
      {my ($sub, @context) = @_;                                                     # Sub to call, context.
       1
      }
@@ -9771,16 +10231,19 @@ Parameters:
      }
     
     ok sample(<<END2)) == 1;                                                        #Tsample
-    sample [data](https://en.wikipedia.org/wiki/Data)     END2
+    sample data
+    END2
     
       ok $s =~ m/=head2 Data::Table::Text::sample2.+?\$sub, \@context/;             
     
 
 ## extractPodDocumentation ($perl)
 
-Extract [POD](https://perldoc.perl.org/perlpod.html) from a [file](https://en.wikipedia.org/wiki/Computer_file) 
+Extract pod from a file
+
        Parameter  Description
-    1  $perl      Perl source [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $perl      Perl source file
+
 **Example:**
 
     if (1)                                                                          
@@ -9814,8 +10277,9 @@ Service details.
 
 ### Output fields
 
-#### [file](https://en.wikipedia.org/wiki/Computer_file) 
-The [file](https://en.wikipedia.org/wiki/Computer_file) in which the service start details is being recorded.
+#### file
+
+The file in which the service start details is being recorded.
 
 #### service
 
@@ -9827,7 +10291,7 @@ The time this service was started time plus a minor hack to simplify testing.
 
 ## Data::Table::Text::AwsEc2Price Definition
 
-Prices of selected [Amazon Web Services](http://aws.amazon.com) elastic compute instance types
+Prices of selected aws elastic compute instance types
 
 ### Output fields
 
@@ -9885,7 +10349,7 @@ Process starter definition.
 
 #### processingLogFile
 
-Optional: name of a [file](https://en.wikipedia.org/wiki/Computer_file) to which [process](https://en.wikipedia.org/wiki/Process_management_(computing)) start and end information should be appended
+Optional: name of a file to which process start and end information should be appended
 
 #### processingTitle
 
@@ -9893,7 +10357,7 @@ Optional: title describing the processing being performed.
 
 #### totalToBeStarted
 
-Optionally: the total number of [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to be started - if this is supplied then an estimate of the finish time for this processing is printed to the [log](https://en.wikipedia.org/wiki/Log_file) [file](https://en.wikipedia.org/wiki/Computer_file) every time a [process](https://en.wikipedia.org/wiki/Process_management_(computing)) starts or finishes.
+Optionally: the total number of processes to be started - if this is supplied then an estimate of the finish time for this processing is printed to the log file every time a process starts or finishes.
 
 ### Output fields
 
@@ -9903,27 +10367,27 @@ If true then automatically clear the transfer area at the end of processing.
 
 #### maximumNumberOfProcesses
 
-The maximum number of [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to start in parallel at one time. If this limit is exceeded, the start of subsequent [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) will be delayed until [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) started earlier have finished.
+The maximum number of processes to start in parallel at one time. If this limit is exceeded, the start of subsequent processes will be delayed until processes started earlier have finished.
 
 #### pids
 
-A [hash](https://en.wikipedia.org/wiki/Hash_table) of pids representing [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) started but not yet completed.
+A hash of pids representing processes started but not yet completed.
 
 #### processFinishTime
 
-Hash of {pid} == time the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) finished.
+Hash of {pid} == time the process finished.
 
 #### processStartTime
 
-Hash of {pid} == time the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) was started.
+Hash of {pid} == time the process was started.
 
 #### processingLogFileHandle
 
-Handle for [log](https://en.wikipedia.org/wiki/Log_file) [file](https://en.wikipedia.org/wiki/Computer_file) if a [log](https://en.wikipedia.org/wiki/Log_file) [file](https://en.wikipedia.org/wiki/Computer_file) was supplied
+Handle for log file if a log file was supplied
 
 #### resultsArray
 
-Consolidated [array](https://en.wikipedia.org/wiki/Dynamic_array) of results.
+Consolidated array of results.
 
 #### startTime
 
@@ -9931,11 +10395,12 @@ Start time
 
 #### transferArea
 
-The name of the [folder](https://en.wikipedia.org/wiki/File_folder) in which files transferring results from the child to the parent [process](https://en.wikipedia.org/wiki/Process_management_(computing)) will be stored.
+The name of the folder in which files transferring results from the child to the parent process will be stored.
 
 ## TestHash Definition
 
-Definition of a blessed [hash](https://en.wikipedia.org/wiki/Hash_table). 
+Definition of a blessed hash.
+
 ### Output fields
 
 #### a
@@ -9962,29 +10427,33 @@ Length of fixed header which carries the length of the following message
 
 #### serverAction
 
-Server action [sub](https://perldoc.perl.org/perlsub.html), which receives a communicator every time a client creates a new connection. If this [server](https://en.wikipedia.org/wiki/Server_(computing)) is going to be started by [systemd](https://en.wikipedia.org/wiki/Systemd)  as a service with the specified [serverName](https://metacpan.org/pod/serverName) then this is the a actual text of the [code](https://en.wikipedia.org/wiki/Computer_program) that will be installed as a CGI script and run in response to an incoming [transaction](https://en.wikipedia.org/wiki/Database_transaction) in a separate [process](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [userid](https://en.wikipedia.org/wiki/User_identifier) set to [serviceUser](https://metacpan.org/pod/serviceUser). It receives the text of the [HTTP](https://en.wikipedia.org/wiki/HTTP) request from the [web browser](https://en.wikipedia.org/wiki/Web_browser) as parameter 1 and should return the text to be sent back to the [web browser](https://en.wikipedia.org/wiki/Web_browser). 
+Server action sub, which receives a communicator every time a client creates a new connection. If this server is going to be started by systemd  as a service with the specified [serverName](https://metacpan.org/pod/serverName) then this is the a actual text of the code that will be installed as a CGI script and run in response to an incoming transaction in a separate process with the userid set to [serviceUser](https://metacpan.org/pod/serviceUser). It receives the text of the http request from the browser as parameter 1 and should return the text to be sent back to the browser.
+
 #### serviceName
 
-Service name for [install](https://en.wikipedia.org/wiki/Installation_(computer_programs)) by [systemd](https://en.wikipedia.org/wiki/Systemd) 
+Service name for install by systemd
+
 #### serviceUser
 
 Userid for service
 
 #### socketPath
 
-Socket [file](https://en.wikipedia.org/wiki/Computer_file) 
+Socket file
+
 ### Output fields
 
 #### client
 
-Client [socket](https://en.wikipedia.org/wiki/Network_socket) and connection [socket](https://en.wikipedia.org/wiki/Network_socket) 
+Client socket and connection socket
+
 #### serverPid
 
-Server pid which can be used to kill the [server](https://en.wikipedia.org/wiki/Server_(computing)) via kill q(kill), $pid
+Server pid which can be used to kill the server via kill q(kill), $pid
 
 # Attributes
 
-The following is a [list](https://en.wikipedia.org/wiki/Linked_list) of all the attributes in this package.  A method coded
+The following is a list of all the attributes in this package.  A method coded
 with the same name in your package will over ride the method of the same name
 in this package and thus provide your value for the attribute in place of the
 default value supplied for this attribute by this package.
@@ -10003,7 +10472,8 @@ File in which to save IP address of primary instance on Aws.
 
 ## nameFromStringMaximumLength
 
-Maximum length of a name generated from a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+Maximum length of a name generated from a string.
+
 ## wwwHeader
 
 Html header.
@@ -10024,41 +10494,43 @@ File path separator.
 
 ## denormalizeFolderName   ($name)
 
-Remove any trailing [folder](https://en.wikipedia.org/wiki/File_folder) separator from a [folder](https://en.wikipedia.org/wiki/File_folder) name.
+Remove any trailing folder separator from a folder name.
 
        Parameter  Description
     1  $name      Folder name
 
 ## renormalizeFolderName   ($name)
 
-Normalize a [folder](https://en.wikipedia.org/wiki/File_folder) name by ensuring it has a single trailing directory separator.
+Normalize a folder name by ensuring it has a single trailing directory separator.
 
        Parameter  Description
     1  $name      Name
 
 ## prefferedFileName   ($name)
 
-Normalize a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+Normalize a file name.
 
        Parameter  Description
     1  $name      Name
 
 ## findAllFilesAndFolders  ($folder, $dirs)
 
-Find all the files and folders under a [folder](https://en.wikipedia.org/wiki/File_folder). 
+Find all the files and folders under a folder.
+
        Parameter  Description
     1  $folder    Folder to start the search with
     2  $dirs      True if only folders are required
 
 ## readUtf16File   ($file)
 
-Read a [file](https://en.wikipedia.org/wiki/Computer_file) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) encoded in utf-16.
+Read a file containing [Unicode](https://en.wikipedia.org/wiki/Unicode) encoded in utf-16.
 
        Parameter  Description
-    1  $file      Name of [file](https://en.wikipedia.org/wiki/Computer_file) to [read](https://en.wikipedia.org/wiki/Reading_(computer)) 
+    1  $file      Name of file to read
+
 ## binModeAllUtf8  ()
 
-Set STDOUT and STDERR to accept [utf8](https://en.wikipedia.org/wiki/UTF-8) without complaint.
+Set STDOUT and STDERR to accept utf8 without complaint.
 
 **Example:**
 
@@ -10068,10 +10540,11 @@ Set STDOUT and STDERR to accept [utf8](https://en.wikipedia.org/wiki/UTF-8) with
 
 ## convertImageToJpx690($Source, $target, $Size, $Tiles)
 
-Convert a **$source** image to a **$target** image in jpx format using versions of [Imagemagick](https://www.imagemagick.org/script/index.php) [version](https://en.wikipedia.org/wiki/Software_versioning) 6.9.0 and above. The size in pixels of each jpx tile may be specified by the optional **$Size** parameter which defaults to **256**. **$Tiles** optionally provides an upper limit on the number of each tiles in each dimension.
+Convert a **$source** image to a **$target** image in jpx format using versions of [Imagemagick](https://www.imagemagick.org/script/index.php) version 6.9.0 and above. The size in pixels of each jpx tile may be specified by the optional **$Size** parameter which defaults to **256**. **$Tiles** optionally provides an upper limit on the number of each tiles in each dimension.
 
        Parameter  Description
-    1  $Source    Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $target    Target [folder](https://en.wikipedia.org/wiki/File_folder) (as multiple files will be created)
+    1  $Source    Source file
+    2  $target    Target folder (as multiple files will be created)
     3  $Size      Optional size of each tile - defaults to 256
     4  $Tiles     Optional limit on the number of tiles in either dimension
 
@@ -10080,7 +10553,8 @@ Convert a **$source** image to a **$target** image in jpx format using versions 
 Convert a **$source** image to a **$target** image in jpx format. The size in pixels of each jpx tile may be specified by the optional **$Size** parameter which defaults to **256**. **$Tiles** optionally provides an upper limit on the number of each tiles in each dimension.
 
        Parameter  Description
-    1  $Source    Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $target    Target [folder](https://en.wikipedia.org/wiki/File_folder) (as multiple files will be created)
+    1  $Source    Source file
+    2  $target    Target folder (as multiple files will be created)
     3  $Size      Optional size of each tile - defaults to 256
     4  $Tiles     Optional limit in either direction on the number of tiles
 
@@ -10092,30 +10566,33 @@ Convert a **$source** image to a **$target** image in jpx format. The size in pi
 
 ## setCombination  (@s)
 
-Count the elements in sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
+Count the elements in sets **@s** represented as arrays of strings and/or the keys of hashes.
 
        Parameter  Description
-    1  @s         Array of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or hashes
+    1  @s         Array of arrays of strings and/or hashes
 
 ## formatTableMultiLine($data, $separator)
 
 Tabularize text that has new lines in it.
 
        Parameter   Description
-    1  $data       Reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [data](https://en.wikipedia.org/wiki/Data) to be formatted as a [table](https://en.wikipedia.org/wiki/Table_(information))     2  $separator  Optional line separator to use instead of new line for each row.
+    1  $data       Reference to an array of arrays of data to be formatted as a table
+    2  $separator  Optional line separator to use instead of new line for each row.
 
 ## formatTableClearUpLeft  ($data)
 
 Blank identical column values up and left.
 
        Parameter  Description
-    1  $data      Array of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) 
+    1  $data      Array of arrays
+
 ## formatTableAA   ($data, $title, %options)
 
-Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array). 
+Tabularize an array of arrays.
+
        Parameter  Description
     1  $data      Data to be formatted
-    2  $title     Reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of titles
+    2  $title     Reference to an array of titles
     3  %options   Options
 
 **Example:**
@@ -10132,35 +10609,38 @@ Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](h
 
 ## formatTableHA   ($data, $title)
 
-Tabularize a [hash](https://en.wikipedia.org/wiki/Hash_table) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array). 
+Tabularize a hash of arrays.
+
        Parameter  Description
     1  $data      Data to be formatted
     2  $title     Optional titles
 
 ## formatTableAH   ($data)
 
-Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array) of hashes.
+Tabularize an array of hashes.
 
        Parameter  Description
     1  $data      Data to be formatted
 
 ## formatTableHH   ($data)
 
-Tabularize a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes.
+Tabularize a hash of hashes.
 
        Parameter  Description
     1  $data      Data to be formatted
 
 ## formatTableA($data, $title)
 
-Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Tabularize an array.
+
        Parameter  Description
     1  $data      Data to be formatted
     2  $title     Optional title
 
 ## formatTableH($data, $title)
 
-Tabularize a [hash](https://en.wikipedia.org/wiki/Hash_table). 
+Tabularize a hash.
+
        Parameter  Description
     1  $data      Data to be formatted
     2  $title     Optional title
@@ -10171,7 +10651,7 @@ Options available for formatting tables.
 
 ## reloadHashes2   ($d, $progress)
 
-Ensures that all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures have LValue methods to get and set their current keys.
+Ensures that all the hashes within a tower of data structures have LValue methods to get and set their current keys.
 
        Parameter  Description
     1  $d         Data structure
@@ -10179,7 +10659,7 @@ Ensures that all the hashes within a tower of [data](https://en.wikipedia.org/wi
 
 ## showHashes2 ($d, $keys, $progress)
 
-Create a map of all the keys within all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures.
+Create a map of all the keys within all the hashes within a tower of data structures.
 
        Parameter  Description
     1  $d         Data structure
@@ -10188,14 +10668,14 @@ Create a map of all the keys within all the hashes within a tower of [data](http
 
 ## showHashes  ($d)
 
-Create a map of all the keys within all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures.
+Create a map of all the keys within all the hashes within a tower of data structures.
 
        Parameter  Description
     1  $d         Data structure
 
 ## newUdsr (@parms)
 
-Create a communicator - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+Create a communicator - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
        Parameter  Description
     1  @parms     Attributes per L<Udsr Definition|/Udsr Definition>
@@ -10227,12 +10707,14 @@ Return the name of the C compiler on this system.
 
 ## getNumberOfCpus ()
 
-Number of [CPUs](https://en.wikipedia.org/wiki/Central_processing_unit). 
+Number of cpus.
+
 ## saveSourceToS3  ($aws, $saveIntervalInSeconds)
 
-Save source [code](https://en.wikipedia.org/wiki/Computer_program). 
+Save source code.
+
        Parameter               Description
-    1  $aws                    Aws target [file](https://en.wikipedia.org/wiki/Computer_file) and keywords
+    1  $aws                    Aws target file and keywords
     2  $saveIntervalInSeconds  Save internal
 
 ## awsParallelProcessFilesTestParallel ($userData, $file)
@@ -10240,65 +10722,80 @@ Save source [code](https://en.wikipedia.org/wiki/Computer_program).
 Test running on [Amazon Web Services](http://aws.amazon.com) in parallel.
 
        Parameter  Description
-    1  $userData  User [data](https://en.wikipedia.org/wiki/Data)     2  $file      File to [process](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+    1  $userData  User data
+    2  $file      File to process.
+
 **Example:**
 
-      my $N = 2001;                                                                 # Number of files to [process](https://en.wikipedia.org/wiki/Process_management_(computing))       my $options = q(region => q(us-east-2), profile=>q(fmc));                     # Aws cli options
-      my %options = [eval](http://perldoc.perl.org/functions/eval.html) "($options)";
+      my $N = 2001;                                                                 # Number of files to process
+      my $options = q(region => q(us-east-2), profile=>q(fmc));                     # Aws cli options
+      my %options = eval "($options)";
     
-      for my $dir(q(/home/phil/perl/cpan/DataTableText/lib/Data/Table/),            # Folders we will need on [Amazon Web Services](http://aws.amazon.com)                   q(/home/phil/.aws/))
+      for my $dir(q(/home/phil/perl/cpan/DataTableText/lib/Data/Table/),            # Folders we will need on aws
+                  q(/home/phil/.aws/))
        {awsParallelSpreadFolder($dir, %options);
        }
     
-      my $d = temporaryFolder;                                                      # Create a temporary [folder](https://en.wikipedia.org/wiki/File_folder)       my $resultsFile = fpe($d, qw(results data));                                  # Save results in this temporary [file](https://en.wikipedia.org/wiki/Computer_file)     
+      my $d = temporaryFolder;                                                      # Create a temporary folder
+      my $resultsFile = fpe($d, qw(results data));                                  # Save results in this temporary file
+    
       if (my $r = execPerlOnRemote(join "
-  ",                                       # Execute some [code](https://en.wikipedia.org/wiki/Computer_program) on a [server](https://en.wikipedia.org/wiki/Server_(computing))     
-        getCodeContext(\&awsParallelProcessFilesTestParallel),                      # Get [code](https://en.wikipedia.org/wiki/Computer_program) context of the [sub](https://perldoc.perl.org/perlsub.html) we want to call.  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+  ",                                       # Execute some code on a server
+    
+        getCodeContext(\&awsParallelProcessFilesTestParallel),                      # Get code context of the sub we want to call.  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-        <<SESSIONLEADER))                                                           # Launch [code](https://en.wikipedia.org/wiki/Computer_program) on session leader
+        <<SESSIONLEADER))                                                           # Launch code on session leader
     use Data::Table::Text qw(:all);
     
     my \$r = awsParallelProcessFiles                                                # Process files on multiple L<Amazon Web Services|http://aws.amazon.com> instances in parallel
-     ({file=>4, time=>timeStamp},                                                   # User [data](https://en.wikipedia.org/wiki/Data)     
-      \\\&Data::Table::Text::awsParallelProcessFilesTestParallel,                   # Reference to [code](https://en.wikipedia.org/wiki/Computer_program) to execute in parallel on each session instance  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
-
-      \\\&Data::Table::Text::awsParallelProcessFilesTestResults,                    # Reference to [code](https://en.wikipedia.org/wiki/Computer_program) to execute in series to merge the results of each parallel computation
-      [map {writeFile(fpe(q($d), \$_, qw(txt)), \$_)} 1..$N],                       # Files to [process](https://en.wikipedia.org/wiki/Process_management_(computing))       $options);                                                                    # Aws cli options as we will be running on Aws
+     ({file=>4, time=>timeStamp},                                                   # User data
     
-    storeFile(q($resultsFile), \$r);                                                # Save results in a [file](https://en.wikipedia.org/wiki/Computer_file)     
+      \\\&Data::Table::Text::awsParallelProcessFilesTestParallel,                   # Reference to code to execute in parallel on each session instance  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+      \\\&Data::Table::Text::awsParallelProcessFilesTestResults,                    # Reference to code to execute in series to merge the results of each parallel computation
+      [map {writeFile(fpe(q($d), \$_, qw(txt)), \$_)} 1..$N],                       # Files to process
+      $options);                                                                    # Aws cli options as we will be running on Aws
+    
+    storeFile(q($resultsFile), \$r);                                                # Save results in a file
+    
     SESSIONLEADER
     
-       {copyFileFromRemote($resultsFile);                                           # Retrieve [user](https://en.wikipedia.org/wiki/User_(computing)) [data](https://en.wikipedia.org/wiki/Data)     
-        my $userData = retrieveFile($resultsFile);                                  # Recover [user](https://en.wikipedia.org/wiki/User_(computing)) [data](https://en.wikipedia.org/wiki/Data)         my @i = awsParallelSecondaryIpAddresses(%options);                          # Ip addresses of secondary instances
-        my @I = keys $userData->{ip}->%*;
-        is_deeply [sort @i], [sort @I];                                             # Each secondary [IP address](https://en.wikipedia.org/wiki/IP_address) address was used
+       {copyFileFromRemote($resultsFile);                                           # Retrieve user data
     
-        ok $userData->{file}  == 4;                                                 # Prove we can pass [data](https://en.wikipedia.org/wiki/Data) in and get it back
+        my $userData = retrieveFile($resultsFile);                                  # Recover user data
+        my @i = awsParallelSecondaryIpAddresses(%options);                          # Ip addresses of secondary instances
+        my @I = keys $userData->{ip}->%*;
+        is_deeply [sort @i], [sort @I];                                             # Each secondary ip address was used
+    
+        ok $userData->{file}  == 4;                                                 # Prove we can pass data in and get it back
         ok $userData->{merge} == 1 + @i, 'ii';                                      # Number of merges
     
-        my %f; my %i;                                                               # Files processed on each [IP address](https://en.wikipedia.org/wiki/IP_address)         for   my $i(sort keys $userData->{ipFile}->%*)                              # Ip
+        my %f; my %i;                                                               # Files processed on each ip
+        for   my $i(sort keys $userData->{ipFile}->%*)                              # Ip
          {for my $f(sort keys $userData->{ipFile}{$i}->%*)                          # File
            {$f{fn($f)}++;                                                           # Files processed
-            $i{$i}++;                                                               # Count files on each [IP address](https://en.wikipedia.org/wiki/IP_address)            }
+            $i{$i}++;                                                               # Count files on each ip
+           }
          }
     
-        is_deeply \%f, {map {$_=>1} 1..$N};                                         # Check each [file](https://en.wikipedia.org/wiki/Computer_file) was processed
+        is_deeply \%f, {map {$_=>1} 1..$N};                                         # Check each file was processed
     
         if (1)
-         {my @rc; my @ra;                                                           # Range of number of files processed on each [IP address](https://en.wikipedia.org/wiki/IP_address) - computed, actually counted
+         {my @rc; my @ra;                                                           # Range of number of files processed on each ip - computed, actually counted
           my $l = $N/@i-1;                                                          # Lower limit of number of files per IP address
           my $h = $N/@i+1;                                                          # Upper limit of number of files per IP address
           for   my $i(keys %i)
-           {my $nc = $i{$i};                                                        # Number of files processed on this [IP address](https://en.wikipedia.org/wiki/IP_address) - computed
-            my $na = $userData->{ip}{$i};                                           # Number of files processed on this [IP address](https://en.wikipedia.org/wiki/IP_address) - actually counted
+           {my $nc = $i{$i};                                                        # Number of files processed on this ip - computed
+            my $na = $userData->{ip}{$i};                                           # Number of files processed on this ip - actually counted
             push @rc, ($nc >= $l and $nc <= $h) ? 1 : 0;                            # 1 - in range, 0 - out of range
             push @ra, ($na >= $l and $na <= $h) ? 1 : 0;                            # 1 - in range, 0 - out of range
            }
-          ok @i == [grep](https://en.wikipedia.org/wiki/Grep) {$_} @ra;                                                   # Check each [IP address](https://en.wikipedia.org/wiki/IP_address) processed the expected number of files
-          ok @i == [grep](https://en.wikipedia.org/wiki/Grep) {$_} @rc;
+          ok @i == grep {$_} @ra;                                                   # Check each ip processed the expected number of files
+          ok @i == grep {$_} @rc;
          }
     
-        ok $userData->{files}{&fpe($d, qw(4 txt))} eq                               # Check the computed MD5 sum for the specified [file](https://en.wikipedia.org/wiki/Computer_file)            q(a87ff679a2f3e71d9181a67b7542122c);
+        ok $userData->{files}{&fpe($d, qw(4 txt))} eq                               # Check the computed MD5 sum for the specified file
+           q(a87ff679a2f3e71d9181a67b7542122c);
        }
     
 
@@ -10307,63 +10804,78 @@ Test running on [Amazon Web Services](http://aws.amazon.com) in parallel.
 Test results of running on [Amazon Web Services](http://aws.amazon.com) in parallel.
 
        Parameter  Description
-    1  $userData  User [data](https://en.wikipedia.org/wiki/Data) from primary instance instance or [process](https://en.wikipedia.org/wiki/Process_management_(computing))     2  @results   Results from each parallel instance or [process](https://en.wikipedia.org/wiki/Process_management_(computing)) 
+    1  $userData  User data from primary instance instance or process
+    2  @results   Results from each parallel instance or process
+
 **Example:**
 
-      my $N = 2001;                                                                 # Number of files to [process](https://en.wikipedia.org/wiki/Process_management_(computing))       my $options = q(region => q(us-east-2), profile=>q(fmc));                     # Aws cli options
-      my %options = [eval](http://perldoc.perl.org/functions/eval.html) "($options)";
+      my $N = 2001;                                                                 # Number of files to process
+      my $options = q(region => q(us-east-2), profile=>q(fmc));                     # Aws cli options
+      my %options = eval "($options)";
     
-      for my $dir(q(/home/phil/perl/cpan/DataTableText/lib/Data/Table/),            # Folders we will need on [Amazon Web Services](http://aws.amazon.com)                   q(/home/phil/.aws/))
+      for my $dir(q(/home/phil/perl/cpan/DataTableText/lib/Data/Table/),            # Folders we will need on aws
+                  q(/home/phil/.aws/))
        {awsParallelSpreadFolder($dir, %options);
        }
     
-      my $d = temporaryFolder;                                                      # Create a temporary [folder](https://en.wikipedia.org/wiki/File_folder)       my $resultsFile = fpe($d, qw(results data));                                  # Save results in this temporary [file](https://en.wikipedia.org/wiki/Computer_file)     
+      my $d = temporaryFolder;                                                      # Create a temporary folder
+      my $resultsFile = fpe($d, qw(results data));                                  # Save results in this temporary file
+    
       if (my $r = execPerlOnRemote(join "
-  ",                                       # Execute some [code](https://en.wikipedia.org/wiki/Computer_program) on a [server](https://en.wikipedia.org/wiki/Server_(computing))         getCodeContext(\&awsParallelProcessFilesTestParallel),                      # Get [code](https://en.wikipedia.org/wiki/Computer_program) context of the [sub](https://perldoc.perl.org/perlsub.html) we want to call.
-        <<SESSIONLEADER))                                                           # Launch [code](https://en.wikipedia.org/wiki/Computer_program) on session leader
+  ",                                       # Execute some code on a server
+        getCodeContext(\&awsParallelProcessFilesTestParallel),                      # Get code context of the sub we want to call.
+        <<SESSIONLEADER))                                                           # Launch code on session leader
     use Data::Table::Text qw(:all);
     
     my \$r = awsParallelProcessFiles                                                # Process files on multiple L<Amazon Web Services|http://aws.amazon.com> instances in parallel
-     ({file=>4, time=>timeStamp},                                                   # User [data](https://en.wikipedia.org/wiki/Data)       \\\&Data::Table::Text::awsParallelProcessFilesTestParallel,                   # Reference to [code](https://en.wikipedia.org/wiki/Computer_program) to execute in parallel on each session instance
+     ({file=>4, time=>timeStamp},                                                   # User data
+      \\\&Data::Table::Text::awsParallelProcessFilesTestParallel,                   # Reference to code to execute in parallel on each session instance
     
-      \\\&Data::Table::Text::awsParallelProcessFilesTestResults,                    # Reference to [code](https://en.wikipedia.org/wiki/Computer_program) to execute in series to merge the results of each parallel computation  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+      \\\&Data::Table::Text::awsParallelProcessFilesTestResults,                    # Reference to code to execute in series to merge the results of each parallel computation  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-      [map {writeFile(fpe(q($d), \$_, qw(txt)), \$_)} 1..$N],                       # Files to [process](https://en.wikipedia.org/wiki/Process_management_(computing))       $options);                                                                    # Aws cli options as we will be running on Aws
+      [map {writeFile(fpe(q($d), \$_, qw(txt)), \$_)} 1..$N],                       # Files to process
+      $options);                                                                    # Aws cli options as we will be running on Aws
     
-    storeFile(q($resultsFile), \$r);                                                # Save results in a [file](https://en.wikipedia.org/wiki/Computer_file)     
+    storeFile(q($resultsFile), \$r);                                                # Save results in a file
+    
     SESSIONLEADER
     
-       {copyFileFromRemote($resultsFile);                                           # Retrieve [user](https://en.wikipedia.org/wiki/User_(computing)) [data](https://en.wikipedia.org/wiki/Data)     
-        my $userData = retrieveFile($resultsFile);                                  # Recover [user](https://en.wikipedia.org/wiki/User_(computing)) [data](https://en.wikipedia.org/wiki/Data)         my @i = awsParallelSecondaryIpAddresses(%options);                          # Ip addresses of secondary instances
-        my @I = keys $userData->{ip}->%*;
-        is_deeply [sort @i], [sort @I];                                             # Each secondary [IP address](https://en.wikipedia.org/wiki/IP_address) address was used
+       {copyFileFromRemote($resultsFile);                                           # Retrieve user data
     
-        ok $userData->{file}  == 4;                                                 # Prove we can pass [data](https://en.wikipedia.org/wiki/Data) in and get it back
+        my $userData = retrieveFile($resultsFile);                                  # Recover user data
+        my @i = awsParallelSecondaryIpAddresses(%options);                          # Ip addresses of secondary instances
+        my @I = keys $userData->{ip}->%*;
+        is_deeply [sort @i], [sort @I];                                             # Each secondary ip address was used
+    
+        ok $userData->{file}  == 4;                                                 # Prove we can pass data in and get it back
         ok $userData->{merge} == 1 + @i, 'ii';                                      # Number of merges
     
-        my %f; my %i;                                                               # Files processed on each [IP address](https://en.wikipedia.org/wiki/IP_address)         for   my $i(sort keys $userData->{ipFile}->%*)                              # Ip
+        my %f; my %i;                                                               # Files processed on each ip
+        for   my $i(sort keys $userData->{ipFile}->%*)                              # Ip
          {for my $f(sort keys $userData->{ipFile}{$i}->%*)                          # File
            {$f{fn($f)}++;                                                           # Files processed
-            $i{$i}++;                                                               # Count files on each [IP address](https://en.wikipedia.org/wiki/IP_address)            }
+            $i{$i}++;                                                               # Count files on each ip
+           }
          }
     
-        is_deeply \%f, {map {$_=>1} 1..$N};                                         # Check each [file](https://en.wikipedia.org/wiki/Computer_file) was processed
+        is_deeply \%f, {map {$_=>1} 1..$N};                                         # Check each file was processed
     
         if (1)
-         {my @rc; my @ra;                                                           # Range of number of files processed on each [IP address](https://en.wikipedia.org/wiki/IP_address) - computed, actually counted
+         {my @rc; my @ra;                                                           # Range of number of files processed on each ip - computed, actually counted
           my $l = $N/@i-1;                                                          # Lower limit of number of files per IP address
           my $h = $N/@i+1;                                                          # Upper limit of number of files per IP address
           for   my $i(keys %i)
-           {my $nc = $i{$i};                                                        # Number of files processed on this [IP address](https://en.wikipedia.org/wiki/IP_address) - computed
-            my $na = $userData->{ip}{$i};                                           # Number of files processed on this [IP address](https://en.wikipedia.org/wiki/IP_address) - actually counted
+           {my $nc = $i{$i};                                                        # Number of files processed on this ip - computed
+            my $na = $userData->{ip}{$i};                                           # Number of files processed on this ip - actually counted
             push @rc, ($nc >= $l and $nc <= $h) ? 1 : 0;                            # 1 - in range, 0 - out of range
             push @ra, ($na >= $l and $na <= $h) ? 1 : 0;                            # 1 - in range, 0 - out of range
            }
-          ok @i == [grep](https://en.wikipedia.org/wiki/Grep) {$_} @ra;                                                   # Check each [IP address](https://en.wikipedia.org/wiki/IP_address) processed the expected number of files
-          ok @i == [grep](https://en.wikipedia.org/wiki/Grep) {$_} @rc;
+          ok @i == grep {$_} @ra;                                                   # Check each ip processed the expected number of files
+          ok @i == grep {$_} @rc;
          }
     
-        ok $userData->{files}{&fpe($d, qw(4 txt))} eq                               # Check the computed MD5 sum for the specified [file](https://en.wikipedia.org/wiki/Computer_file)            q(a87ff679a2f3e71d9181a67b7542122c);
+        ok $userData->{files}{&fpe($d, qw(4 txt))} eq                               # Check the computed MD5 sum for the specified file
+           q(a87ff679a2f3e71d9181a67b7542122c);
        }
     
 
@@ -10383,14 +10895,14 @@ Return an S3 --delete keyword from an S3 option set.
 
 ## fpgaGowin   (%options)
 
-Compile [Verilog](https://en.wikipedia.org/wiki/Verilog) to a gowin device.
+Compile verilog to a gowin device.
 
        Parameter  Description
     1  %options   Parameters
 
 ## Data::Table::Text::Starter::logEntry($starter, $finish)
 
-Create a [log](https://en.wikipedia.org/wiki/Log_file) entry showing progress and eta.
+Create a log entry showing progress and eta.
 
        Parameter  Description
     1  $starter   Starter
@@ -10398,37 +10910,44 @@ Create a [log](https://en.wikipedia.org/wiki/Log_file) entry showing progress an
 
 ## Data::Table::Text::Starter::averageProcessTime  ($starter)
 
-Average elapsed time spent by each [process](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+Average elapsed time spent by each process.
+
        Parameter  Description
     1  $starter   Starter
 
 ## Data::Table::Text::Starter::say ($starter, @message)
 
-Write to the [log](https://en.wikipedia.org/wiki/Log_file) [file](https://en.wikipedia.org/wiki/Computer_file) if it is available.
+Write to the log file if it is available.
 
        Parameter  Description
     1  $starter   Starter
-    2  @message   Text to [write](https://en.wikipedia.org/wiki/Write_(system_call)) to [log](https://en.wikipedia.org/wiki/Log_file) [file](https://en.wikipedia.org/wiki/Computer_file). 
+    2  @message   Text to write to log file.
+
 ## Data::Table::Text::Starter::waitOne ($starter)
 
-Wait for at least one [process](https://en.wikipedia.org/wiki/Process_management_(computing)) to finish and consolidate its results.
+Wait for at least one process to finish and consolidate its results.
 
        Parameter  Description
     1  $starter   Starter
 
 ## countSquareArray(@square)
 
-Count the number of elements in a square [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+Count the number of elements in a square array.
+
        Parameter  Description
-    1  @square    Array of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) 
+    1  @square    Array of arrays
+
 ## processSizesInParallelN ($N, $parallel, $results, @sizes)
 
-Process items of known size in parallel using the specified number **$N** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each [file](https://en.wikipedia.org/wiki/Computer_file) is assigned to depending on the size of the [file](https://en.wikipedia.org/wiki/Computer_file) so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+Process items of known size in parallel using the specified number **$N** processes with the process each file is assigned to depending on the size of the file so that each process is loaded with approximately the same number of bytes of data in total from the files it processes. 
 
-Each [file](https://en.wikipedia.org/wiki/Computer_file) is processed by [sub](https://perldoc.perl.org/perlsub.html) **$parallel** and the results of processing all files is processed by **$results** where the files are taken from **@files**. Each **&$parallel** receives a [file](https://en.wikipedia.org/wiki/Computer_file) from **@files**. **&$results** receives an [array](https://en.wikipedia.org/wiki/Dynamic_array) of all the results returned by **&$parallel**.
+Each file is processed by sub **$parallel** and the results of processing all files is processed by **$results** where the files are taken from **@files**. Each **&$parallel** receives a file from **@files**. **&$results** receives an array of all the results returned by **&$parallel**.
 
        Parameter  Description
-    1  $N         Number of [processes](https://en.wikipedia.org/wiki/Process_management_(computing))     2  $parallel  Parallel [sub](https://perldoc.perl.org/perlsub.html)     3  $results   Results [sub](https://perldoc.perl.org/perlsub.html)     4  @sizes     Array of [size; item] to [process](https://en.wikipedia.org/wiki/Process_management_(computing)) by size
+    1  $N         Number of processes
+    2  $parallel  Parallel sub
+    3  $results   Results sub
+    4  @sizes     Array of [size; item] to process by size
 
 ## wellKnownUrls   ()
 
@@ -10447,115 +10966,134 @@ Spell checker
 Contract references to well known Urls to their abbreviated form.
 
        Parameter  Description
-    1  $string    Source [string](https://en.wikipedia.org/wiki/String_(computer_science)) 
+    1  $string    Source string
+
 ## expandWellKnownWordsInMarkDownFile  ($s, $t)
 
-Expand well known words in a mark down [file](https://en.wikipedia.org/wiki/Computer_file). 
+Expand well known words in a mark down file.
+
        Parameter  Description
-    1  $s         Source [file](https://en.wikipedia.org/wiki/Computer_file)     2  $t         Target [file](https://en.wikipedia.org/wiki/Computer_file) 
+    1  $s         Source file
+    2  $t         Target file
+
 ## formatSourcePodAsHtml   ()
 
-Format the [POD](https://perldoc.perl.org/perlpod.html) in the current source [file](https://en.wikipedia.org/wiki/Computer_file) as [HTML](https://en.wikipedia.org/wiki/HTML).
+Format the [POD](https://perldoc.perl.org/perlpod.html) in the current source file as [HTML](https://en.wikipedia.org/wiki/HTML).
 
 ## extractTest ($string)
 
-Remove example markers from [test](https://en.wikipedia.org/wiki/Software_testing) [code](https://en.wikipedia.org/wiki/Computer_program). 
+Remove example markers from test code.
+
        Parameter  Description
-    1  $string    String containing [test](https://en.wikipedia.org/wiki/Software_testing) line
+    1  $string    String containing test line
 
 ## docUserFlags($flags, $perlModule, $package, $name)
 
-Generate [documentation](https://en.wikipedia.org/wiki/Software_documentation) for a method by calling the extractDocumentationFlags method in the package being documented, passing it the flags for a method and the name of the method. The called method should return the [documentation](https://en.wikipedia.org/wiki/Software_documentation) to be inserted for the named method.
+Generate documentation for a method by calling the extractDocumentationFlags method in the package being documented, passing it the flags for a method and the name of the method. The called method should return the documentation to be inserted for the named method.
 
        Parameter    Description
     1  $flags       Flags
-    2  $perlModule  File containing [documentation](https://en.wikipedia.org/wiki/Software_documentation)     3  $package     Package containing [documentation](https://en.wikipedia.org/wiki/Software_documentation)     4  $name        Name of method to be processed
+    2  $perlModule  File containing documentation
+    3  $package     Package containing documentation
+    4  $name        Name of method to be processed
 
 ## updatePerlModuleDocumentation   ($perlModule)
 
-Update the [documentation](https://en.wikipedia.org/wiki/Software_documentation) in a **$perlModule** and display said [documentation](https://en.wikipedia.org/wiki/Software_documentation) in a web [web browser](https://en.wikipedia.org/wiki/Web_browser). 
+Update the documentation in a **$perlModule** and display said documentation in a web browser.
+
        Parameter    Description
-    1  $perlModule  File containing the [code](https://en.wikipedia.org/wiki/Computer_program) of the [Perl](http://www.perl.org/) [module](https://en.wikipedia.org/wiki/Modular_programming) 
+    1  $perlModule  File containing the code of the perl module
+
 ## extractPythonDocumentationFromFiles (@sources)
 
-Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.org/wiki/Software_documentation) from the specified files.
+Extract python documentation from the specified files.
 
        Parameter  Description
     1  @sources   Python source files
 
 # Synonyms
 
-**fpd** is a synonym for [filePathDir](#filepathdir) - Create a [folder](https://en.wikipedia.org/wiki/File_folder) name from a [list](https://en.wikipedia.org/wiki/Linked_list) of  names.
+**fpd** is a synonym for [filePathDir](#filepathdir) - Create a folder name from a list of  names.
 
-**fpe** is a synonym for [filePathExt](#filepathext) - Create a [file](https://en.wikipedia.org/wiki/Computer_file) name from a [list](https://en.wikipedia.org/wiki/Linked_list) of  names the last of which is assumed to be the extension of the [file](https://en.wikipedia.org/wiki/Computer_file) name.
+**fpe** is a synonym for [filePathExt](#filepathext) - Create a file name from a list of  names the last of which is assumed to be the extension of the file name.
 
-**fpf** is a synonym for [filePath](#filepath) - Create a [file](https://en.wikipedia.org/wiki/Computer_file) name from a [list](https://en.wikipedia.org/wiki/Linked_list) of  names.
+**fpf** is a synonym for [filePath](#filepath) - Create a file name from a list of  names.
 
 **owf** is a synonym for [overWriteFile](#overwritefile) - Write to a **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-**temporaryDirectory** is a synonym for [temporaryFolder](#temporaryfolder) - Create a new, empty, temporary [folder](https://en.wikipedia.org/wiki/File_folder). 
+**temporaryDirectory** is a synonym for [temporaryFolder](#temporaryfolder) - Create a new, empty, temporary folder.
+
 # Index
 
-1 [absFile](#absfile) - Return the name of the given [file](https://en.wikipedia.org/wiki/Computer_file) if it a fully qualified [file](https://en.wikipedia.org/wiki/Computer_file) name else returns **undef**.
+1 [absFile](#absfile) - Return the name of the given file if it a fully qualified file name else returns **undef**.
 
-2 [absFromAbsPlusRel](#absfromabsplusrel) - Absolute [file](https://en.wikipedia.org/wiki/Computer_file) from an absolute [file](https://en.wikipedia.org/wiki/Computer_file) **$a** plus a relative [file](https://en.wikipedia.org/wiki/Computer_file) **$r**.
+2 [absFromAbsPlusRel](#absfromabsplusrel) - Absolute file from an absolute file **$a** plus a relative file **$r**.
 
-3 [addCertificate](#addcertificate) - Add a certificate to the current [Secure Shell](https://www.ssh.com/ssh) session.
+3 [addCertificate](#addcertificate) - Add a certificate to the current ssh session.
 
 4 [addLValueScalarMethods](#addlvaluescalarmethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) scalar methods in the current package if they do not already exist.
 
 5 [appendFile](#appendfile) - Append to **$file** a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded with [utf8](https://en.wikipedia.org/wiki/UTF-8), creating the $file first if necessary.
 
-6 [arrayProduct](#arrayproduct) - Find the product of any [strings](https://en.wikipedia.org/wiki/String_(computer_science)) that look like numbers in an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-7 [arraySum](#arraysum) - Find the sum of any [strings](https://en.wikipedia.org/wiki/String_(computer_science)) that look like numbers in an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-8 [arrayTimes](#arraytimes) - Multiply by **$multiplier** each element of the [array](https://en.wikipedia.org/wiki/Dynamic_array) **@a** and return as the result.
+6 [arrayProduct](#arrayproduct) - Find the product of any strings that look like numbers in an array.
 
-9 [arrayToHash](#arraytohash) - Create a [hash](https://en.wikipedia.org/wiki/Hash_table) reference from an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-10 [asciiToHexString](#asciitohexstring) - Encode an [Ascii](https://en.wikipedia.org/wiki/ASCII) [string](https://en.wikipedia.org/wiki/String_(computer_science)) as a [string](https://en.wikipedia.org/wiki/String_(computer_science)) of [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits.
+7 [arraySum](#arraysum) - Find the sum of any strings that look like numbers in an array.
+
+8 [arrayTimes](#arraytimes) - Multiply by **$multiplier** each element of the array **@a** and return as the result.
+
+9 [arrayToHash](#arraytohash) - Create a hash reference from an array.
+
+10 [asciiToHexString](#asciitohexstring) - Encode an [Ascii](https://en.wikipedia.org/wiki/ASCII) string as a string of [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits.
 
 11 [assertPackageRefs](#assertpackagerefs) - Confirm that the specified references are to the specified package.
 
 12 [assertRef](#assertref) - Confirm that the specified references are to the package into which this routine has been exported.
 
-13 [awsCurrentAvailabilityZone](#awscurrentavailabilityzone) - Get the availability zone of the [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-14 [awsCurrentInstanceId](#awscurrentinstanceid) - Get the instance id of the [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-15 [awsCurrentInstanceType](#awscurrentinstancetype) - Get the instance type of the [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-16 [awsCurrentIp](#awscurrentip) - Get the [IP address](https://en.wikipedia.org/wiki/IP_address) address of the AWS [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-17 [awsCurrentLinuxSpotPrices](#awscurrentlinuxspotprices) - Return {instance type} = cheapest [spot](https://aws.amazon.com/ec2/spot/) price in dollars per hour for the given region.
+13 [awsCurrentAvailabilityZone](#awscurrentavailabilityzone) - Get the availability zone of the [Amazon Web Services](http://aws.amazon.com) server we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
 
-18 [awsCurrentRegion](#awscurrentregion) - Get the region of the [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-19 [awsEc2CreateImage](#awsec2createimage) - Create an image snap shot with the specified **$name** of the AWS [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an AWS [server](https://en.wikipedia.org/wiki/Server_(computing)) else return false.
+14 [awsCurrentInstanceId](#awscurrentinstanceid) - Get the instance id of the [Amazon Web Services](http://aws.amazon.com) server we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
+
+15 [awsCurrentInstanceType](#awscurrentinstancetype) - Get the instance type of the [Amazon Web Services](http://aws.amazon.com) server if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
+
+16 [awsCurrentIp](#awscurrentip) - Get the ip address of the AWS server we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
+
+17 [awsCurrentLinuxSpotPrices](#awscurrentlinuxspotprices) - Return {instance type} = cheapest spot price in dollars per hour for the given region.
+
+18 [awsCurrentRegion](#awscurrentregion) - Get the region of the [Amazon Web Services](http://aws.amazon.com) server we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
+
+19 [awsEc2CreateImage](#awsec2createimage) - Create an image snap shot with the specified **$name** of the AWS server we are currently running on if we are running on an AWS server else return false.
 
 20 [awsEc2DescribeImages](#awsec2describeimages) - Describe images available.
 
 21 [awsEc2DescribeInstances](#awsec2describeinstances) - Describe the [Amazon Web Services](http://aws.amazon.com) instances running in a **$region**.
 
-22 [awsEc2DescribeInstancesGetIPAddresses](#awsec2describeinstancesgetipaddresses) - Return a [hash](https://en.wikipedia.org/wiki/Hash_table) of {instanceId => public [IP address](https://en.wikipedia.org/wiki/IP_address) address} for all running instances on [Amazon Web Services](http://aws.amazon.com) with [IP address](https://en.wikipedia.org/wiki/IP_address) addresses.
+22 [awsEc2DescribeInstancesGetIPAddresses](#awsec2describeinstancesgetipaddresses) - Return a hash of {instanceId => public ip address} for all running instances on [Amazon Web Services](http://aws.amazon.com) with ip addresses.
 
 23 [awsEc2DescribeInstanceType](#awsec2describeinstancetype) - Return details of the specified instance type.
 
-24 [awsEc2DescribeSpotInstances](#awsec2describespotinstances) - Return a [hash](https://en.wikipedia.org/wiki/Hash_table) {spot instance request => [spot](https://aws.amazon.com/ec2/spot/) instance details} describing the status of active [spot](https://aws.amazon.com/ec2/spot/) instances.
+24 [awsEc2DescribeSpotInstances](#awsec2describespotinstances) - Return a hash {spot instance request => spot instance details} describing the status of active spot instances.
 
 25 [awsEc2FindImagesWithTagValue](#awsec2findimageswithtagvalue) - Find images with a tag that matches the specified regular expression **$value**.
 
 26 [awsEc2InstanceIpAddress](#awsec2instanceipaddress) - Return the IP address of a named instance on [Amazon Web Services](http://aws.amazon.com) else return **undef**.
 
-27 [awsEc2ReportSpotInstancePrices](#awsec2reportspotinstanceprices) - Report the prices of all the [spot](https://aws.amazon.com/ec2/spot/) instances whose type matches a regular expression **$instanceTypeRe**.
+27 [awsEc2ReportSpotInstancePrices](#awsec2reportspotinstanceprices) - Report the prices of all the spot instances whose type matches a regular expression **$instanceTypeRe**.
 
-28 [awsEc2RequestSpotInstances](#awsec2requestspotinstances) - Request [spot](https://aws.amazon.com/ec2/spot/) instances as long as they can be started within the next minute.
+28 [awsEc2RequestSpotInstances](#awsec2requestspotinstances) - Request spot instances as long as they can be started within the next minute.
 
 29 [awsEc2Tag](#awsec2tag) - Tag an elastic compute resource with the supplied tags.
 
 30 [awsExecCli](#awsexeccli) - Execute an AWs command and return its response.
 
-31 [awsExecCliJson](#awsexecclijson) - Execute an AWs command and decode the [Json](https://en.wikipedia.org/wiki/JSON) so produced.
+31 [awsExecCliJson](#awsexecclijson) - Execute an AWs command and decode the json so produced.
 
 32 [awsInstanceId](#awsinstanceid) - Create an instance-id from the specified **%options**.
 
-33 [awsIp](#awsip) - Get [IP address](https://en.wikipedia.org/wiki/IP_address) address of [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon Web Services](http://aws.amazon.com).
+33 [awsIp](#awsip) - Get ip address of server at [Amazon Web Services](http://aws.amazon.com).
 
-34 [awsMetaData](#awsmetadata) - Get an item of meta [data](https://en.wikipedia.org/wiki/Data) for the [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) [server](https://en.wikipedia.org/wiki/Server_(computing)) else return a blank [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-35 [awsParallelGatherFolder](#awsparallelgatherfolder) - On [Amazon Web Services](http://aws.amazon.com): merges all the files in the specified **$folder** on each secondary instance to the corresponding [folder](https://en.wikipedia.org/wiki/File_folder) on the primary instance in parallel.
+34 [awsMetaData](#awsmetadata) - Get an item of meta data for the [Amazon Web Services](http://aws.amazon.com) server we are currently running on if we are running on an [Amazon Web Services](http://aws.amazon.com) server else return a blank string.
+
+35 [awsParallelGatherFolder](#awsparallelgatherfolder) - On [Amazon Web Services](http://aws.amazon.com): merges all the files in the specified **$folder** on each secondary instance to the corresponding folder on the primary instance in parallel.
 
 36 [awsParallelIpAddresses](#awsparallelipaddresses) - Return the IP addresses of all the [Amazon Web Services](http://aws.amazon.com) session instances.
 
@@ -10569,103 +11107,115 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 41 [awsParallelProcessFilesTestResults](#awsparallelprocessfilestestresults) - Test results of running on [Amazon Web Services](http://aws.amazon.com) in parallel.
 
-42 [awsParallelSecondaryIpAddresses](#awsparallelsecondaryipaddresses) - Return a [list](https://en.wikipedia.org/wiki/Linked_list) containing the IP addresses of any secondary instances on [Amazon Web Services](http://aws.amazon.com).
+42 [awsParallelSecondaryIpAddresses](#awsparallelsecondaryipaddresses) - Return a list containing the IP addresses of any secondary instances on [Amazon Web Services](http://aws.amazon.com).
 
 43 [awsParallelSpreadFolder](#awsparallelspreadfolder) - On [Amazon Web Services](http://aws.amazon.com): copies a specified **$folder** from the primary instance, see: [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), in parallel, to all the secondary instances in the session.
 
 44 [awsProfile](#awsprofile) - Create a profile keyword from the specified **%options**.
 
-45 [awsR53a](#awsr53a) - Create/Update a **A** [Domain Name System](https://en.wikipedia.org/wiki/Domain_Name_System) record for the specified [server](https://en.wikipedia.org/wiki/Server_(computing)). 
-46 [awsR53aaaa](#awsr53aaaa) - Create/Update a **AAAA** [Domain Name System](https://en.wikipedia.org/wiki/Domain_Name_System) record for the specified [server](https://en.wikipedia.org/wiki/Server_(computing)). 
+45 [awsR53a](#awsr53a) - Create/Update a **A** [Domain Name System](https://en.wikipedia.org/wiki/Domain_Name_System) record for the specified server.
+
+46 [awsR53aaaa](#awsr53aaaa) - Create/Update a **AAAA** [Domain Name System](https://en.wikipedia.org/wiki/Domain_Name_System) record for the specified server.
+
 47 [awsRegion](#awsregion) - Create a region keyword from the specified **%options**.
 
-48 [awsTranslateText](#awstranslatetext) - Translate **$text** from English to a specified **$language** using AWS Translate with the specified global **$options** and return the translated [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-49 [binModeAllUtf8](#binmodeallutf8) - Set STDOUT and STDERR to accept [utf8](https://en.wikipedia.org/wiki/UTF-8) without complaint.
+48 [awsTranslateText](#awstranslatetext) - Translate **$text** from English to a specified **$language** using AWS Translate with the specified global **$options** and return the translated string.
 
-50 [boldString](#boldstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to bold.
+49 [binModeAllUtf8](#binmodeallutf8) - Set STDOUT and STDERR to accept utf8 without complaint.
 
-51 [boldStringUndo](#boldstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to bold.
+50 [boldString](#boldstring) - Convert alphanumerics in a string to bold.
 
-52 [call](#call) - Call the specified **$sub** in a separate child [process](https://en.wikipedia.org/wiki/Process_management_(computing)), wait for it to complete, then copy back the named **@our** variables from the child [process](https://en.wikipedia.org/wiki/Process_management_(computing)) to the calling parent [process](https://en.wikipedia.org/wiki/Process_management_(computing)) effectively freeing any [memory](https://en.wikipedia.org/wiki/Computer_memory) used during the call.
+51 [boldStringUndo](#boldstringundo) - Undo alphanumerics in a string to bold.
 
-53 [callSubInOverlappedParallel](#callsubinoverlappedparallel) - Call the **$child** [sub](https://perldoc.perl.org/perlsub.html) reference in parallel in a separate child [process](https://en.wikipedia.org/wiki/Process_management_(computing)) and ignore its results while calling the **$parent** [sub](https://perldoc.perl.org/perlsub.html) reference in the parent [process](https://en.wikipedia.org/wiki/Process_management_(computing)) and returning its results.
+52 [call](#call) - Call the specified **$sub** in a separate child process, wait for it to complete, then copy back the named **@our** variables from the child process to the calling parent process effectively freeing any memory used during the call.
 
-54 [callSubInParallel](#callsubinparallel) - Call a [sub](https://perldoc.perl.org/perlsub.html) reference in parallel to avoid [memory](https://en.wikipedia.org/wiki/Computer_memory) fragmentation and return its results.
+53 [callSubInOverlappedParallel](#callsubinoverlappedparallel) - Call the **$child** sub reference in parallel in a separate child process and ignore its results while calling the **$parent** sub reference in the parent process and returning its results.
 
-55 [checkFile](#checkfile) - Return the name of the specified [file](https://en.wikipedia.org/wiki/Computer_file) if it exists, else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) the maximum extent of the path that does exist.
+54 [callSubInParallel](#callsubinparallel) - Call a sub reference in parallel to avoid memory fragmentation and return its results.
+
+55 [checkFile](#checkfile) - Return the name of the specified file if it exists, else confess the maximum extent of the path that does exist.
 
 56 [checkKeys](#checkkeys) - Check the keys in a **hash** confirm to those **$permitted**.
 
-57 [childPids](#childpids) - Recursively [find](https://en.wikipedia.org/wiki/Find_(Unix)) the pids of all the [sub](https://perldoc.perl.org/perlsub.html) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) of a **$process** and all their [sub](https://perldoc.perl.org/perlsub.html) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) and so on returning the specified pid and all its child pids as a [list](https://en.wikipedia.org/wiki/Linked_list). 
-58 [chooseStringAtRandom](#choosestringatrandom) - Choose a [string](https://en.wikipedia.org/wiki/String_(computer_science)) at random from the [list](https://en.wikipedia.org/wiki/Linked_list) of **@strings** supplied.
+57 [childPids](#childpids) - Recursively find the pids of all the sub processes of a **$process** and all their sub processes and so on returning the specified pid and all its child pids as a list.
+
+58 [chooseStringAtRandom](#choosestringatrandom) - Choose a string at random from the list of **@strings** supplied.
 
 59 [clearFolder](#clearfolder) - Remove all the files and folders under and including the specified **$folder** as long as the number of files to be removed is less than the specified **$limitCount**.
 
-60 [cmpArrays](#cmparrays) - Compare two [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)). 
-61 [compareArraysAndExplain](#comparearraysandexplain) - Compare two [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and provide an explanation as to why they differ if they differ or [undef](https://perldoc.perl.org/functions/undef.html) if they do not.
+60 [cmpArrays](#cmparrays) - Compare two arrays of strings.
+
+61 [compareArraysAndExplain](#comparearraysandexplain) - Compare two arrays of strings and provide an explanation as to why they differ if they differ or undef if they do not.
 
 62 [confirmHasCommandLineCommand](#confirmhascommandlinecommand) - Check that the specified b&lt;$cmd> is present on the current system.
 
-63 [containingFolderName](#containingfoldername) - The name of a [folder](https://en.wikipedia.org/wiki/File_folder) containing a [file](https://en.wikipedia.org/wiki/Computer_file). 
-64 [containingPowerOfTwo](#containingpoweroftwo) - Find [log](https://en.wikipedia.org/wiki/Log_file) two of the lowest power of two greater than or equal to a number **$n**.
+63 [containingFolderName](#containingfoldername) - The name of a folder containing a file.
+
+64 [containingPowerOfTwo](#containingpoweroftwo) - Find log two of the lowest power of two greater than or equal to a number **$n**.
 
 65 [contains](#contains) - Returns the indices at which an **$item** matches elements of the specified **@array**.
 
-66 [convertDocxToFodt](#convertdocxtofodt) - Convert a _docx_ **$inputFile** [file](https://en.wikipedia.org/wiki/Computer_file) to a _fodt_ **$outputFile** using **unoconv** which must not be running elsewhere at the time.
+66 [convertDocxToFodt](#convertdocxtofodt) - Convert a _docx_ **$inputFile** file to a _fodt_ **$outputFile** using **unoconv** which must not be running elsewhere at the time.
 
 67 [convertImageToJpx](#convertimagetojpx) - Convert a **$source** image to a **$target** image in jpx format.
 
-68 [convertImageToJpx690](#convertimagetojpx690) - Convert a **$source** image to a **$target** image in jpx format using versions of [Imagemagick](https://www.imagemagick.org/script/index.php) [version](https://en.wikipedia.org/wiki/Software_versioning) 6.
+68 [convertImageToJpx690](#convertimagetojpx690) - Convert a **$source** image to a **$target** image in jpx format using versions of [Imagemagick](https://www.imagemagick.org/script/index.php) version 6.
 
 69 [convertPerlToJavaScript](#convertperltojavascript) - Convert Perl to Javascript.
 
-70 [convertUnicodeToXml](#convertunicodetoxml) - Convert a **$string** with [Unicode](https://en.wikipedia.org/wiki/Unicode) [code](https://en.wikipedia.org/wiki/Computer_program) points that are not directly representable in [Ascii](https://en.wikipedia.org/wiki/ASCII) into [string](https://en.wikipedia.org/wiki/String_(computer_science)) that replaces these [code](https://en.wikipedia.org/wiki/Computer_program) points with their representation in [Xml](https://en.wikipedia.org/wiki/XML) making the [string](https://en.wikipedia.org/wiki/String_(computer_science)) usable in [Xml](https://en.wikipedia.org/wiki/XML) documents.
+70 [convertUnicodeToXml](#convertunicodetoxml) - Convert a **$string** with [Unicode](https://en.wikipedia.org/wiki/Unicode) code points that are not directly representable in [Ascii](https://en.wikipedia.org/wiki/ASCII) into string that replaces these code points with their representation in [Xml](https://en.wikipedia.org/wiki/XML) making the string usable in [Xml](https://en.wikipedia.org/wiki/XML) documents.
 
-71 [convertUtf32ToUtf8](#convertutf32toutf8) - Convert a number representing a single [Unicode](https://en.wikipedia.org/wiki/Unicode) point coded in utf32 to [utf8](https://en.wikipedia.org/wiki/UTF-8) big endian.
+71 [convertUtf32ToUtf8](#convertutf32toutf8) - Convert a number representing a single unicode point coded in utf32 to utf8 big endian.
 
-72 [convertUtf32ToUtf8LE](#convertutf32toutf8le) - Convert a number representing a single [Unicode](https://en.wikipedia.org/wiki/Unicode) point coded in utf32 to [utf8](https://en.wikipedia.org/wiki/UTF-8) little endian.
+72 [convertUtf32ToUtf8LE](#convertutf32toutf8le) - Convert a number representing a single unicode point coded in utf32 to utf8 little endian.
 
-73 [convertUtf8ToUtf32](#convertutf8toutf32) - Convert a number representing a single [Unicode](https://en.wikipedia.org/wiki/Unicode) point coded in [utf8](https://en.wikipedia.org/wiki/UTF-8) to utf32.
+73 [convertUtf8ToUtf32](#convertutf8toutf32) - Convert a number representing a single unicode point coded in utf8 to utf32.
 
-74 [copyBinaryFile](#copybinaryfile) - Copy the binary [file](https://en.wikipedia.org/wiki/Computer_file) **$source** to a [file](https://en.wikipedia.org/wiki/Computer_file) named <%target> and return the target [file](https://en.wikipedia.org/wiki/Computer_file) name,.
+74 [copyBinaryFile](#copybinaryfile) - Copy the binary file **$source** to a file named <%target> and return the target file name,.
 
-75 [copyFile](#copyfile) - Copy the **$source** [file](https://en.wikipedia.org/wiki/Computer_file) encoded in [utf8](https://en.wikipedia.org/wiki/UTF-8) to the specified **$target** [file](https://en.wikipedia.org/wiki/Computer_file) in and return $target.
+75 [copyFile](#copyfile) - Copy the **$source** file encoded in utf8 to the specified **$target** file in and return $target.
 
-76 [copyFileFromRemote](#copyfilefromremote) - Copy the specified **$file** from the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+76 [copyFileFromRemote](#copyfilefromremote) - Copy the specified **$file** from the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-77 [copyFileToFolder](#copyfiletofolder) - Copy the [file](https://en.wikipedia.org/wiki/Computer_file) named in **$source** to the specified **$targetFolder/** or if $targetFolder/ is in fact a [file](https://en.wikipedia.org/wiki/Computer_file) into the [folder](https://en.wikipedia.org/wiki/File_folder) containing this [file](https://en.wikipedia.org/wiki/Computer_file) and return the target [file](https://en.wikipedia.org/wiki/Computer_file) name.
+77 [copyFileToFolder](#copyfiletofolder) - Copy the file named in **$source** to the specified **$targetFolder/** or if $targetFolder/ is in fact a file into the folder containing this file and return the target file name.
 
-78 [copyFileToRemote](#copyfiletoremote) - Copy the specified local **$file** to the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+78 [copyFileToRemote](#copyfiletoremote) - Copy the specified local **$file** to the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-79 [copyFolder](#copyfolder) - Copy the **$source** [folder](https://en.wikipedia.org/wiki/File_folder) to the **$target** [folder](https://en.wikipedia.org/wiki/File_folder) after clearing the $target [folder](https://en.wikipedia.org/wiki/File_folder). 
-80 [copyFolderToRemote](#copyfoldertoremote) - Copy the specified local **$Source** [folder](https://en.wikipedia.org/wiki/File_folder) to the corresponding remote [folder](https://en.wikipedia.org/wiki/File_folder) on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+79 [copyFolder](#copyfolder) - Copy the **$source** folder to the **$target** folder after clearing the $target folder.
 
-81 [countFileExtensions](#countfileextensions) - Return a [hash](https://en.wikipedia.org/wiki/Hash_table) which counts the [file](https://en.wikipedia.org/wiki/Computer_file) [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions) in and below the folders in the specified [list](https://en.wikipedia.org/wiki/Linked_list). 
-82 [countFileTypes](#countfiletypes) - Return a [hash](https://en.wikipedia.org/wiki/Hash_table) which counts, in parallel with a maximum number of [processes](https://en.wikipedia.org/wiki/Process_management_(computing)): **$maximumNumberOfProcesses**, the results of applying the **file** command to each [file](https://en.wikipedia.org/wiki/Computer_file) in and under the specified **@folders**.
+80 [copyFolderToRemote](#copyfoldertoremote) - Copy the specified local **$Source** folder to the corresponding remote folder on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+
+81 [countFileExtensions](#countfileextensions) - Return a hash which counts the file extensions in and below the folders in the specified list.
+
+82 [countFileTypes](#countfiletypes) - Return a hash which counts, in parallel with a maximum number of processes: **$maximumNumberOfProcesses**, the results of applying the **file** command to each file in and under the specified **@folders**.
 
 83 [countOccurencesInString](#countoccurencesinstring) - Returns the number of occurrences in **$inString** of **$searchFor**.
 
-84 [countSquareArray](#countsquarearray) - Count the number of elements in a square [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-85 [createEmptyFile](#createemptyfile) - Create an empty [file](https://en.wikipedia.org/wiki/Computer_file) unless the [file](https://en.wikipedia.org/wiki/Computer_file) already exists and return the name of the [file](https://en.wikipedia.org/wiki/Computer_file) else [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if the [file](https://en.wikipedia.org/wiki/Computer_file) cannot be created.
+84 [countSquareArray](#countsquarearray) - Count the number of elements in a square array.
+
+85 [createEmptyFile](#createemptyfile) - Create an empty file unless the file already exists and return the name of the file else confess if the file cannot be created.
 
 86 [currentDirectory](#currentdirectory) - Get the current working directory.
 
-87 [currentDirectoryAbove](#currentdirectoryabove) - Get the path to the [folder](https://en.wikipedia.org/wiki/File_folder) above the current working [folder](https://en.wikipedia.org/wiki/File_folder). 
-88 [cutOutImagesInFodtFile](#cutoutimagesinfodtfile) - Cut out the images embedded in a **fodt** [file](https://en.wikipedia.org/wiki/Computer_file), perhaps produced via [convertDocxToFodt](#convertdocxtofodt), placing them in the specified [folder](https://en.wikipedia.org/wiki/File_folder) and replacing them in the source [file](https://en.wikipedia.org/wiki/Computer_file) with:
+87 [currentDirectoryAbove](#currentdirectoryabove) - Get the path to the folder above the current working folder.
+
+88 [cutOutImagesInFodtFile](#cutoutimagesinfodtfile) - Cut out the images embedded in a **fodt** file, perhaps produced via [convertDocxToFodt](#convertdocxtofodt), placing them in the specified folder and replacing them in the source file with:
 
     <image href="$imageFile" outputclass="imageType">.
 
 89 [Data::Exchange::Service::check](#data-exchange-service-check) - Check that we are the current incarnation of the named service with details obtained from [newServiceIncarnation](#newserviceincarnation).
 
-90 [Data::Table::Text::Starter::averageProcessTime](#data-table-text-starter-averageprocesstime) - Average elapsed time spent by each [process](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-91 [Data::Table::Text::Starter::finish](#data-table-text-starter-finish) - Wait for all started [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to finish and return their results as an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-92 [Data::Table::Text::Starter::logEntry](#data-table-text-starter-logentry) - Create a [log](https://en.wikipedia.org/wiki/Log_file) entry showing progress and eta.
+90 [Data::Table::Text::Starter::averageProcessTime](#data-table-text-starter-averageprocesstime) - Average elapsed time spent by each process.
 
-93 [Data::Table::Text::Starter::say](#data-table-text-starter-say) - Write to the [log](https://en.wikipedia.org/wiki/Log_file) [file](https://en.wikipedia.org/wiki/Computer_file) if it is available.
+91 [Data::Table::Text::Starter::finish](#data-table-text-starter-finish) - Wait for all started processes to finish and return their results as an array.
 
-94 [Data::Table::Text::Starter::start](#data-table-text-starter-start) - Start a new [process](https://en.wikipedia.org/wiki/Process_management_(computing)) to run the specified **$sub**.
+92 [Data::Table::Text::Starter::logEntry](#data-table-text-starter-logentry) - Create a log entry showing progress and eta.
 
-95 [Data::Table::Text::Starter::waitOne](#data-table-text-starter-waitone) - Wait for at least one [process](https://en.wikipedia.org/wiki/Process_management_(computing)) to finish and consolidate its results.
+93 [Data::Table::Text::Starter::say](#data-table-text-starter-say) - Write to the log file if it is available.
+
+94 [Data::Table::Text::Starter::start](#data-table-text-starter-start) - Start a new process to run the specified **$sub**.
+
+95 [Data::Table::Text::Starter::waitOne](#data-table-text-starter-waitone) - Wait for at least one process to finish and consolidate its results.
 
 96 [dateStamp](#datestamp) - Year-monthName-day.
 
@@ -10673,88 +11223,100 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 98 [dateTimeStampName](#datetimestampname) - Date time stamp without white space.
 
-99 [ddd](#ddd) - Dump [data](https://en.wikipedia.org/wiki/Data). 
+99 [ddd](#ddd) - Dump data.
+
 100 [decodeBase64](#decodebase64) - Decode an [Ascii](https://en.wikipedia.org/wiki/ASCII) **$string** in base 64.
 
-101 [decodeJson](#decodejson) - Convert a [Json](https://en.wikipedia.org/wiki/JSON) **$string** to a [Perl](http://www.perl.org/) [data](https://en.wikipedia.org/wiki/Data) structure.
+101 [decodeJson](#decodejson) - Convert a [Json](https://en.wikipedia.org/wiki/JSON) **$string** to a [Perl](http://www.perl.org/) data structure.
 
-102 [deduplicateSequentialWordsInString](#deduplicatesequentialwordsinstring) - Remove sequentially duplicate words in a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-103 [denormalizeFolderName](#denormalizefoldername) - Remove any trailing [folder](https://en.wikipedia.org/wiki/File_folder) separator from a [folder](https://en.wikipedia.org/wiki/File_folder) name.
+102 [deduplicateSequentialWordsInString](#deduplicatesequentialwordsinstring) - Remove sequentially duplicate words in a string.
 
-104 [deSquareArray](#desquarearray) - Create a one dimensional [array](https://en.wikipedia.org/wiki/Dynamic_array) from a two dimensional [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array). 
-105 [detagString](#detagstring) - Remove [HTML](https://en.wikipedia.org/wiki/HTML) or [Xml](https://en.wikipedia.org/wiki/XML) tags from a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-106 [divideCharactersIntoRanges](#dividecharactersintoranges) - Divide a [string](https://en.wikipedia.org/wiki/String_(computer_science)) of characters into ranges.
+103 [denormalizeFolderName](#denormalizefoldername) - Remove any trailing folder separator from a folder name.
 
-107 [divideIntegersIntoRanges](#divideintegersintoranges) - Divide an [array](https://en.wikipedia.org/wiki/Dynamic_array) of integers into ranges.
+104 [deSquareArray](#desquarearray) - Create a one dimensional array from a two dimensional array of arrays.
 
-108 [docUserFlags](#docuserflags) - Generate [documentation](https://en.wikipedia.org/wiki/Software_documentation) for a method by calling the extractDocumentationFlags method in the package being documented, passing it the flags for a method and the name of the method.
+105 [detagString](#detagstring) - Remove [HTML](https://en.wikipedia.org/wiki/HTML) or [Xml](https://en.wikipedia.org/wiki/XML) tags from a string.
 
-109 [downloadGitHubPublicRepo](#downloadgithubpublicrepo) - Get the contents of a public repo on GitHub and place them in a temporary [folder](https://en.wikipedia.org/wiki/File_folder) whose name is returned to the caller or [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if no such repo exists.
+106 [divideCharactersIntoRanges](#dividecharactersintoranges) - Divide a string of characters into ranges.
 
-110 [downloadGitHubPublicRepoFile](#downloadgithubpublicrepofile) - Get the contents of a **$user** **$repo** **$file** from  a public repo on GitHub and return them as a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-111 [dumpFile](#dumpfile) - Dump to a **$file** the referenced [data](https://en.wikipedia.org/wiki/Data) **$structure**.
+107 [divideIntegersIntoRanges](#divideintegersintoranges) - Divide an array of integers into ranges.
 
-112 [dumpFileAsJson](#dumpfileasjson) - Dump to a **$file** the referenced [data](https://en.wikipedia.org/wiki/Data) **$structure** represented as [Json](https://en.wikipedia.org/wiki/JSON) [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-113 [dumpGZipFile](#dumpgzipfile) - Write to a **$file** a [data](https://en.wikipedia.org/wiki/Data) **$structure** through [gzip](https://en.wikipedia.org/wiki/Gzip).
+108 [docUserFlags](#docuserflags) - Generate documentation for a method by calling the extractDocumentationFlags method in the package being documented, passing it the flags for a method and the name of the method.
 
-114 [dumpTempFile](#dumptempfile) - Dump a [data](https://en.wikipedia.org/wiki/Data) structure to a temporary [file](https://en.wikipedia.org/wiki/Computer_file) and return the name of the [file](https://en.wikipedia.org/wiki/Computer_file) created.
+109 [downloadGitHubPublicRepo](#downloadgithubpublicrepo) - Get the contents of a public repo on GitHub and place them in a temporary folder whose name is returned to the caller or confess if no such repo exists.
 
-115 [dumpTempFileAsJson](#dumptempfileasjson) - Dump a [data](https://en.wikipedia.org/wiki/Data) structure represented as [Json](https://en.wikipedia.org/wiki/JSON) [string](https://en.wikipedia.org/wiki/String_(computer_science)) to a temporary [file](https://en.wikipedia.org/wiki/Computer_file) and return the name of the [file](https://en.wikipedia.org/wiki/Computer_file) created.
+110 [downloadGitHubPublicRepoFile](#downloadgithubpublicrepofile) - Get the contents of a **$user** **$repo** **$file** from  a public repo on GitHub and return them as a string.
 
-116 [enclosedReversedString](#enclosedreversedstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to enclosed reversed alphanumerics.
+111 [dumpFile](#dumpfile) - Dump to a **$file** the referenced data **$structure**.
 
-117 [enclosedReversedStringUndo](#enclosedreversedstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to enclosed reversed alphanumerics.
+112 [dumpFileAsJson](#dumpfileasjson) - Dump to a **$file** the referenced data **$structure** represented as [Json](https://en.wikipedia.org/wiki/JSON) string.
 
-118 [enclosedString](#enclosedstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to enclosed alphanumerics.
+113 [dumpGZipFile](#dumpgzipfile) - Write to a **$file** a data **$structure** through [gzip](https://en.wikipedia.org/wiki/Gzip).
 
-119 [enclosedStringUndo](#enclosedstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to enclosed alphanumerics.
+114 [dumpTempFile](#dumptempfile) - Dump a data structure to a temporary file and return the name of the file created.
+
+115 [dumpTempFileAsJson](#dumptempfileasjson) - Dump a data structure represented as [Json](https://en.wikipedia.org/wiki/JSON) string to a temporary file and return the name of the file created.
+
+116 [enclosedReversedString](#enclosedreversedstring) - Convert alphanumerics in a string to enclosed reversed alphanumerics.
+
+117 [enclosedReversedStringUndo](#enclosedreversedstringundo) - Undo alphanumerics in a string to enclosed reversed alphanumerics.
+
+118 [enclosedString](#enclosedstring) - Convert alphanumerics in a string to enclosed alphanumerics.
+
+119 [enclosedStringUndo](#enclosedstringundo) - Undo alphanumerics in a string to enclosed alphanumerics.
 
 120 [encodeBase64](#encodebase64) - Encode an [Ascii](https://en.wikipedia.org/wiki/ASCII) **$string** in base 64.
 
-121 [encodeJson](#encodejson) - Convert a [Perl](http://www.perl.org/) [data](https://en.wikipedia.org/wiki/Data) **$structure** to a [Json](https://en.wikipedia.org/wiki/JSON) [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-122 [encodeUnicodeHtmlAsAscii](#encodeunicodehtmlasascii) - Encode a [Unicode](https://en.wikipedia.org/wiki/Unicode) [string](https://en.wikipedia.org/wiki/String_(computer_science)) of [HTML](https://en.wikipedia.org/wiki/HTML) as [Ascii](https://en.wikipedia.org/wiki/ASCII) by replacing [Unicode](https://en.wikipedia.org/wiki/Unicode) characters with an expression.
+121 [encodeJson](#encodejson) - Convert a [Perl](http://www.perl.org/) data **$structure** to a [Json](https://en.wikipedia.org/wiki/JSON) string.
 
-123 [evalFile](#evalfile) - Read a [file](https://en.wikipedia.org/wiki/Computer_file) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each [hash](https://en.wikipedia.org/wiki/Hash_table) element.
+122 [encodeUnicodeHtmlAsAscii](#encodeunicodehtmlasascii) - Encode a [Unicode](https://en.wikipedia.org/wiki/Unicode) string of html as [Ascii](https://en.wikipedia.org/wiki/ASCII) by replacing unicode characters with an expression.
 
-124 [evalFileAsJson](#evalfileasjson) - Read a **$file** containing [Json](https://en.wikipedia.org/wiki/JSON) and return the corresponding [Perl](http://www.perl.org/) [data](https://en.wikipedia.org/wiki/Data) structure.
+123 [evalFile](#evalfile) - Read a file containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, confess to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each hash element.
 
-125 [evalGZipFile](#evalgzipfile) - Read a [file](https://en.wikipedia.org/wiki/Computer_file) compressed with [gzip](https://en.wikipedia.org/wiki/Gzip) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each [hash](https://en.wikipedia.org/wiki/Hash_table) element.
+124 [evalFileAsJson](#evalfileasjson) - Read a **$file** containing [Json](https://en.wikipedia.org/wiki/JSON) and return the corresponding [Perl](http://www.perl.org/) data structure.
 
-126 [evalOrConfess](#evalorconfess) - Evaluate some [code](https://en.wikipedia.org/wiki/Computer_program) successfully or [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) as to why it failed to evaluate successfully.
+125 [evalGZipFile](#evalgzipfile) - Read a file compressed with [gzip](https://en.wikipedia.org/wiki/Gzip) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, confess to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each hash element.
 
-127 [execPerlOnRemote](#execperlonremote) - Execute some Perl **$code** on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+126 [evalOrConfess](#evalorconfess) - Evaluate some code successfully or confess as to why it failed to evaluate successfully.
 
-128 [expandNewLinesInDocumentation](#expandnewlinesindocumentation) - Expand new lines in [documentation](https://en.wikipedia.org/wiki/Software_documentation), specifically 
+127 [execPerlOnRemote](#execperlonremote) - Execute some Perl **$code** on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+
+128 [expandNewLinesInDocumentation](#expandnewlinesindocumentation) - Expand new lines in documentation, specifically 
  for new line and 
 
     for two new lines.
 
-129 [expandWellKnownUrlsInDitaFormat](#expandwellknownurlsinditaformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) in the format L\[url-name\] in the L\[Dita\] **xref**format.
+129 [expandWellKnownUrlsInDitaFormat](#expandwellknownurlsinditaformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] in the L\[Dita\] **xref**format.
 
-130 [expandWellKnownUrlsInHtmlFormat](#expandwellknownurlsinhtmlformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) in the format L\[url-name\] using the [HTML](https://en.wikipedia.org/wiki/HTML) **a** tag.
+130 [expandWellKnownUrlsInHtmlFormat](#expandwellknownurlsinhtmlformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] using the html **a** tag.
 
-131 [expandWellKnownUrlsInHtmlFromPerl](#expandwellknownurlsinhtmlfromperl) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) in the format L\[url-name\] using the [HTML](https://en.wikipedia.org/wiki/HTML) **a** tag.
+131 [expandWellKnownUrlsInHtmlFromPerl](#expandwellknownurlsinhtmlfromperl) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] using the html **a** tag.
 
-132 [expandWellKnownUrlsInPerlFormat](#expandwellknownurlsinperlformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) in the format L&lt;url-name> using the Perl POD syntax.
+132 [expandWellKnownUrlsInPerlFormat](#expandwellknownurlsinperlformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L&lt;url-name> using the Perl POD syntax.
 
-133 [expandWellKnownUrlsInPod2Html](#expandwellknownurlsinpod2html) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) in the format =begin [HTML](https://en.wikipedia.org/wiki/HTML) format.
+133 [expandWellKnownUrlsInPod2Html](#expandwellknownurlsinpod2html) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format =begin html format.
 
 134 [expandWellKnownWordsAsUrlsAndAddTocToMakeANewHtmlFile](#expandwellknownwordsasurlsandaddtoctomakeanewhtmlfile) - Expand well known words found in a '.
 
-135 [expandWellKnownWordsAsUrlsInHtmlFormat](#expandwellknownwordsasurlsinhtmlformat) - Expand words found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) using the [HTML](https://en.wikipedia.org/wiki/HTML) **a** tag to supply a definition of that [word](https://en.wikipedia.org/wiki/Doc_(computing)). 
-136 [expandWellKnownWordsAsUrlsInMdFormat](#expandwellknownwordsasurlsinmdformat) - Expand words found in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) using the md [url](https://en.wikipedia.org/wiki/URL) to supply a definition of that [word](https://en.wikipedia.org/wiki/Doc_(computing)). 
-137 [expandWellKnownWordsInMarkDownFile](#expandwellknownwordsinmarkdownfile) - Expand well known words in a mark down [file](https://en.wikipedia.org/wiki/Computer_file). 
-138 [extractCodeBlock](#extractcodeblock) - Extract the block of [code](https://en.wikipedia.org/wiki/Computer_program) delimited by **$comment**, starting at qq($comment-begin), ending at qq($comment-end) from the named **$file** else the current Perl [program](https://en.wikipedia.org/wiki/Computer_program) $0 and return it as a [string](https://en.wikipedia.org/wiki/String_(computer_science)) or [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) if this is not possible.
+135 [expandWellKnownWordsAsUrlsInHtmlFormat](#expandwellknownwordsasurlsinhtmlformat) - Expand words found in a string using the html **a** tag to supply a definition of that word.
 
-139 [extractPodDocumentation](#extractpoddocumentation) - Extract [POD](https://perldoc.perl.org/perlpod.html) from a [file](https://en.wikipedia.org/wiki/Computer_file) 
-140 [extractPythonDocumentationFromFiles](#extractpythondocumentationfromfiles) - Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.org/wiki/Software_documentation) from the specified files.
+136 [expandWellKnownWordsAsUrlsInMdFormat](#expandwellknownwordsasurlsinmdformat) - Expand words found in a string using the md url to supply a definition of that word.
 
-141 [extractTest](#extracttest) - Remove example markers from [test](https://en.wikipedia.org/wiki/Software_testing) [code](https://en.wikipedia.org/wiki/Computer_program). 
-142 [fe](#fe) - Get the extension of a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+137 [expandWellKnownWordsInMarkDownFile](#expandwellknownwordsinmarkdownfile) - Expand well known words in a mark down file.
 
-143 [fff](#fff) - Confess a message with a line position and a [file](https://en.wikipedia.org/wiki/Computer_file) that Geany will jump to if clicked on.
+138 [extractCodeBlock](#extractcodeblock) - Extract the block of code delimited by **$comment**, starting at qq($comment-begin), ending at qq($comment-end) from the named **$file** else the current Perl program $0 and return it as a string or confess if this is not possible.
 
-144 [fileInWindowsFormat](#fileinwindowsformat) - Convert a [Unix](https://en.wikipedia.org/wiki/Unix) **$file** name to windows format.
+139 [extractPodDocumentation](#extractpoddocumentation) - Extract pod from a file
+
+140 [extractPythonDocumentationFromFiles](#extractpythondocumentationfromfiles) - Extract python documentation from the specified files.
+
+141 [extractTest](#extracttest) - Remove example markers from test code.
+
+142 [fe](#fe) - Get the extension of a file name.
+
+143 [fff](#fff) - Confess a message with a line position and a file that Geany will jump to if clicked on.
+
+144 [fileInWindowsFormat](#fileinwindowsformat) - Convert a unix **$file** name to windows format.
 
 145 [fileLargestSize](#filelargestsize) - Return the largest **$file**.
 
@@ -10764,85 +11326,93 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 148 [fileModTime](#filemodtime) - Get the modified time of a **$file** as seconds since the epoch.
 
-149 [fileOutOfDate](#fileoutofdate) - Calls the specified [sub](https://perldoc.perl.org/perlsub.html) **$make** for each source [file](https://en.wikipedia.org/wiki/Computer_file) that is missing and then again against the **$target** [file](https://en.wikipedia.org/wiki/Computer_file) if any of the **@source** files were missing or the $target [file](https://en.wikipedia.org/wiki/Computer_file) is older than any of the @source files or if the target does not exist.
+149 [fileOutOfDate](#fileoutofdate) - Calls the specified sub **$make** for each source file that is missing and then again against the **$target** file if any of the **@source** files were missing or the $target file is older than any of the @source files or if the target does not exist.
 
-150 [filePath](#filepath) - Create a [file](https://en.wikipedia.org/wiki/Computer_file) name from a [list](https://en.wikipedia.org/wiki/Linked_list) of  names.
+150 [filePath](#filepath) - Create a file name from a list of  names.
 
-151 [filePathDir](#filepathdir) - Create a [folder](https://en.wikipedia.org/wiki/File_folder) name from a [list](https://en.wikipedia.org/wiki/Linked_list) of  names.
+151 [filePathDir](#filepathdir) - Create a folder name from a list of  names.
 
-152 [filePathExt](#filepathext) - Create a [file](https://en.wikipedia.org/wiki/Computer_file) name from a [list](https://en.wikipedia.org/wiki/Linked_list) of  names the last of which is assumed to be the extension of the [file](https://en.wikipedia.org/wiki/Computer_file) name.
+152 [filePathExt](#filepathext) - Create a file name from a list of  names the last of which is assumed to be the extension of the file name.
 
 153 [filePathSeparatorChar](#filepathseparatorchar) - File path separator.
 
 154 [fileSize](#filesize) - Get the size of a **$file** in bytes.
 
-155 [findAllFilesAndFolders](#findallfilesandfolders) - Find all the files and folders under a [folder](https://en.wikipedia.org/wiki/File_folder). 
+155 [findAllFilesAndFolders](#findallfilesandfolders) - Find all the files and folders under a folder.
+
 156 [findDirs](#finddirs) - Find all the folders under a **$folder** and optionally **$filter** the selected folders with a regular expression.
 
 157 [findFiles](#findfiles) - Find all the files under a **$folder** and optionally **$filter** the selected files with a regular expression.
 
-158 [findFileWithExtension](#findfilewithextension) - Find the first [file](https://en.wikipedia.org/wiki/Computer_file) that exists with a path and name of **$file** and an extension drawn from <@ext>.
+158 [findFileWithExtension](#findfilewithextension) - Find the first file that exists with a path and name of **$file** and an extension drawn from <@ext>.
 
-159 [firstFileThatExists](#firstfilethatexists) - Returns the name of the first [file](https://en.wikipedia.org/wiki/Computer_file) from **@files** that exists or **undef** if none of the named @files exist.
+159 [firstFileThatExists](#firstfilethatexists) - Returns the name of the first file from **@files** that exists or **undef** if none of the named @files exist.
 
-160 [firstNChars](#firstnchars) - First N characters of a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-161 [flattenArrayAndHashValues](#flattenarrayandhashvalues) - Flatten an [array](https://en.wikipedia.org/wiki/Dynamic_array) of scalars, [array](https://en.wikipedia.org/wiki/Dynamic_array) and [hash](https://en.wikipedia.org/wiki/Hash_table) references to make an [array](https://en.wikipedia.org/wiki/Dynamic_array) of scalars by flattening the [array](https://en.wikipedia.org/wiki/Dynamic_array) references and [hash](https://en.wikipedia.org/wiki/Hash_table) values.
+160 [firstNChars](#firstnchars) - First N characters of a string.
 
-162 [fn](#fn) - Remove the path and extension from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+161 [flattenArrayAndHashValues](#flattenarrayandhashvalues) - Flatten an array of scalars, array and hash references to make an array of scalars by flattening the array references and hash values.
 
-163 [fne](#fne) - Remove the path from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+162 [fn](#fn) - Remove the path and extension from a file name.
+
+163 [fne](#fne) - Remove the path from a file name.
 
 164 [folderSize](#foldersize) - Get the size of a **$folder** in bytes.
 
-165 [forEachKeyAndValue](#foreachkeyandvalue) - Iterate over a [hash](https://en.wikipedia.org/wiki/Hash_table) for each key and value.
+165 [forEachKeyAndValue](#foreachkeyandvalue) - Iterate over a hash for each key and value.
 
-166 [formatHtmlAndTextTables](#formathtmlandtexttables) - Create text and [HTML](https://en.wikipedia.org/wiki/HTML) versions of a tabular report.
+166 [formatHtmlAndTextTables](#formathtmlandtexttables) - Create text and html versions of a tabular report.
 
-167 [formatHtmlAndTextTablesWaitPids](#formathtmlandtexttableswaitpids) - Wait on all [table](https://en.wikipedia.org/wiki/Table_(information)) formatting pids to complete.
+167 [formatHtmlAndTextTablesWaitPids](#formathtmlandtexttableswaitpids) - Wait on all table formatting pids to complete.
 
-168 [formatHtmlTable](#formathtmltable) - Format an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of scalars as an [HTML](https://en.wikipedia.org/wiki/HTML) [table](https://en.wikipedia.org/wiki/Table_(information)) using the  **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
+168 [formatHtmlTable](#formathtmltable) - Format an array of arrays of scalars as an html table using the  **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
 
-169 [formatHtmlTablesIndex](#formathtmltablesindex) - Create an index of [HTML](https://en.wikipedia.org/wiki/HTML) reports.
+169 [formatHtmlTablesIndex](#formathtmltablesindex) - Create an index of html reports.
 
-170 [formatSourcePodAsHtml](#formatsourcepodashtml) - Format the [POD](https://perldoc.perl.org/perlpod.html) in the current source [file](https://en.wikipedia.org/wiki/Computer_file) as [HTML](https://en.wikipedia.org/wiki/HTML).
+170 [formatSourcePodAsHtml](#formatsourcepodashtml) - Format the [POD](https://perldoc.perl.org/perlpod.html) in the current source file as [HTML](https://en.wikipedia.org/wiki/HTML).
 
 171 [formatString](#formatstring) - Format the specified **$string** so it can be displayed in **$width** columns.
 
-172 [formatTable](#formattable) - Format various **$data** structures as a [table](https://en.wikipedia.org/wiki/Table_(information)) with titles as specified by **$columnTitles**: either a reference to an [array](https://en.wikipedia.org/wiki/Dynamic_array) of column titles or a [string](https://en.wikipedia.org/wiki/String_(computer_science)) each line of which contains the column title as the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) with the [REST](https://en.wikipedia.org/wiki/REST) of the line describing that column.
+172 [formatTable](#formattable) - Format various **$data** structures as a table with titles as specified by **$columnTitles**: either a reference to an array of column titles or a string each line of which contains the column title as the first word with the rest of the line describing that column.
 
-173 [formatTableA](#formattablea) - Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-174 [formatTableAA](#formattableaa) - Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array). 
-175 [formatTableAH](#formattableah) - Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array) of hashes.
+173 [formatTableA](#formattablea) - Tabularize an array.
 
-176 [formatTableBasic](#formattablebasic) - Tabularize an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of text.
+174 [formatTableAA](#formattableaa) - Tabularize an array of arrays.
+
+175 [formatTableAH](#formattableah) - Tabularize an array of hashes.
+
+176 [formatTableBasic](#formattablebasic) - Tabularize an array of arrays of text.
 
 177 [formatTableCheckKeys](#formattablecheckkeys) - Options available for formatting tables.
 
 178 [formatTableClearUpLeft](#formattableclearupleft) - Blank identical column values up and left.
 
-179 [formatTableH](#formattableh) - Tabularize a [hash](https://en.wikipedia.org/wiki/Hash_table). 
-180 [formatTableHA](#formattableha) - Tabularize a [hash](https://en.wikipedia.org/wiki/Hash_table) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array). 
-181 [formatTableHH](#formattablehh) - Tabularize a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes.
+179 [formatTableH](#formattableh) - Tabularize a hash.
+
+180 [formatTableHA](#formattableha) - Tabularize a hash of arrays.
+
+181 [formatTableHH](#formattablehh) - Tabularize a hash of hashes.
 
 182 [formatTableMultiLine](#formattablemultiline) - Tabularize text that has new lines in it.
 
 183 [formattedTablesReport](#formattedtablesreport) - Report of all the reports created.
 
-184 [fp](#fp) - Get the path from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+184 [fp](#fp) - Get the path from a file name.
 
-185 [fpgaGowin](#fpgagowin) - Compile [Verilog](https://en.wikipedia.org/wiki/Verilog) to a gowin device.
+185 [fpgaGowin](#fpgagowin) - Compile verilog to a gowin device.
 
-186 [fpn](#fpn) - Remove the extension from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+186 [fpn](#fpn) - Remove the extension from a file name.
 
-187 [fullFileName](#fullfilename) - Full name of a [file](https://en.wikipedia.org/wiki/Computer_file). 
+187 [fullFileName](#fullfilename) - Full name of a file.
+
 188 [fullyQualifiedFile](#fullyqualifiedfile) - Check whether a **$file** name is fully qualified or not and, optionally, whether it is fully qualified with a specified **$prefix** or not.
 
-189 [fullyQualifyFile](#fullyqualifyfile) - Return the fully qualified name of a [file](https://en.wikipedia.org/wiki/Computer_file). 
-190 [genHash](#genhash) - Return a **$bless**ed [hash](https://en.wikipedia.org/wiki/Hash_table) with the specified **$attributes** accessible via [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) method calls.
+189 [fullyQualifyFile](#fullyqualifyfile) - Return the fully qualified name of a file.
 
-191 [genLValueArrayMethods](#genlvaluearraymethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) [array](https://en.wikipedia.org/wiki/Dynamic_array) methods in the current package.
+190 [genHash](#genhash) - Return a **$bless**ed hash with the specified **$attributes** accessible via [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) method calls.
 
-192 [genLValueHashMethods](#genlvaluehashmethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) [hash](https://en.wikipedia.org/wiki/Hash_table) methods in the current package.
+191 [genLValueArrayMethods](#genlvaluearraymethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) array methods in the current package.
+
+192 [genLValueHashMethods](#genlvaluehashmethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) hash methods in the current package.
 
 193 [genLValueScalarMethods](#genlvaluescalarmethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) scalar methods in the current package, A method whose value has not yet been set will return a new scalar with value **undef**.
 
@@ -10850,156 +11420,175 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 195 [getCCompiler](#getccompiler) - Return the name of the C compiler on this system.
 
-196 [getCodeContext](#getcodecontext) - Recreate the [code](https://en.wikipedia.org/wiki/Computer_program) context for a referenced [sub](https://perldoc.perl.org/perlsub.html). 
-197 [getFieldOffsetInStructureFromIncludeFile](#getfieldoffsetinstructurefromincludefile) - Get the offset of a field in a system structures from an include [file](https://en.wikipedia.org/wiki/Computer_file). 
-198 [getNumberOfCpus](#getnumberofcpus) - Number of [CPUs](https://en.wikipedia.org/wiki/Central_processing_unit). 
-199 [getStructureSizeFromIncludeFile](#getstructuresizefromincludefile) - Get the size of a system structure from an include [file](https://en.wikipedia.org/wiki/Computer_file). 
-200 [getSubName](#getsubname) - Returns the (package, name, [file](https://en.wikipedia.org/wiki/Computer_file), line) of a [Perl](http://www.perl.org/) **$sub** reference.
+196 [getCodeContext](#getcodecontext) - Recreate the code context for a referenced sub.
 
-201 [getSystemConstantsFromIncludeFile](#getsystemconstantsfromincludefile) - Get the value of the named system constants from an include [file](https://en.wikipedia.org/wiki/Computer_file). 
-202 [guidFromMd5](#guidfrommd5) - Create a [guid](https://en.wikipedia.org/wiki/Universally_unique_identifier) from an [MD5](https://en.wikipedia.org/wiki/MD5) [hash](https://en.wikipedia.org/wiki/Hash_table). 
-203 [guidFromString](#guidfromstring) - Create a [guid](https://en.wikipedia.org/wiki/Universally_unique_identifier) representation of the [MD5](https://en.wikipedia.org/wiki/MD5) of the content of a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-204 [hashifyFolderStructure](#hashifyfolderstructure) - Hashify a [list](https://en.wikipedia.org/wiki/Linked_list) of [file](https://en.wikipedia.org/wiki/Computer_file) names to get the corresponding [folder](https://en.wikipedia.org/wiki/File_folder) structure.
+197 [getFieldOffsetInStructureFromIncludeFile](#getfieldoffsetinstructurefromincludefile) - Get the offset of a field in a system structures from an include file.
 
-205 [hexToAsciiString](#hextoasciistring) - Decode a [string](https://en.wikipedia.org/wiki/String_(computer_science)) of [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits as an [Ascii](https://en.wikipedia.org/wiki/ASCII) [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+198 [getNumberOfCpus](#getnumberofcpus) - Number of cpus.
+
+199 [getStructureSizeFromIncludeFile](#getstructuresizefromincludefile) - Get the size of a system structure from an include file.
+
+200 [getSubName](#getsubname) - Returns the (package, name, file, line) of a perl **$sub** reference.
+
+201 [getSystemConstantsFromIncludeFile](#getsystemconstantsfromincludefile) - Get the value of the named system constants from an include file.
+
+202 [guidFromMd5](#guidfrommd5) - Create a guid from an md5 hash.
+
+203 [guidFromString](#guidfromstring) - Create a guid representation of the [MD5](https://en.wikipedia.org/wiki/MD5) of the content of a string.
+
+204 [hashifyFolderStructure](#hashifyfolderstructure) - Hashify a list of file names to get the corresponding folder structure.
+
+205 [hexToAsciiString](#hextoasciistring) - Decode a string of [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits as an [Ascii](https://en.wikipedia.org/wiki/ASCII) string.
+
 206 [hostName](#hostname) - The name of the host we are running on.
 
-207 [htmlToc](#htmltoc) - Generate a [table](https://en.wikipedia.org/wiki/Table_(information)) of contents for some [HTML](https://en.wikipedia.org/wiki/HTML) held in a [file](https://en.wikipedia.org/wiki/Computer_file) or a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+207 [htmlToc](#htmltoc) - Generate a table of contents for some html held in a file or a string.
+
 208 [imageSize](#imagesize) - Return (width, height) of an **$image**.
 
-209 [includeFiles](#includefiles) - Read the given [file](https://en.wikipedia.org/wiki/Computer_file) and expand all lines that start "includeThisFile " with the [file](https://en.wikipedia.org/wiki/Computer_file) named by the [REST](https://en.wikipedia.org/wiki/REST) of the line and keep doing this until all the included files have been expanded or a repetition is detected.
+209 [includeFiles](#includefiles) - Read the given file and expand all lines that start "includeThisFile " with the file named by the rest of the line and keep doing this until all the included files have been expanded or a repetition is detected.
 
-210 [indentString](#indentstring) - Indent lines contained in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) or formatted [table](https://en.wikipedia.org/wiki/Table_(information)) by the specified [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-211 [indexOfMax](#indexofmax) - Find the index of the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
+210 [indentString](#indentstring) - Indent lines contained in a string or formatted table by the specified string.
 
-212 [indexOfMin](#indexofmin) - Find the index of the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
+211 [indexOfMax](#indexofmax) - Find the index of the maximum number in a list of numbers confessing to any ill defined values.
 
-213 [intersectionOfHashesAsArrays](#intersectionofhashesasarrays) - Form the intersection of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose values are an [array](https://en.wikipedia.org/wiki/Dynamic_array) of corresponding values from each [hash](https://en.wikipedia.org/wiki/Hash_table). 
-214 [intersectionOfHashKeys](#intersectionofhashkeys) - Form the intersection of the keys of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose keys represent the intersection.
+212 [indexOfMin](#indexofmin) - Find the index of the minimum number in a list of numbers confessing to any ill defined values.
 
-215 [invertHashOfHashes](#inverthashofhashes) - Invert a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes: given {a}{b} = c return {b}{c} = c.
+213 [intersectionOfHashesAsArrays](#intersectionofhashesasarrays) - Form the intersection of the specified hashes **@h** as one hash whose values are an array of corresponding values from each hash.
 
-216 [ipAddressOfHost](#ipaddressofhost) - Get the first [IP address](https://en.wikipedia.org/wiki/IP_address) address of the specified host via Domain Name Services.
+214 [intersectionOfHashKeys](#intersectionofhashkeys) - Form the intersection of the keys of the specified hashes **@h** as one hash whose keys represent the intersection.
 
-217 [ipAddressViaArp](#ipaddressviaarp) - Get the [IP address](https://en.wikipedia.org/wiki/IP_address) address of a [server](https://en.wikipedia.org/wiki/Server_(computing)) on the local [network](https://en.wikipedia.org/wiki/Computer_network) by hostname via arp.
+215 [invertHashOfHashes](#inverthashofhashes) - Invert a hash of hashes: given {a}{b} = c return {b}{c} = c.
 
-218 [isBlank](#isblank) - Test whether a [string](https://en.wikipedia.org/wiki/String_(computer_science)) is blank.
+216 [ipAddressOfHost](#ipaddressofhost) - Get the first ip address of the specified host via Domain Name Services.
 
-219 [isFileUtf8](#isfileutf8) - Return the [file](https://en.wikipedia.org/wiki/Computer_file) name quoted if its contents are in [utf8](https://en.wikipedia.org/wiki/UTF-8) else return [undef](https://perldoc.perl.org/functions/undef.html). 
+217 [ipAddressViaArp](#ipaddressviaarp) - Get the ip address of a server on the local network by hostname via arp.
+
+218 [isBlank](#isblank) - Test whether a string is blank.
+
+219 [isFileUtf8](#isfileutf8) - Return the file name quoted if its contents are in utf8 else return undef.
+
 220 [isSubInPackage](#issubinpackage) - Test whether the specified **$package** contains the subroutine &lt;$sub>.
 
-221 [javaPackage](#javapackage) - Extract the package name from a [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) [string](https://en.wikipedia.org/wiki/String_(computer_science)) or [file](https://en.wikipedia.org/wiki/Computer_file). 
-222 [javaPackageAsFileName](#javapackageasfilename) - Extract the package name from a [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) [string](https://en.wikipedia.org/wiki/String_(computer_science)) or [file](https://en.wikipedia.org/wiki/Computer_file) and convert it to a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+221 [javaPackage](#javapackage) - Extract the package name from a java string or file.
 
-223 [javaScriptExports](#javascriptexports) - Extract the Javascript functions marked for export in a [file](https://en.wikipedia.org/wiki/Computer_file) or [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+222 [javaPackageAsFileName](#javapackageasfilename) - Extract the package name from a java string or file and convert it to a file name.
+
+223 [javaScriptExports](#javascriptexports) - Extract the Javascript functions marked for export in a file or string.
+
 224 [keyCount](#keycount) - Count keys down to the specified level.
 
-225 [lengthOfLongestSubArray](#lengthoflongestsubarray) - Given an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) [find](https://en.wikipedia.org/wiki/Find_(Unix)) the length of the longest [sub](https://perldoc.perl.org/perlsub.html) [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-226 [lll](#lll) - Log messages with a time stamp and originating [file](https://en.wikipedia.org/wiki/Computer_file) and line number.
+225 [lengthOfLongestSubArray](#lengthoflongestsubarray) - Given an array of arrays find the length of the longest sub array.
 
-227 [loadArrayArrayFromLines](#loadarrayarrayfromlines) - Load an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) from lines of text: each line is an [array](https://en.wikipedia.org/wiki/Dynamic_array) of words.
+226 [lll](#lll) - Log messages with a time stamp and originating file and line number.
 
-228 [loadArrayFromLines](#loadarrayfromlines) - Load an [array](https://en.wikipedia.org/wiki/Dynamic_array) from lines of text in a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-229 [loadArrayHashFromLines](#loadarrayhashfromlines) - Load an [array](https://en.wikipedia.org/wiki/Dynamic_array) of hashes from lines of text: each line is a [hash](https://en.wikipedia.org/wiki/Hash_table) of words.
+227 [loadArrayArrayFromLines](#loadarrayarrayfromlines) - Load an array of arrays from lines of text: each line is an array of words.
+
+228 [loadArrayFromLines](#loadarrayfromlines) - Load an array from lines of text in a string.
+
+229 [loadArrayHashFromLines](#loadarrayhashfromlines) - Load an array of hashes from lines of text: each line is a hash of words.
 
 230 [loadHash](#loadhash) - Load the specified blessed **$hash** generated with [genHash](#genhash) with **%attributes**.
 
-231 [loadHashArrayFromLines](#loadhasharrayfromlines) - Load a [hash](https://en.wikipedia.org/wiki/Hash_table) of [arrays](https://en.wikipedia.org/wiki/Dynamic_array) from lines of text: the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key, the remaining words are the [array](https://en.wikipedia.org/wiki/Dynamic_array) contents.
+231 [loadHashArrayFromLines](#loadhasharrayfromlines) - Load a hash of arrays from lines of text: the first word of each line is the key, the remaining words are the array contents.
 
-232 [loadHashFromLines](#loadhashfromlines) - Load a [hash](https://en.wikipedia.org/wiki/Hash_table): first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key and the [REST](https://en.wikipedia.org/wiki/REST) is the value.
+232 [loadHashFromLines](#loadhashfromlines) - Load a hash: first word of each line is the key and the rest is the value.
 
-233 [loadHashHashFromLines](#loadhashhashfromlines) - Load a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes from lines of text: the first [word](https://en.wikipedia.org/wiki/Doc_(computing)) of each line is the key, the remaining words are the [sub](https://perldoc.perl.org/perlsub.html) [hash](https://en.wikipedia.org/wiki/Hash_table) contents.
+233 [loadHashHashFromLines](#loadhashhashfromlines) - Load a hash of hashes from lines of text: the first word of each line is the key, the remaining words are the sub hash contents.
 
 234 [lpad](#lpad) - Left Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
 
-235 [makeDieConfess](#makedieconfess) - Force [die](http://perldoc.perl.org/functions/die.html) to [confess](http://perldoc.perl.org/Carp.html#SYNOPSIS/) where the death occurred.
+235 [makeDieConfess](#makedieconfess) - Force die to confess where the death occurred.
 
-236 [makePath](#makepath) - Make the path for the specified [file](https://en.wikipedia.org/wiki/Computer_file) name or [folder](https://en.wikipedia.org/wiki/File_folder) on the local machine.
+236 [makePath](#makepath) - Make the path for the specified file name or folder on the local machine.
 
-237 [makePathRemote](#makepathremote) - Make the path for the specified **$file** or [folder](https://en.wikipedia.org/wiki/File_folder) on the [Amazon Web Services](http://aws.amazon.com) instance whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+237 [makePathRemote](#makepathremote) - Make the path for the specified **$file** or folder on the [Amazon Web Services](http://aws.amazon.com) instance whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-238 [matchPath](#matchpath) - Return the deepest [folder](https://en.wikipedia.org/wiki/File_folder) that exists along a given [file](https://en.wikipedia.org/wiki/Computer_file) name path.
+238 [matchPath](#matchpath) - Return the deepest folder that exists along a given file name path.
 
-239 [mathematicalBoldItalicString](#mathematicalbolditalicstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
+239 [mathematicalBoldItalicString](#mathematicalbolditalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
 
-240 [mathematicalBoldItalicStringUndo](#mathematicalbolditalicstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
+240 [mathematicalBoldItalicStringUndo](#mathematicalbolditalicstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
 
-241 [mathematicalBoldString](#mathematicalboldstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
+241 [mathematicalBoldString](#mathematicalboldstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
 
-242 [mathematicalBoldStringUndo](#mathematicalboldstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
+242 [mathematicalBoldStringUndo](#mathematicalboldstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
 
-243 [mathematicalItalicString](#mathematicalitalicstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Italic.
+243 [mathematicalItalicString](#mathematicalitalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Italic.
 
-244 [mathematicalMonoSpaceString](#mathematicalmonospacestring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
+244 [mathematicalMonoSpaceString](#mathematicalmonospacestring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
 
-245 [mathematicalMonoSpaceStringUndo](#mathematicalmonospacestringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
+245 [mathematicalMonoSpaceStringUndo](#mathematicalmonospacestringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
 
-246 [mathematicalSansSerifBoldItalicString](#mathematicalsansserifbolditalicstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
+246 [mathematicalSansSerifBoldItalicString](#mathematicalsansserifbolditalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
 
-247 [mathematicalSansSerifBoldItalicStringUndo](#mathematicalsansserifbolditalicstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
+247 [mathematicalSansSerifBoldItalicStringUndo](#mathematicalsansserifbolditalicstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
 
-248 [mathematicalSansSerifBoldString](#mathematicalsansserifboldstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
+248 [mathematicalSansSerifBoldString](#mathematicalsansserifboldstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
 
-249 [mathematicalSansSerifBoldStringUndo](#mathematicalsansserifboldstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
+249 [mathematicalSansSerifBoldStringUndo](#mathematicalsansserifboldstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
 
-250 [mathematicalSansSerifItalicString](#mathematicalsansserifitalicstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
+250 [mathematicalSansSerifItalicString](#mathematicalsansserifitalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
 
-251 [mathematicalSansSerifItalicStringUndo](#mathematicalsansserifitalicstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
+251 [mathematicalSansSerifItalicStringUndo](#mathematicalsansserifitalicstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
 
-252 [mathematicalSansSerifString](#mathematicalsansserifstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
+252 [mathematicalSansSerifString](#mathematicalsansserifstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
 
-253 [mathematicalSansSerifStringUndo](#mathematicalsansserifstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
+253 [mathematicalSansSerifStringUndo](#mathematicalsansserifstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
 
-254 [max](#max) - Find the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
+254 [max](#max) - Find the maximum number in a list of numbers confessing to any ill defined values.
 
-255 [maximum](#maximum) - Find the maximum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
+255 [maximum](#maximum) - Find the maximum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
 
 256 [maximumLineLength](#maximumlinelength) - Find the longest line in a **$string**.
 
-257 [md5FromGuid](#md5fromguid) - Recover an [MD5](https://en.wikipedia.org/wiki/MD5) sum from a [guid](https://en.wikipedia.org/wiki/Universally_unique_identifier). 
-258 [mergeFolder](#mergefolder) - Copy the **$source** [folder](https://en.wikipedia.org/wiki/File_folder) into the **$target** [folder](https://en.wikipedia.org/wiki/File_folder) retaining any existing files not replaced by copied files.
+257 [md5FromGuid](#md5fromguid) - Recover an md5 sum from a guid.
 
-259 [mergeFolderFromRemote](#mergefolderfromremote) - Merge the specified **$Source** [folder](https://en.wikipedia.org/wiki/File_folder) from the corresponding remote [folder](https://en.wikipedia.org/wiki/File_folder) on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+258 [mergeFolder](#mergefolder) - Copy the **$source** folder into the **$target** folder retaining any existing files not replaced by copied files.
 
-260 [mergeHashesBySummingValues](#mergehashesbysummingvalues) - Merge a [list](https://en.wikipedia.org/wiki/Linked_list) of hashes **@h** by summing their values.
+259 [mergeFolderFromRemote](#mergefolderfromremote) - Merge the specified **$Source** folder from the corresponding remote folder on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-261 [microSecondsSinceEpoch](#microsecondssinceepoch) - Micro seconds since [Unix](https://en.wikipedia.org/wiki/Unix) epoch.
+260 [mergeHashesBySummingValues](#mergehashesbysummingvalues) - Merge a list of hashes **@h** by summing their values.
 
-262 [min](#min) - Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers confessing to any ill defined values.
+261 [microSecondsSinceEpoch](#microsecondssinceepoch) - Micro seconds since unix epoch.
 
-263 [minimum](#minimum) - Find the minimum number in a [list](https://en.wikipedia.org/wiki/Linked_list) of numbers ignoring any undefined values and assuming that all entries are numeric
+262 [min](#min) - Find the minimum number in a list of numbers confessing to any ill defined values.
 
-264 [mmm](#mmm) - Log messages with a differential time in milliseconds and originating [file](https://en.wikipedia.org/wiki/Computer_file) and line number.
+263 [minimum](#minimum) - Find the minimum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
 
-265 [moveFileNoClobber](#movefilenoclobber) - Rename the **$source** [file](https://en.wikipedia.org/wiki/Computer_file), which must exist, to the **$target** [file](https://en.wikipedia.org/wiki/Computer_file) but only if the $target [file](https://en.wikipedia.org/wiki/Computer_file) does not exist already.
+264 [mmm](#mmm) - Log messages with a differential time in milliseconds and originating file and line number.
 
-266 [moveFileWithClobber](#movefilewithclobber) - Rename the **$source** [file](https://en.wikipedia.org/wiki/Computer_file), which must exist, to the **$target** [file](https://en.wikipedia.org/wiki/Computer_file) but only if the $target [file](https://en.wikipedia.org/wiki/Computer_file) does not exist already.
+265 [moveFileNoClobber](#movefilenoclobber) - Rename the **$source** file, which must exist, to the **$target** file but only if the $target file does not exist already.
 
-267 [nameFromFolder](#namefromfolder) - Create a name from the last [folder](https://en.wikipedia.org/wiki/File_folder) in the path of a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+266 [moveFileWithClobber](#movefilewithclobber) - Rename the **$source** file, which must exist, to the **$target** file but only if the $target file does not exist already.
 
-268 [nameFromString](#namefromstring) - Create a readable name from an arbitrary [string](https://en.wikipedia.org/wiki/String_(computer_science)) of text.
+267 [nameFromFolder](#namefromfolder) - Create a name from the last folder in the path of a file name.
 
-269 [nameFromStringRestrictedToTitle](#namefromstringrestrictedtotitle) - Create a readable name from a [string](https://en.wikipedia.org/wiki/String_(computer_science)) of text that might contain a title tag - fall back to [nameFromString](#namefromstring) if that is not possible.
+268 [nameFromString](#namefromstring) - Create a readable name from an arbitrary string of text.
+
+269 [nameFromStringRestrictedToTitle](#namefromstringrestrictedtotitle) - Create a readable name from a string of text that might contain a title tag - fall back to [nameFromString](#namefromstring) if that is not possible.
 
 270 [newLine](#newline) - Return a new line - useful for writing [Perl](http://www.perl.org/) one liners
 
-271 [newProcessStarter](#newprocessstarter) - Create a new [process starter](#data-table-text-starter-definition) with which to start parallel [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) up to a specified **$maximumNumberOfProcesses** maximum number of parallel [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) at a time, wait for all the started [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) to finish and then optionally retrieve their saved results as an [array](https://en.wikipedia.org/wiki/Dynamic_array) from the [folder](https://en.wikipedia.org/wiki/File_folder) named by **$transferArea**.
+271 [newProcessStarter](#newprocessstarter) - Create a new [process starter](#data-table-text-starter-definition) with which to start parallel processes up to a specified **$maximumNumberOfProcesses** maximum number of parallel processes at a time, wait for all the started processes to finish and then optionally retrieve their saved results as an array from the folder named by **$transferArea**.
 
 272 [newServiceIncarnation](#newserviceincarnation) - Create a new service incarnation to record the start up of a new instance of a service and return the description as a [Data::Exchange::Service Definition hash](#data-exchange-service-definition).
 
-273 [newUdsr](#newudsr) - Create a communicator - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+273 [newUdsr](#newudsr) - Create a communicator - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
-274 [newUdsrClient](#newudsrclient) - Create a new communications client - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+274 [newUdsrClient](#newudsrclient) - Create a new communications client - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
-275 [newUdsrServer](#newudsrserver) - Create a communications [server](https://en.wikipedia.org/wiki/Server_(computing)) - a means to communicate between [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+275 [newUdsrServer](#newudsrserver) - Create a communications server - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
-276 [numberOfCpus](#numberofcpus) - Number of [CPUs](https://en.wikipedia.org/wiki/Central_processing_unit) scaled by an optional factor - but only if you have nproc.
+276 [numberOfCpus](#numberofcpus) - Number of cpus scaled by an optional factor - but only if you have nproc.
 
-277 [numberOfLinesInFile](#numberoflinesinfile) - Return the number of lines in a [file](https://en.wikipedia.org/wiki/Computer_file). 
-278 [numberOfLinesInString](#numberoflinesinstring) - The number of lines in a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
+277 [numberOfLinesInFile](#numberoflinesinfile) - Return the number of lines in a file.
+
+278 [numberOfLinesInString](#numberoflinesinstring) - The number of lines in a string.
+
 279 [numberWithCommas](#numberwithcommas) - Place commas in a number.
 
-280 [nws](#nws) - Normalize white space in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to make comparisons easier.
+280 [nws](#nws) - Normalize white space in a string to make comparisons easier.
 
 281 [onAws](#onaws) - Returns 1 if we are on AWS else return 0.
 
@@ -11011,86 +11600,97 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 285 [onWindows](#onwindows) - Are we on windows.
 
-286 [overrideAndReabsorbMethods](#overrideandreabsorbmethods) - Override methods down the [list](https://en.wikipedia.org/wiki/Linked_list) of **@packages** then reabsorb any unused methods back up the [list](https://en.wikipedia.org/wiki/Linked_list) of packages so that all the packages have the same methods as the last package with methods from packages mentioned earlier overriding methods from packages mentioned later.
+286 [overrideAndReabsorbMethods](#overrideandreabsorbmethods) - Override methods down the list of **@packages** then reabsorb any unused methods back up the list of packages so that all the packages have the same methods as the last package with methods from packages mentioned earlier overriding methods from packages mentioned later.
 
 287 [overrideMethods](#overridemethods) - For each method, if it exists in package **$from** then export it to package **$to** replacing any existing method in **$to**, otherwise export the method from package **$to** to package **$from** in order to merge the behavior of the **$from** and **$to** packages with respect to the named methods with duplicates resolved if favour of package **$from**.
 
-288 [overWriteBinaryFile](#overwritebinaryfile) - Write to **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
+288 [overWriteBinaryFile](#overwritebinaryfile) - Write to **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
 
 289 [overWriteFile](#overwritefile) - Write to a **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-290 [overWriteHtmlFile](#overwritehtmlfile) - Write an [HTML](https://en.wikipedia.org/wiki/HTML) [file](https://en.wikipedia.org/wiki/Computer_file) to /var/www/html and make it readable.
+290 [overWriteHtmlFile](#overwritehtmlfile) - Write an [HTML](https://en.wikipedia.org/wiki/HTML) file to /var/www/html and make it readable.
 
-291 [overWritePerlCgiFile](#overwriteperlcgifile) - Write a [Perl](http://www.perl.org/) [file](https://en.wikipedia.org/wiki/Computer_file) to /usr/lib/cgi-bin and make it executable after checking it for syntax errors.
+291 [overWritePerlCgiFile](#overwriteperlcgifile) - Write a [Perl](http://www.perl.org/) file to /usr/lib/cgi-bin and make it executable after checking it for syntax errors.
 
-292 [packBySize](#packbysize) - Given **$N** buckets and a [list](https://en.wikipedia.org/wiki/Linked_list) **@sizes** of (\[size of [file](https://en.wikipedia.org/wiki/Computer_file), name of file\].
+292 [packBySize](#packbysize) - Given **$N** buckets and a list **@sizes** of (\[size of file, name of file\].
 
 293 [pad](#pad) - Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
 
-294 [parseCommandLineArguments](#parsecommandlinearguments) - Call the specified **$sub** after classifying the specified [array](https://en.wikipedia.org/wiki/Dynamic_array) of \[arguments\] in **$args** into positional and keyword parameters.
+294 [parseCommandLineArguments](#parsecommandlinearguments) - Call the specified **$sub** after classifying the specified array of \[arguments\] in **$args** into positional and keyword parameters.
 
-295 [parseDitaRef](#parseditaref) - Parse a [Dita](http://docs.oasis-open.org/dita/dita/v1.3/os/part2-tech-content/dita-v1.3-os-part2-tech-content.html) reference **$ref** into its components (file name, topic id, id) .
+295 [parseDitaRef](#parseditaref) - Parse a dita reference **$ref** into its components (file name, topic id, id) .
 
-296 [parseFileName](#parsefilename) - Parse a [file](https://en.wikipedia.org/wiki/Computer_file) name into (path, name, extension) considering .
+296 [parseFileName](#parsefilename) - Parse a file name into (path, name, extension) considering .
 
-297 [parseIntoWordsAndStrings](#parseintowordsandstrings) - Parse a **$string** into words and quoted [strings](https://en.wikipedia.org/wiki/String_(computer_science)). 
-298 [parseS3BucketAndFolderName](#parses3bucketandfoldername) - Parse an [S3](https://aws.amazon.com/s3/) bucket/folder name into a bucket and a [folder](https://en.wikipedia.org/wiki/File_folder) name removing any initial s3://.
+297 [parseIntoWordsAndStrings](#parseintowordsandstrings) - Parse a **$string** into words and quoted strings.
 
-299 [parseXmlDocType](#parsexmldoctype) - Parse an [Xml](https://en.wikipedia.org/wiki/XML) DOCTYPE and return a [hash](https://en.wikipedia.org/wiki/Hash_table) indicating its components.
+298 [parseS3BucketAndFolderName](#parses3bucketandfoldername) - Parse an [S3](https://aws.amazon.com/s3/) bucket/folder name into a bucket and a folder name removing any initial s3://.
 
-300 [partitionStringsOnPrefixBySize](#partitionstringsonprefixbysize) - Partition a [hash](https://en.wikipedia.org/wiki/Hash_table) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and associated sizes into partitions with either a maximum size **$maxSize** or only one element; the [hash](https://en.wikipedia.org/wiki/Hash_table) **%Sizes** consisting of a mapping {string=>size}; with each partition being named with the shortest [string](https://en.wikipedia.org/wiki/String_(computer_science)) prefix that identifies just the [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in that partition.
+299 [parseXmlDocType](#parsexmldoctype) - Parse an [Xml](https://en.wikipedia.org/wiki/XML) DOCTYPE and return a hash indicating its components.
 
-301 [perlPackage](#perlpackage) - Extract the package name from a [Perl](http://www.perl.org/) [string](https://en.wikipedia.org/wiki/String_(computer_science)) or [file](https://en.wikipedia.org/wiki/Computer_file). 
+300 [partitionStringsOnPrefixBySize](#partitionstringsonprefixbysize) - Partition a hash of strings and associated sizes into partitions with either a maximum size **$maxSize** or only one element; the hash **%Sizes** consisting of a mapping {string=>size}; with each partition being named with the shortest string prefix that identifies just the strings in that partition.
+
+301 [perlPackage](#perlpackage) - Extract the package name from a perl string or file.
+
 302 [powerOfTwo](#poweroftwo) - Test whether a number **$n** is a power of two, return the power if it is else **undef**.
 
 303 [ppp](#ppp) - Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
 
-304 [prefferedFileName](#prefferedfilename) - Normalize a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+304 [prefferedFileName](#prefferedfilename) - Normalize a file name.
 
-305 [printQw](#printqw) - Print an [array](https://en.wikipedia.org/wiki/Dynamic_array) of words in qw() format.
+305 [printQw](#printqw) - Print an array of words in qw() format.
 
-306 [processFilesInParallel](#processfilesinparallel) - Process files in parallel using (8 \* the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each [file](https://en.wikipedia.org/wiki/Computer_file) is assigned to depending on the size of the [file](https://en.wikipedia.org/wiki/Computer_file) so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-307 [processJavaFilesInParallel](#processjavafilesinparallel) - Process [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) files of known size in parallel using (the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each item is assigned to depending on the size of the [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) item so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-308 [processSizesInParallel](#processsizesinparallel) - Process items of known size in parallel using (8 \* the number of CPUs) [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each item is assigned to depending on the size of the item so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the items it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-309 [processSizesInParallelN](#processsizesinparalleln) - Process items of known size in parallel using the specified number **$N** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) with the [process](https://en.wikipedia.org/wiki/Process_management_(computing)) each [file](https://en.wikipedia.org/wiki/Computer_file) is assigned to depending on the size of the [file](https://en.wikipedia.org/wiki/Computer_file) so that each [process](https://en.wikipedia.org/wiki/Process_management_(computing)) is loaded with approximately the same number of bytes of [data](https://en.wikipedia.org/wiki/Data) in total from the files it [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-310 [quoteFile](#quotefile) - Quote a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+306 [processFilesInParallel](#processfilesinparallel) - Process files in parallel using (8 \* the number of CPUs) processes with the process each file is assigned to depending on the size of the file so that each process is loaded with approximately the same number of bytes of data in total from the files it processes.
 
-311 [randomizeArray](#randomizearray) - Randomize an [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-312 [readBinaryFile](#readbinaryfile) - Read a binary [file](https://en.wikipedia.org/wiki/Computer_file) on the local machine.
+307 [processJavaFilesInParallel](#processjavafilesinparallel) - Process java files of known size in parallel using (the number of CPUs) processes with the process each item is assigned to depending on the size of the java item so that each process is loaded with approximately the same number of bytes of data in total from the java files it processes.
 
-313 [readFile](#readfile) - Return the content of a [file](https://en.wikipedia.org/wiki/Computer_file) residing on the local machine interpreting the content of the [file](https://en.wikipedia.org/wiki/Computer_file) as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+308 [processSizesInParallel](#processsizesinparallel) - Process items of known size in parallel using (8 \* the number of CPUs) processes with the process each item is assigned to depending on the size of the item so that each process is loaded with approximately the same number of bytes of data in total from the items it processes.
 
-314 [readFileFromRemote](#readfilefromremote) - Copy and [read](https://en.wikipedia.org/wiki/Reading_(computer)) a **$file** from the remote machine whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp) and return the content of $file interpreted as [utf8](https://en.wikipedia.org/wiki/UTF-8) .
+309 [processSizesInParallelN](#processsizesinparalleln) - Process items of known size in parallel using the specified number **$N** processes with the process each file is assigned to depending on the size of the file so that each process is loaded with approximately the same number of bytes of data in total from the files it processes.
 
-315 [readFiles](#readfiles) - Read all the files in the specified [list](https://en.wikipedia.org/wiki/Linked_list) of folders into a [hash](https://en.wikipedia.org/wiki/Hash_table). 
-316 [readGZipFile](#readgzipfile) - Read the specified [file](https://en.wikipedia.org/wiki/Computer_file) containing compressed [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8) through [gzip](https://en.wikipedia.org/wiki/Gzip).
+310 [quoteFile](#quotefile) - Quote a file name.
 
-317 [readStdIn](#readstdin) - Return the contents of STDIN and return the results as either an [array](https://en.wikipedia.org/wiki/Dynamic_array) or a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-318 [readUtf16File](#readutf16file) - Read a [file](https://en.wikipedia.org/wiki/Computer_file) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) encoded in utf-16.
+311 [randomizeArray](#randomizearray) - Randomize an array.
 
-319 [rectangularArray](#rectangulararray) - Create a two dimensional rectangular [array](https://en.wikipedia.org/wiki/Dynamic_array) whose first dimension is **$first** from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-320 [rectangularArray2](#rectangulararray2) - Create a two dimensional rectangular [array](https://en.wikipedia.org/wiki/Dynamic_array) whose second dimension is **$second** from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
+312 [readBinaryFile](#readbinaryfile) - Read a binary file on the local machine.
+
+313 [readFile](#readfile) - Return the content of a file residing on the local machine interpreting the content of the file as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+
+314 [readFileFromRemote](#readfilefromremote) - Copy and read a **$file** from the remote machine whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp) and return the content of $file interpreted as utf8 .
+
+315 [readFiles](#readfiles) - Read all the files in the specified list of folders into a hash.
+
+316 [readGZipFile](#readgzipfile) - Read the specified file containing compressed [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8) through [gzip](https://en.wikipedia.org/wiki/Gzip).
+
+317 [readStdIn](#readstdin) - Return the contents of STDIN and return the results as either an array or a string.
+
+318 [readUtf16File](#readutf16file) - Read a file containing [Unicode](https://en.wikipedia.org/wiki/Unicode) encoded in utf-16.
+
+319 [rectangularArray](#rectangulararray) - Create a two dimensional rectangular array whose first dimension is **$first** from a one dimensional linear array.
+
+320 [rectangularArray2](#rectangulararray2) - Create a two dimensional rectangular array whose second dimension is **$second** from a one dimensional linear array.
+
 321 [reinstateWellKnown](#reinstatewellknown) - Contract references to well known Urls to their abbreviated form.
 
-322 [relFromAbsAgainstAbs](#relfromabsagainstabs) - Relative [file](https://en.wikipedia.org/wiki/Computer_file) from one absolute [file](https://en.wikipedia.org/wiki/Computer_file) **$a** against another **$b**.
+322 [relFromAbsAgainstAbs](#relfromabsagainstabs) - Relative file from one absolute file **$a** against another **$b**.
 
-323 [reloadHashes](#reloadhashes) - Ensures that all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures have LValue methods to get and set their current keys.
+323 [reloadHashes](#reloadhashes) - Ensures that all the hashes within a tower of data structures have LValue methods to get and set their current keys.
 
-324 [reloadHashes2](#reloadhashes2) - Ensures that all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures have LValue methods to get and set their current keys.
+324 [reloadHashes2](#reloadhashes2) - Ensures that all the hashes within a tower of data structures have LValue methods to get and set their current keys.
 
-325 [removeDuplicatePrefixes](#removeduplicateprefixes) - Remove duplicated leading directory names from a [file](https://en.wikipedia.org/wiki/Computer_file) name.
+325 [removeDuplicatePrefixes](#removeduplicateprefixes) - Remove duplicated leading directory names from a file name.
 
-326 [removeFilePathsFromStructure](#removefilepathsfromstructure) - Remove all [file](https://en.wikipedia.org/wiki/Computer_file) paths from a specified **$structure** to make said $structure testable with ["is\_deeply" in Test::More](https://metacpan.org/pod/Test%3A%3AMore#is_deeply).
+326 [removeFilePathsFromStructure](#removefilepathsfromstructure) - Remove all file paths from a specified **$structure** to make said $structure testable with ["is\_deeply" in Test::More](https://metacpan.org/pod/Test%3A%3AMore#is_deeply).
 
-327 [removeFilePrefix](#removefileprefix) - Removes a [file](https://en.wikipedia.org/wiki/Computer_file) **$prefix** from an [array](https://en.wikipedia.org/wiki/Dynamic_array) of **@files**.
+327 [removeFilePrefix](#removefileprefix) - Removes a file **$prefix** from an array of **@files**.
 
-328 [renormalizeFolderName](#renormalizefoldername) - Normalize a [folder](https://en.wikipedia.org/wiki/File_folder) name by ensuring it has a single trailing directory separator.
+328 [renormalizeFolderName](#renormalizefoldername) - Normalize a folder name by ensuring it has a single trailing directory separator.
 
 329 [replaceStringWithString](#replacestringwithstring) - Replace all instances in **$string** of **$source** with **$target**.
 
 330 [reportAttributes](#reportattributes) - Report the attributes present in a **$sourceFile**.
 
-331 [reportAttributeSettings](#reportattributesettings) - Report the current values of the attribute methods in the calling [file](https://en.wikipedia.org/wiki/Computer_file) and optionally [write](https://en.wikipedia.org/wiki/Write_(system_call)) the report to **$reportFile**.
+331 [reportAttributeSettings](#reportattributesettings) - Report the current values of the attribute methods in the calling file and optionally write the report to **$reportFile**.
 
 332 [reportExportableMethods](#reportexportablemethods) - Report the exportable methods marked with #e in a **$sourceFile**.
 
@@ -11100,11 +11700,13 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 335 [retrieveFile](#retrievefile) - Retrieve a **$file** created via [Storable](https://metacpan.org/pod/Storable).
 
-336 [runInParallel](#runinparallel) - Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) in parallel using a maximum of **$maximumNumberOfProcesses** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
-337 [runInSquareRootParallel](#runinsquarerootparallel) - Process the elements of an [array](https://en.wikipedia.org/wiki/Dynamic_array) in square root parallel using a maximum of **$maximumNumberOfProcesses** [processes](https://en.wikipedia.org/wiki/Process_management_(computing)). 
+336 [runInParallel](#runinparallel) - Process the elements of an array in parallel using a maximum of **$maximumNumberOfProcesses** processes.
+
+337 [runInSquareRootParallel](#runinsquarerootparallel) - Process the elements of an array in square root parallel using a maximum of **$maximumNumberOfProcesses** processes.
+
 338 [s3Delete](#s3delete) - Return an S3 --delete keyword from an S3 option set.
 
-339 [s3DownloadFolder](#s3downloadfolder) - Download a specified **$folder** on S3 to a **$local** [folder](https://en.wikipedia.org/wiki/File_folder) using the specified **%options** if any.
+339 [s3DownloadFolder](#s3downloadfolder) - Download a specified **$folder** on S3 to a **$local** folder using the specified **%options** if any.
 
 340 [s3FileExists](#s3fileexists) - Return (name, size, date, time) for a **$file** that exists on S3 else () using the specified **%options** if any.
 
@@ -11112,139 +11714,151 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 342 [s3Profile](#s3profile) - Return an S3 profile keyword from an S3 option set.
 
-343 [s3ReadFile](#s3readfile) - Read from a **$file** on S3 and [write](https://en.wikipedia.org/wiki/Write_(system_call)) the contents to a local [file](https://en.wikipedia.org/wiki/Computer_file) **$local** using the specified **%options** if any.
+343 [s3ReadFile](#s3readfile) - Read from a **$file** on S3 and write the contents to a local file **$local** using the specified **%options** if any.
 
-344 [s3ReadString](#s3readstring) - Read from a **$file** on S3 and return the contents as a [string](https://en.wikipedia.org/wiki/String_(computer_science)) using specified **%options** if any.
+344 [s3ReadString](#s3readstring) - Read from a **$file** on S3 and return the contents as a string using specified **%options** if any.
 
-345 [s3WriteFile](#s3writefile) - Write to a [file](https://en.wikipedia.org/wiki/Computer_file) **$fileS3** on S3 the contents of a local [file](https://en.wikipedia.org/wiki/Computer_file) **$fileLocal** using the specified **%options** if any.
+345 [s3WriteFile](#s3writefile) - Write to a file **$fileS3** on S3 the contents of a local file **$fileLocal** using the specified **%options** if any.
 
 346 [s3WriteString](#s3writestring) - Write to a **$file** on S3 the contents of **$string** using the specified **%options** if any.
 
-347 [s3ZipFolder](#s3zipfolder) - Zip the specified **$source** [folder](https://en.wikipedia.org/wiki/File_folder) and [write](https://en.wikipedia.org/wiki/Write_(system_call)) it to the named **$target** [file](https://en.wikipedia.org/wiki/Computer_file) on S3.
+347 [s3ZipFolder](#s3zipfolder) - Zip the specified **$source** folder and write it to the named **$target** file on S3.
 
-348 [s3ZipFolders](#s3zipfolders) - Zip local folders and [upload](https://en.wikipedia.org/wiki/Upload) them to S3 in parallel.
+348 [s3ZipFolders](#s3zipfolders) - Zip local folders and upload them to S3 in parallel.
 
-349 [saveAwsDomain](#saveawsdomain) - Make the [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon Web Services](http://aws.amazon.com) with the given [domain name](https://en.wikipedia.org/wiki/Domain_name) name the default primary [server](https://en.wikipedia.org/wiki/Server_(computing)) as used by all the methods whose names end in **r** or **Remote**.
+349 [saveAwsDomain](#saveawsdomain) - Make the server at [Amazon Web Services](http://aws.amazon.com) with the given domain name the default primary server as used by all the methods whose names end in **r** or **Remote**.
 
-350 [saveAwsIp](#saveawsip) - Make the [server](https://en.wikipedia.org/wiki/Server_(computing)) at [Amazon Web Services](http://aws.amazon.com) with the given IP address the default primary [server](https://en.wikipedia.org/wiki/Server_(computing)) as used by all the methods whose names end in **r** or **Remote**.
+350 [saveAwsIp](#saveawsip) - Make the server at [Amazon Web Services](http://aws.amazon.com) with the given IP address the default primary server as used by all the methods whose names end in **r** or **Remote**.
 
-351 [saveCodeToS3](#savecodetos3) - Save source [code](https://en.wikipedia.org/wiki/Computer_program) every **$saveCodeEvery** seconds by zipping [folder](https://en.wikipedia.org/wiki/File_folder) **$folder** to [zip](https://linux.die.net/man/1/zip) [file](https://en.wikipedia.org/wiki/Computer_file) **$zipFileName** then saving this [zip](https://linux.die.net/man/1/zip) [file](https://en.wikipedia.org/wiki/Computer_file) in the specified [S3](https://aws.amazon.com/s3/) **$bucket** using any additional [S3](https://aws.amazon.com/s3/) parameters in **$S3Parms**.
+351 [saveCodeToS3](#savecodetos3) - Save source code every **$saveCodeEvery** seconds by zipping folder **$folder** to zip file **$zipFileName** then saving this zip file in the specified [S3](https://aws.amazon.com/s3/) **$bucket** using any additional [S3](https://aws.amazon.com/s3/) parameters in **$S3Parms**.
 
-352 [saveSourceToS3](#savesourcetos3) - Save source [code](https://en.wikipedia.org/wiki/Computer_program). 
-353 [searchDirectoryTreeForSubFolders](#searchdirectorytreeforsubfolders) - Search the specified directory under the specified [folder](https://en.wikipedia.org/wiki/File_folder) for [sub](https://perldoc.perl.org/perlsub.html) folders.
+352 [saveSourceToS3](#savesourcetos3) - Save source code.
 
-354 [searchDirectoryTreesForMatchingFiles](#searchdirectorytreesformatchingfiles) - Search the specified directory [trees](https://en.wikipedia.org/wiki/Tree_(data_structure)) for the files (not folders) that match the specified [file name extensions](https://en.wikipedia.org/wiki/List_of_filename_extensions). 
-355 [setCombination](#setcombination) - Count the elements in sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
+353 [searchDirectoryTreeForSubFolders](#searchdirectorytreeforsubfolders) - Search the specified directory under the specified folder for sub folders.
 
-356 [setDifference](#setdifference) - Subtract the keys in the second set represented as a [hash](https://en.wikipedia.org/wiki/Hash_table) from the first set represented as a [hash](https://en.wikipedia.org/wiki/Hash_table) to create a new [hash](https://en.wikipedia.org/wiki/Hash_table) showing the set difference between the two.
+354 [searchDirectoryTreesForMatchingFiles](#searchdirectorytreesformatchingfiles) - Search the specified directory trees for the files (not folders) that match the specified extensions.
+
+355 [setCombination](#setcombination) - Count the elements in sets **@s** represented as arrays of strings and/or the keys of hashes.
+
+356 [setDifference](#setdifference) - Subtract the keys in the second set represented as a hash from the first set represented as a hash to create a new hash showing the set difference between the two.
 
 357 [setFileExtension](#setfileextension) - Given a **$file**, change its extension to **$extension**.
 
-358 [setIntersection](#setintersection) - Intersection of sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
+358 [setIntersection](#setintersection) - Intersection of sets **@s** represented as arrays of strings and/or the keys of hashes.
 
-359 [setIntersectionOverUnion](#setintersectionoverunion) - Returns the size of the intersection over the size of the union of one or more sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) and/or hashes.
+359 [setIntersectionOverUnion](#setintersectionoverunion) - Returns the size of the intersection over the size of the union of one or more sets **@s** represented as arrays and/or hashes.
 
 360 [setPackageSearchOrder](#setpackagesearchorder) - Set a package search order for methods requested in the current package via AUTOLOAD.
 
 361 [setPartitionOnIntersectionOverUnion](#setpartitiononintersectionoverunion) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets** so that within each partition the [setIntersectionOverUnion](#setintersectionoverunion) of any two sets in the partition is never less than the specified level of _$confidence\*\*2_.
 
-362 [setPartitionOnIntersectionOverUnionOfHashStringSets](#setpartitiononintersectionoverunionofhashstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a [hash](https://en.wikipedia.org/wiki/Hash_table), each [hash](https://en.wikipedia.org/wiki/Hash_table) value being a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the [hash](https://en.wikipedia.org/wiki/Hash_table) keys of the [string](https://en.wikipedia.org/wiki/String_(computer_science)) sets.
+362 [setPartitionOnIntersectionOverUnionOfHashStringSets](#setpartitiononintersectionoverunionofhashstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a hash, each hash value being a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the hash keys of the string sets.
 
-363 [setPartitionOnIntersectionOverUnionOfHashStringSetsInParallel](#setpartitiononintersectionoverunionofhashstringsetsinparallel) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a [hash](https://en.wikipedia.org/wiki/Hash_table), each [hash](https://en.wikipedia.org/wiki/Hash_table) value being a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the [hash](https://en.wikipedia.org/wiki/Hash_table) keys of the [string](https://en.wikipedia.org/wiki/String_(computer_science)) sets.
+363 [setPartitionOnIntersectionOverUnionOfHashStringSetsInParallel](#setpartitiononintersectionoverunionofhashstringsetsinparallel) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a hash, each hash value being a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the hash keys of the string sets.
 
 364 [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets** of words so that within each partition the [setIntersectionOverUnion](#setintersectionoverunion) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
 
-365 [setPartitionOnIntersectionOverUnionOfStringSets](#setpartitiononintersectionoverunionofstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@strings**, each set represented by a [string](https://en.wikipedia.org/wiki/String_(computer_science)) containing words and punctuation, each [word](https://en.wikipedia.org/wiki/Doc_(computing)) possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
+365 [setPartitionOnIntersectionOverUnionOfStringSets](#setpartitiononintersectionoverunionofstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@strings**, each set represented by a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
 
 366 [setPermissionsForFile](#setpermissionsforfile) - Apply [chmod](https://linux.die.net/man/1/chmod) to a **$file** to set its **$permissions**.
 
-367 [setUnion](#setunion) - Union of sets **@s** represented as [arrays](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) and/or the keys of hashes.
+367 [setUnion](#setunion) - Union of sets **@s** represented as arrays of strings and/or the keys of hashes.
 
-368 [showGotVersusWanted](#showgotversuswanted) - Show the difference between the wanted [string](https://en.wikipedia.org/wiki/String_(computer_science)) and the wanted [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-369 [showHashes](#showhashes) - Create a map of all the keys within all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures.
+368 [showGotVersusWanted](#showgotversuswanted) - Show the difference between the wanted string and the wanted string.
 
-370 [showHashes2](#showhashes2) - Create a map of all the keys within all the hashes within a tower of [data](https://en.wikipedia.org/wiki/Data) structures.
+369 [showHashes](#showhashes) - Create a map of all the keys within all the hashes within a tower of data structures.
+
+370 [showHashes2](#showhashes2) - Create a map of all the keys within all the hashes within a tower of data structures.
 
 371 [spellCheck](#spellcheck) - Spell checker
 
-372 [squareArray](#squarearray) - Create a two dimensional square [array](https://en.wikipedia.org/wiki/Dynamic_array) from a one dimensional linear [array](https://en.wikipedia.org/wiki/Dynamic_array). 
-373 [startProcess](#startprocess) - Start new [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) while the number of child [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) recorded in **%$pids** is less than the specified **$maximum**.
+372 [squareArray](#squarearray) - Create a two dimensional square array from a one dimensional linear array.
 
-374 [storeFile](#storefile) - Store into a **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, a [data](https://en.wikipedia.org/wiki/Data) **$structure** via [Storable](https://metacpan.org/pod/Storable).
+373 [startProcess](#startprocess) - Start new processes while the number of child processes recorded in **%$pids** is less than the specified **$maximum**.
 
-375 [stringMd5Sum](#stringmd5sum) - Get the Md5 sum of a **$string** that might contain [utf8](https://en.wikipedia.org/wiki/UTF-8) [code](https://en.wikipedia.org/wiki/Computer_program) points.
+374 [storeFile](#storefile) - Store into a **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, a data **$structure** via [Storable](https://metacpan.org/pod/Storable).
 
-376 [stringsAreNotEqual](#stringsarenotequal) - Return the common start followed by the two non equal tails of two non equal [strings](https://en.wikipedia.org/wiki/String_(computer_science)) or an empty [list](https://en.wikipedia.org/wiki/Linked_list) if the [strings](https://en.wikipedia.org/wiki/String_(computer_science)) are equal.
+375 [stringMd5Sum](#stringmd5sum) - Get the Md5 sum of a **$string** that might contain [utf8](https://en.wikipedia.org/wiki/UTF-8) code points.
 
-377 [subNameTraceBack](#subnametraceback) - Find the names of the calling subroutines and return them as a blank separated [string](https://en.wikipedia.org/wiki/String_(computer_science)) of names.
+376 [stringsAreNotEqual](#stringsarenotequal) - Return the common start followed by the two non equal tails of two non equal strings or an empty list if the strings are equal.
 
-378 [subScriptString](#subscriptstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [sub](https://perldoc.perl.org/perlsub.html) scripts.
+377 [subNameTraceBack](#subnametraceback) - Find the names of the calling subroutines and return them as a blank separated string of names.
 
-379 [subScriptStringUndo](#subscriptstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to [sub](https://perldoc.perl.org/perlsub.html) scripts.
+378 [subScriptString](#subscriptstring) - Convert alphanumerics in a string to sub scripts.
 
-380 [sumAbsAndRel](#sumabsandrel) - Combine zero or more absolute and relative names of **@files** starting at the current working [folder](https://en.wikipedia.org/wiki/File_folder) to get an absolute [file](https://en.wikipedia.org/wiki/Computer_file) name.
+379 [subScriptStringUndo](#subscriptstringundo) - Undo alphanumerics in a string to sub scripts.
 
-381 [summarizeColumn](#summarizecolumn) - Count the number of unique instances of each value a column in a [table](https://en.wikipedia.org/wiki/Table_(information)) assumes.
+380 [sumAbsAndRel](#sumabsandrel) - Combine zero or more absolute and relative names of **@files** starting at the current working folder to get an absolute file name.
 
-382 [superScriptString](#superscriptstring) - Convert alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to super scripts.
+381 [summarizeColumn](#summarizecolumn) - Count the number of unique instances of each value a column in a table assumes.
 
-383 [superScriptStringUndo](#superscriptstringundo) - Undo alphanumerics in a [string](https://en.wikipedia.org/wiki/String_(computer_science)) to super scripts.
+382 [superScriptString](#superscriptstring) - Convert alphanumerics in a string to super scripts.
 
-384 [swapFilePrefix](#swapfileprefix) - Swaps the start of a **$file** name from a **$known** name to a **$new** one if the [file](https://en.wikipedia.org/wiki/Computer_file) does in fact start with the $known name otherwise returns the original [file](https://en.wikipedia.org/wiki/Computer_file) name as it is.
+383 [superScriptStringUndo](#superscriptstringundo) - Undo alphanumerics in a string to super scripts.
 
-385 [swapFolderPrefix](#swapfolderprefix) - Given a **$file**, swap the [folder](https://en.wikipedia.org/wiki/File_folder) name of the $file from **$known** to **$new** if the [file](https://en.wikipedia.org/wiki/Computer_file) $file starts with the $known [folder](https://en.wikipedia.org/wiki/File_folder) name else return the $file as it is.
+384 [swapFilePrefix](#swapfileprefix) - Swaps the start of a **$file** name from a **$known** name to a **$new** one if the file does in fact start with the $known name otherwise returns the original file name as it is.
 
-386 [syncFromS3InParallel](#syncfroms3inparallel) - Download from [S3](https://aws.amazon.com/s3/) by using "aws [S3](https://aws.amazon.com/s3/) sync --exclude '\*' --include '.
+385 [swapFolderPrefix](#swapfolderprefix) - Given a **$file**, swap the folder name of the $file from **$known** to **$new** if the file $file starts with the $known folder name else return the $file as it is.
 
-387 [syncToS3InParallel](#synctos3inparallel) - Upload to [S3](https://aws.amazon.com/s3/) by using "aws [S3](https://aws.amazon.com/s3/) sync --exclude '\*' --include '.
+386 [syncFromS3InParallel](#syncfroms3inparallel) - Download from [S3](https://aws.amazon.com/s3/) by using "aws s3 sync --exclude '\*' --include '.
 
-388 [temporaryFile](#temporaryfile) - Create a new, empty, temporary [file](https://en.wikipedia.org/wiki/Computer_file). 
-389 [temporaryFolder](#temporaryfolder) - Create a new, empty, temporary [folder](https://en.wikipedia.org/wiki/File_folder). 
+387 [syncToS3InParallel](#synctos3inparallel) - Upload to [S3](https://aws.amazon.com/s3/) by using "aws s3 sync --exclude '\*' --include '.
+
+388 [temporaryFile](#temporaryfile) - Create a new, empty, temporary file.
+
+389 [temporaryFolder](#temporaryfolder) - Create a new, empty, temporary folder.
+
 390 [timeStamp](#timestamp) - Hours:minute:seconds.
 
-391 [transitiveClosure](#transitiveclosure) - Transitive closure of a [hash](https://en.wikipedia.org/wiki/Hash_table) of hashes.
+391 [transitiveClosure](#transitiveclosure) - Transitive closure of a hash of hashes.
 
-392 [trim](#trim) - Remove any white space from the front and end of a [string](https://en.wikipedia.org/wiki/String_(computer_science)). 
-393 [Udsr::kill](#udsr-kill) - Kill a communications [server](https://en.wikipedia.org/wiki/Server_(computing)). 
+392 [trim](#trim) - Remove any white space from the front and end of a string.
+
+393 [Udsr::kill](#udsr-kill) - Kill a communications server.
+
 394 [Udsr::read](#udsr-read) - Read a message from the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#newudsrclient).
 
-395 [Udsr::webUser](#udsr-webuser) - Create a [systemd](https://en.wikipedia.org/wiki/Systemd) installed [server](https://en.wikipedia.org/wiki/Server_(computing)) that [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) [HTTP](https://en.wikipedia.org/wiki/HTTP) requests using a specified [userid](https://en.wikipedia.org/wiki/User_identifier). 
+395 [Udsr::webUser](#udsr-webuser) - Create a systemd installed server that processes http requests using a specified userid.
+
 396 [Udsr::write](#udsr-write) - Write a communications message to the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#newudsrclient).
 
-397 [unbless](#unbless) - Remove the effects of bless from a [Perl](http://www.perl.org/) [data](https://en.wikipedia.org/wiki/Data) **$structure** enabling it to be converted to [Json](https://en.wikipedia.org/wiki/JSON) or compared with [Test::More::is\_deeply](https://metacpan.org/pod/Test%3A%3AMore%3A%3Ais_deeply).
+397 [unbless](#unbless) - Remove the effects of bless from a [Perl](http://www.perl.org/) data **$structure** enabling it to be converted to [Json](https://en.wikipedia.org/wiki/JSON) or compared with [Test::More::is\_deeply](https://metacpan.org/pod/Test%3A%3AMore%3A%3Ais_deeply).
 
-398 [unionOfHashesAsArrays](#unionofhashesasarrays) - Form the union of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose values are a [array](https://en.wikipedia.org/wiki/Dynamic_array) of corresponding values from each [hash](https://en.wikipedia.org/wiki/Hash_table). 
-399 [unionOfHashKeys](#unionofhashkeys) - Form the union of the keys of the specified hashes **@h** as one [hash](https://en.wikipedia.org/wiki/Hash_table) whose keys represent the union.
+398 [unionOfHashesAsArrays](#unionofhashesasarrays) - Form the union of the specified hashes **@h** as one hash whose values are a array of corresponding values from each hash.
 
-400 [uniqueNameFromFile](#uniquenamefromfile) - Create a unique name from a [file](https://en.wikipedia.org/wiki/Computer_file) name and the [MD5](https://en.wikipedia.org/wiki/MD5) sum of its content.
+399 [unionOfHashKeys](#unionofhashkeys) - Form the union of the keys of the specified hashes **@h** as one hash whose keys represent the union.
 
-401 [updateDocumentation](#updatedocumentation) - Update the [documentation](https://en.wikipedia.org/wiki/Software_documentation) for a Perl [module](https://en.wikipedia.org/wiki/Modular_programming) from the comments in its source [code](https://en.wikipedia.org/wiki/Computer_program). 
-402 [updatePerlModuleDocumentation](#updateperlmoduledocumentation) - Update the [documentation](https://en.wikipedia.org/wiki/Software_documentation) in a **$perlModule** and display said [documentation](https://en.wikipedia.org/wiki/Software_documentation) in a web [web browser](https://en.wikipedia.org/wiki/Web_browser). 
-403 [userId](#userid) - Get or confirm the [userid](https://en.wikipedia.org/wiki/User_identifier) we are currently running under.
+400 [uniqueNameFromFile](#uniquenamefromfile) - Create a unique name from a file name and the md5 sum of its content.
 
-404 [validateHash](#validatehash) - Confess if the specified [hash](https://en.wikipedia.org/wiki/Hash_table) does not have all of the specified keys.
+401 [updateDocumentation](#updatedocumentation) - Update the documentation for a Perl module from the comments in its source code.
+
+402 [updatePerlModuleDocumentation](#updateperlmoduledocumentation) - Update the documentation in a **$perlModule** and display said documentation in a web browser.
+
+403 [userId](#userid) - Get or confirm the userid we are currently running under.
+
+404 [validateHash](#validatehash) - Confess if the specified hash does not have all of the specified keys.
 
 405 [versionCode](#versioncode) - YYYYmmdd-HHMMSS.
 
 406 [versionCodeDashed](#versioncodedashed) - YYYY-mm-dd-HH:MM:SS.
 
-407 [waitForAllStartedProcessesToFinish](#waitforallstartedprocessestofinish) - Wait until all the [processes](https://en.wikipedia.org/wiki/Process_management_(computing)) started by [startProcess](#startprocess) have finished.
+407 [waitForAllStartedProcessesToFinish](#waitforallstartedprocessestofinish) - Wait until all the processes started by [startProcess](#startprocess) have finished.
 
 408 [wellKnownUrls](#wellknownurls) - Short names for some well known urls.
 
-409 [writeBinaryFile](#writebinaryfile) - Write to a new **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
+409 [writeBinaryFile](#writebinaryfile) - Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
 
 410 [writeFile](#writefile) - Write to a new **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-411 [writeFiles](#writefiles) - Write the values of a **$hash** reference into files identified by the key of each value using [overWriteFile](#overwritefile) optionally swapping the prefix of each [file](https://en.wikipedia.org/wiki/Computer_file) from **$old** to **$new**.
+411 [writeFiles](#writefiles) - Write the values of a **$hash** reference into files identified by the key of each value using [overWriteFile](#overwritefile) optionally swapping the prefix of each file from **$old** to **$new**.
 
-412 [writeFileToRemote](#writefiletoremote) - Write to a new **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+412 [writeFileToRemote](#writefiletoremote) - Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-413 [writeGZipFile](#writegzipfile) - Write to a **$file**, after creating a path to the [file](https://en.wikipedia.org/wiki/Computer_file) with [makePath](https://metacpan.org/pod/makePath) if necessary, through [gzip](https://en.wikipedia.org/wiki/Gzip) a **$string** whose content is encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+413 [writeGZipFile](#writegzipfile) - Write to a **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, through [gzip](https://en.wikipedia.org/wiki/Gzip) a **$string** whose content is encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-414 [writeStructureTest](#writestructuretest) - Write a [test](https://en.wikipedia.org/wiki/Software_testing) for a [data](https://en.wikipedia.org/wiki/Data) **$structure** with [file](https://en.wikipedia.org/wiki/Computer_file) names in it.
+414 [writeStructureTest](#writestructuretest) - Write a test for a data **$structure** with file names in it.
 
-415 [writeTempFile](#writetempfile) - Write an [array](https://en.wikipedia.org/wiki/Dynamic_array) of [strings](https://en.wikipedia.org/wiki/String_(computer_science)) as lines to a temporary [file](https://en.wikipedia.org/wiki/Computer_file) and return the [file](https://en.wikipedia.org/wiki/Computer_file) name.
+415 [writeTempFile](#writetempfile) - Write an array of strings as lines to a temporary file and return the file name.
 
 416 [wwwDecode](#wwwdecode) - Percent decode a [url](https://en.wikipedia.org/wiki/URL) **$string** per: https://en.
 
@@ -11252,19 +11866,20 @@ Extract [Python](https://www.python.org/) [documentation](https://en.wikipedia.o
 
 418 [wwwGitHubAuth](#wwwgithubauth) - Logon as a [GitHub](https://github.com/philiprbrenan) [Oauth](https://en.wikipedia.org/wiki/OAuth) app per: [https://github.](https://github.)
 
-419 [xxx](#xxx) - Execute a [shell](https://en.wikipedia.org/wiki/Shell_(computing)) command optionally checking its response.
+419 [xxx](#xxx) - Execute a shell command optionally checking its response.
 
-420 [xxxr](#xxxr) - Execute a command **$cmd** via [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) on the [server](https://en.wikipedia.org/wiki/Server_(computing)) whose [IP address](https://en.wikipedia.org/wiki/IP_address) address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+420 [xxxr](#xxxr) - Execute a command **$cmd** via bash on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-421 [yyy](#yyy) - Execute a block of [shell](https://en.wikipedia.org/wiki/Shell_(computing)) commands line by line after removing comments - stop if there is a non zero return [code](https://en.wikipedia.org/wiki/Computer_program) from any command.
+421 [yyy](#yyy) - Execute a block of shell commands line by line after removing comments - stop if there is a non zero return code from any command.
 
-422 [zzz](#zzz) - Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return [code](https://en.wikipedia.org/wiki/Computer_program) of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails.
+422 [zzz](#zzz) - Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return code of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails.
 
 # Installation
 
-This [module](https://en.wikipedia.org/wiki/Modular_programming) is written in 100% Pure Perl and, thus, it is easy to [read](https://en.wikipedia.org/wiki/Reading_(computer)), comprehend, use, modify and [install](https://en.wikipedia.org/wiki/Installation_(computer_programs)) via **cpan**:
+This module is written in 100% Pure Perl and, thus, it is easy to read,
+comprehend, use, modify and install via **cpan**:
 
-    sudo [CPAN](https://metacpan.org/author/PRBRENAN) [install](https://en.wikipedia.org/wiki/Installation_(computer_programs)) Data::Table::Text
+    sudo cpan install Data::Table::Text
 
 # Author
 
@@ -11276,24 +11891,24 @@ This [module](https://en.wikipedia.org/wiki/Modular_programming) is written in 1
 
 Copyright (c) 2016-2023 Philip R Brenan.
 
-This [module](https://en.wikipedia.org/wiki/Modular_programming) is free [software](https://en.wikipedia.org/wiki/Software). It may be used, redistributed and/or modified
+This module is free software. It may be used, redistributed and/or modified
 under the same terms as Perl itself.
 
 # Acknowledgements
 
-Thanks to the following [people](https://en.wikipedia.org/wiki/Person) for their [help](https://en.wikipedia.org/wiki/Online_help) with this [module](https://en.wikipedia.org/wiki/Modular_programming): 
+Thanks to the following people for their help with this module:
+
 - [mim@cpan.org](mailto:mim@cpan.org)
 
     Testing on windows
+
+1111
+2222
 
 # POD ERRORS
 
 Hey! **The above document had some coding errors, which are explained below:**
 
-- Around line 101:
-
-    Non-ASCII character seen before =encoding in 'dateTimeStamp '. Assuming CP1252
-
-- Around line 12438:
+- Around line 12603:
 
     Unterminated L<...> sequence
