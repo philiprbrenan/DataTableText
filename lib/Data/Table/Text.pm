@@ -3058,6 +3058,10 @@ sub formatHtmlAndTextTables($$$$$%)                                             
 
 #D1 Lines                                                                       # Load data structures from lines.
 
+sub newLine()                                                                   # Return a new line - useful for writing L<perl> one liners
+ {"\n"
+ }
+
 sub loadArrayFromLines($)                                                       # Load an array from lines of text in a string.
  {my ($string) = @_;                                                            # The string of lines from which to create an array
   [grep {!/\A#/} split "\n", $string]
@@ -7297,8 +7301,8 @@ END
          }
        }
 
-      if ($line =~ m(\A(\s*)if\s*\x28(\d+)\x29))                                # Process "if (\d+)" recording leading spaces
-       {my $S = $1; my $minimumNumberOfLines = $2;                              # Leading spaces so we can balance the indentation of the closing curly bracket. Start testing for the closing } after this many lines
+      if ($line =~ m(\A(\s*)if\s*\x28(\d+|github)\x29)i)                        # Process "if (\d+)" recording leading spaces
+       {my $S = $1; my $minimumNumberOfLines = 0;#$2;                              # Leading spaces so we can balance the indentation of the closing curly bracket. Start testing for the closing } after this many lines
         my $M = $maxLinesInExample;
         for(my ($L, $N) = ($l + 1, 0); $L < @lines; ++$L, ++$N)
          {my $nextLine = $lines[$L];
@@ -7325,8 +7329,15 @@ END
        {my @svg;
         for my $l(@testLines)                                                   # Each line of the test
          {if ($l =~ m(svg=>q\((.*?)\)))                                         # Svg image found for this test
-           {my $f = "$svg$1.svg";                                               # Implied svg file name
-            push @svg, qq(\n\n=for html <img src="$f">) unless $svg{$f}++;      # The new line takes the directive out of an example.  Only include images otherwise the document gets very big very quickly
+           {my $s = $1;                                                         # Svg file name
+            my $u = "$svg$s.svg";                                               # Implied svg file name
+            push @svg, qq(\n\n=for html <img src="$u">) unless $svg{$u}++;      # The new line takes the directive out of an example.  Only include images otherwise the document gets very big very quickly
+            for my $i(1..99)                                                    # Test for wiring diagrams
+             {my $u = "$svg${s}_$i.svg";                                        # File name url
+              my $f = "svg/${s}_$i.svg";                                        # Local file name
+              last unless -e $f;                                                # Include file if it exists locally
+              push @svg, qq(\n\n=for html <img src="$u">) unless $svg{$u}++;    # The new line takes the directive out of an example.  Only include images otherwise the document gets very big very quickly
+             }
            }
          }
          push @testLines, @svg;
@@ -8329,6 +8340,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
  mergeFolderFromRemote microSecondsSinceEpoch min mmm
  moveFileNoClobber moveFileWithClobber
  nameFromFolder nameFromString nameFromStringRestrictedToTitle newProcessStarter
+ newLine
  newServiceIncarnation newUdsr newUdsrClient newUdsrServer numberOfCpus
  numberOfLinesInFile numberOfLinesInString numberWithCommas nws
  onAws onAwsPrimary onAwsSecondary overWriteBinaryFile overWriteFile
