@@ -5524,26 +5524,35 @@ sub downloadGitHubPublicRepoFile($$$)                                           
   $r                                                                            # Return data read from github
  }
 
-#D1 FPGAs                                                                       # Load verilog into a field programmable gate array
+sub postProcessImagesForDocumentation()                                         # Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the ping files are larger.
+ {my $home  = currentDirectory;                                                 # Home folder
+  my $dir   = fpd qw(lib Silicon Chip);                                         # Target folder for images
+  my $imgs  = fpd $home, $dir;                                                  # Images source folder
+     $imgs  = $home if $ENV{GITHUB_TOKEN};                                      # Change folders for github
+  my $svg   = fpd $imgs, qw(svg);                                               # Svg folder
+  my $png   = fpd $imgs, qw(png);                                               # Png folder
+  my ($user, $repo) =  split m(/), $ENV{GITHUB_REPOSITORY}//'';                 # Userid and repo from github
 
-sub fpgaGowin(%)                                                                #P Compile verilog to a gowin device.
- {my (%options) = @_;                                                           # Parameters
-  my $home    = currentDirectory;                                               # Local folder
-  my ($m)     = reverse grep {$_} split m(/), $home;                            # Module is the last element of the path to the current directory
+  makePath($png);                                                               # Make png folder
 
-  my $Device  = q(GW1NR-LV9QN88PC6/I5);                                         # Default device
+  my @f = searchDirectoryTreesForMatchingFiles $svg, qw(.svg);                  # Svg files from which we make png files
 
-  my $v       = fpe $home, $m, q(sv);                                           # Source file
-  my $j       = fpe $home, $m, qw(json);                                        # Json description
-  my $p       = fpe $home, $m, qw(pnr);                                         # Place and route
-  my $d       = $options{device} // $Device;                                    # Device
-  my ($b)     = searchDirectoryTreesForMatchingFiles($home, qw(.cst));          # Device description
-  $b or confess "Need a .cst file to provide constraints but none found";
-  unlink $j, $p;                                                                # Output files
+  for my $s(@f)                                                                 # Svg files
+   {my $t = setFileExtension $s, q(png);
+       $t = swapFilePrefix $t, $svg, $png;                                      # Matching png
+    my $c = qq(cairosvg -o $t --output-width 10000 --output-height 10000 $s);
+    my $r = qx($c);
+    say STDERR $r if $r =~ m(\S);
+   }
 
-  xxx(qq(yosys -q -p "read_verilog $v; synth_gowin -top $m -json $j"));
-  xxx(qq(nextpnr-gowin -v --debug --json $j --write $p --device "$d" --family GW1N-9C --cst $b));
-  xxx(qq(gowin_pack -d GW1N-9C -o pack.fs $p));
+  my @r;
+  for my $x(qw(gds png svg))                                                    # Upload images to target location
+   {eval <<END;                                                                 # Avoid making this module directly dependent on ghc as we only use it here
+use GitHub::Crud qw(:all);
+END
+    push @r, writeFolderUsingSavedToken("$user","$repo",fpd("$dir","$x"),fpd("$imgs","$x"));
+   }
+  @r
  }
 
 #D1 Processes                                                                   # Start processes, wait for them to terminate and retrieve their results
@@ -7268,7 +7277,7 @@ END
   my @lines = split /\n/, $source;                                              # Split source into lines
 
   for my $l(@lines)                                                             # Look for global values
-   {if ($l =~ m/\A#Svg\s+(.*?)\s*\Z/i)                                          # Svg images folder url
+   {if ($l =~ m/\A#svg\s+(.*?)\s*\Z/i)                                          # Svg images folder url
      {$svg = $1;
      }
     elsif ($l =~ m/\A\s*my\s+\$(\w+)\s*=\s*q\((.*?)\);\s*#Substitute/)          # Key to substitute => value to substitute
@@ -7326,21 +7335,33 @@ END
        }
 
       if ($svg)                                                                 # Look for svg image references being used as illustrations of examples
-       {my @svg;
+       {my $png = $svg =~ s(svg/\Z) (png/)gsr;                                  # Implied png folder
+        my @svg;
         for my $l(@testLines)                                                   # Each line of the test
          {if ($l =~ m(svg=>q\((.*?)\)))                                         # Svg image found for this test
            {my $s = $1;                                                         # Svg file name
-            my $u = "$svg$s.svg";                                               # Implied svg file name
+            my $p = sub {$l =~ m(pngs=>(\d+)) ? $1 : undef}->();                # Use png instead of svg
+            my $u = "$svg$s.svg";                                               # Implied svg file url
+               $u = "$png$s.png" if $p;                                         # Implied png file url
             push @svg, qq(\n\n=for html <img src="$u">) unless $svg{$u}++;      # The new line takes the directive out of an example.  Only include images otherwise the document gets very big very quickly
-            for my $i(1..99)                                                    # Test for wiring diagrams
+            for my $i(1..99)                                                    # Test for svgs that already exists
              {my $u = "$svg${s}_$i.svg";                                        # File name url
-              my $f = "svg/${s}_$i.svg";                                        # Local file name
+                 $u = "$png${s}_$i.png" if $p;                                  # Implied png file url
+              my $f = "svg/${s}_$i.svg";                                        # Local svg file name
               last unless -e $f;                                                # Include file if it exists locally
               push @svg, qq(\n\n=for html <img src="$u">) unless $svg{$u}++;    # The new line takes the directive out of an example.  Only include images otherwise the document gets very big very quickly
              }
+            if ($l =~ m(svgs=>(\d+)))                                           # Svg count provided
+             {my $n = $1;                                                       # Svg url count
+              for my $i(1..$n)                                                  # Add any additional svgs
+               {my $u = "$svg${s}_$i.svg";                                      # Svg url
+                   $u = "$png${s}_$i.png" if $p;                                # Png url
+                push @svg, qq(\n\n=for html <img src="$u">) unless $svg{$u}++;  # The new line takes the directive out of an example.  Only include images otherwise the document gets very big very quickly
+               }
+             }
            }
          }
-         push @testLines, @svg;
+        push @testLines, @svg;
        }
 
       push @testLines, '';                                                      # Blank line between each test line
@@ -8348,6 +8369,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
  overWriteHtmlFile overWritePerlCgiFile
  pad ppp parseCommandLineArguments parseDitaRef parseFileName
  parseIntoWordsAndStrings parseXmlDocType partitionStringsOnPrefixBySize
+ postProcessImagesForDocumentation
  powerOfTwo printQw processFilesInParallel processJavaFilesInParallel
  processSizesInParallel
  quoteFile
@@ -13723,6 +13745,11 @@ B<Example:>
 
   }
   
+  #latest:;
+  if (0) {                                                                        
+    postProcessImagesForDocumentation;
+  }
+  
   
 
 =head2 loadArrayFromLines  ($string)
@@ -17668,9 +17695,20 @@ B<Example:>
 
   
 
-=head1 FPGAs
+=head2 postProcessImagesForDocumentation   ()
 
-Load verilog into a field programmable gate array
+Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the ping files are larger.
+
+
+B<Example:>
+
+
+  
+    postProcessImagesForDocumentation;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+  }
+  
+  
 
 =head1 Processes
 
@@ -20039,13 +20077,6 @@ Return an S3 --delete keyword from an S3 option set.
      Parameter  Description
   1  %options   Options
 
-=head2 fpgaGowin   (%options)
-
-Compile verilog to a gowin device.
-
-     Parameter  Description
-  1  %options   Parameters
-
 =head2 Data::Table::Text::Starter::logEntry($starter, $finish)
 
 Create a log entry showing progress and eta.
@@ -20550,239 +20581,239 @@ B<temporaryDirectory> is a synonym for L<temporaryFolder|/temporaryFolder> - Cre
 
 184 L<fp|/fp> - Get the path from a file name.
 
-185 L<fpgaGowin|/fpgaGowin> - Compile verilog to a gowin device.
+185 L<fpn|/fpn> - Remove the extension from a file name.
 
-186 L<fpn|/fpn> - Remove the extension from a file name.
+186 L<fullFileName|/fullFileName> - Full name of a file.
 
-187 L<fullFileName|/fullFileName> - Full name of a file.
+187 L<fullyQualifiedFile|/fullyQualifiedFile> - Check whether a B<$file> name is fully qualified or not and, optionally, whether it is fully qualified with a specified B<$prefix> or not.
 
-188 L<fullyQualifiedFile|/fullyQualifiedFile> - Check whether a B<$file> name is fully qualified or not and, optionally, whether it is fully qualified with a specified B<$prefix> or not.
+188 L<fullyQualifyFile|/fullyQualifyFile> - Return the fully qualified name of a file.
 
-189 L<fullyQualifyFile|/fullyQualifyFile> - Return the fully qualified name of a file.
+189 L<genHash|/genHash> - Return a B<$bless>ed hash with the specified B<$attributes> accessible via L<lvalue method|http://perldoc.perl.org/perlsub.html#Lvalue-subroutines> method calls.
 
-190 L<genHash|/genHash> - Return a B<$bless>ed hash with the specified B<$attributes> accessible via L<lvalue method|http://perldoc.perl.org/perlsub.html#Lvalue-subroutines> method calls.
+190 L<genLValueArrayMethods|/genLValueArrayMethods> - Generate L<lvalue method|http://perldoc.perl.org/perlsub.html#Lvalue-subroutines> array methods in the current package.
 
-191 L<genLValueArrayMethods|/genLValueArrayMethods> - Generate L<lvalue method|http://perldoc.perl.org/perlsub.html#Lvalue-subroutines> array methods in the current package.
+191 L<genLValueHashMethods|/genLValueHashMethods> - Generate L<lvalue method|http://perldoc.perl.org/perlsub.html#Lvalue-subroutines> hash methods in the current package.
 
-192 L<genLValueHashMethods|/genLValueHashMethods> - Generate L<lvalue method|http://perldoc.perl.org/perlsub.html#Lvalue-subroutines> hash methods in the current package.
+192 L<genLValueScalarMethods|/genLValueScalarMethods> - Generate L<lvalue method|http://perldoc.perl.org/perlsub.html#Lvalue-subroutines> scalar methods in the current package, A method whose value has not yet been set will return a new scalar with value B<undef>.
 
-193 L<genLValueScalarMethods|/genLValueScalarMethods> - Generate L<lvalue method|http://perldoc.perl.org/perlsub.html#Lvalue-subroutines> scalar methods in the current package, A method whose value has not yet been set will return a new scalar with value B<undef>.
+193 L<genLValueScalarMethodsWithDefaultValues|/genLValueScalarMethodsWithDefaultValues> - Generate L<lvalue method|http://perldoc.perl.org/perlsub.html#Lvalue-subroutines> scalar methods with default values in the current package.
 
-194 L<genLValueScalarMethodsWithDefaultValues|/genLValueScalarMethodsWithDefaultValues> - Generate L<lvalue method|http://perldoc.perl.org/perlsub.html#Lvalue-subroutines> scalar methods with default values in the current package.
+194 L<getCCompiler|/getCCompiler> - Return the name of the C compiler on this system.
 
-195 L<getCCompiler|/getCCompiler> - Return the name of the C compiler on this system.
+195 L<getCodeContext|/getCodeContext> - Recreate the code context for a referenced sub.
 
-196 L<getCodeContext|/getCodeContext> - Recreate the code context for a referenced sub.
+196 L<getFieldOffsetInStructureFromIncludeFile|/getFieldOffsetInStructureFromIncludeFile> - Get the offset of a field in a system structures from an include file.
 
-197 L<getFieldOffsetInStructureFromIncludeFile|/getFieldOffsetInStructureFromIncludeFile> - Get the offset of a field in a system structures from an include file.
+197 L<getNumberOfCpus|/getNumberOfCpus> - Number of cpus.
 
-198 L<getNumberOfCpus|/getNumberOfCpus> - Number of cpus.
+198 L<getStructureSizeFromIncludeFile|/getStructureSizeFromIncludeFile> - Get the size of a system structure from an include file.
 
-199 L<getStructureSizeFromIncludeFile|/getStructureSizeFromIncludeFile> - Get the size of a system structure from an include file.
+199 L<getSubName|/getSubName> - Returns the (package, name, file, line) of a perl B<$sub> reference.
 
-200 L<getSubName|/getSubName> - Returns the (package, name, file, line) of a perl B<$sub> reference.
+200 L<getSystemConstantsFromIncludeFile|/getSystemConstantsFromIncludeFile> - Get the value of the named system constants from an include file.
 
-201 L<getSystemConstantsFromIncludeFile|/getSystemConstantsFromIncludeFile> - Get the value of the named system constants from an include file.
+201 L<guidFromMd5|/guidFromMd5> - Create a guid from an md5 hash.
 
-202 L<guidFromMd5|/guidFromMd5> - Create a guid from an md5 hash.
+202 L<guidFromString|/guidFromString> - Create a guid representation of the L<MD5|https://en.wikipedia.org/wiki/MD5> of the content of a string.
 
-203 L<guidFromString|/guidFromString> - Create a guid representation of the L<MD5|https://en.wikipedia.org/wiki/MD5> of the content of a string.
+203 L<hashifyFolderStructure|/hashifyFolderStructure> - Hashify a list of file names to get the corresponding folder structure.
 
-204 L<hashifyFolderStructure|/hashifyFolderStructure> - Hashify a list of file names to get the corresponding folder structure.
+204 L<hexToAsciiString|/hexToAsciiString> - Decode a string of L<hexadecimal|https://en.wikipedia.org/wiki/Hexadecimal> digits as an L<Ascii|https://en.wikipedia.org/wiki/ASCII> string.
 
-205 L<hexToAsciiString|/hexToAsciiString> - Decode a string of L<hexadecimal|https://en.wikipedia.org/wiki/Hexadecimal> digits as an L<Ascii|https://en.wikipedia.org/wiki/ASCII> string.
+205 L<hostName|/hostName> - The name of the host we are running on.
 
-206 L<hostName|/hostName> - The name of the host we are running on.
+206 L<htmlToc|/htmlToc> - Generate a table of contents for some html held in a file or a string.
 
-207 L<htmlToc|/htmlToc> - Generate a table of contents for some html held in a file or a string.
+207 L<imageSize|/imageSize> - Return (width, height) of an B<$image>.
 
-208 L<imageSize|/imageSize> - Return (width, height) of an B<$image>.
+208 L<includeFiles|/includeFiles> - Read the given file and expand all lines that start "includeThisFile " with the file named by the rest of the line and keep doing this until all the included files have been expanded or a repetition is detected.
 
-209 L<includeFiles|/includeFiles> - Read the given file and expand all lines that start "includeThisFile " with the file named by the rest of the line and keep doing this until all the included files have been expanded or a repetition is detected.
+209 L<indentString|/indentString> - Indent lines contained in a string or formatted table by the specified string.
 
-210 L<indentString|/indentString> - Indent lines contained in a string or formatted table by the specified string.
+210 L<indexOfMax|/indexOfMax> - Find the index of the maximum number in a list of numbers confessing to any ill defined values.
 
-211 L<indexOfMax|/indexOfMax> - Find the index of the maximum number in a list of numbers confessing to any ill defined values.
+211 L<indexOfMin|/indexOfMin> - Find the index of the minimum number in a list of numbers confessing to any ill defined values.
 
-212 L<indexOfMin|/indexOfMin> - Find the index of the minimum number in a list of numbers confessing to any ill defined values.
+212 L<intersectionOfHashesAsArrays|/intersectionOfHashesAsArrays> - Form the intersection of the specified hashes B<@h> as one hash whose values are an array of corresponding values from each hash.
 
-213 L<intersectionOfHashesAsArrays|/intersectionOfHashesAsArrays> - Form the intersection of the specified hashes B<@h> as one hash whose values are an array of corresponding values from each hash.
+213 L<intersectionOfHashKeys|/intersectionOfHashKeys> - Form the intersection of the keys of the specified hashes B<@h> as one hash whose keys represent the intersection.
 
-214 L<intersectionOfHashKeys|/intersectionOfHashKeys> - Form the intersection of the keys of the specified hashes B<@h> as one hash whose keys represent the intersection.
+214 L<invertHashOfHashes|/invertHashOfHashes> - Invert a hash of hashes: given {a}{b} = c return {b}{c} = c.
 
-215 L<invertHashOfHashes|/invertHashOfHashes> - Invert a hash of hashes: given {a}{b} = c return {b}{c} = c.
+215 L<ipAddressOfHost|/ipAddressOfHost> - Get the first ip address of the specified host via Domain Name Services.
 
-216 L<ipAddressOfHost|/ipAddressOfHost> - Get the first ip address of the specified host via Domain Name Services.
+216 L<ipAddressViaArp|/ipAddressViaArp> - Get the ip address of a server on the local network by hostname via arp.
 
-217 L<ipAddressViaArp|/ipAddressViaArp> - Get the ip address of a server on the local network by hostname via arp.
+217 L<isBlank|/isBlank> - Test whether a string is blank.
 
-218 L<isBlank|/isBlank> - Test whether a string is blank.
+218 L<isFileUtf8|/isFileUtf8> - Return the file name quoted if its contents are in utf8 else return undef.
 
-219 L<isFileUtf8|/isFileUtf8> - Return the file name quoted if its contents are in utf8 else return undef.
+219 L<isSubInPackage|/isSubInPackage> - Test whether the specified B<$package> contains the subroutine <$sub>.
 
-220 L<isSubInPackage|/isSubInPackage> - Test whether the specified B<$package> contains the subroutine <$sub>.
+220 L<javaPackage|/javaPackage> - Extract the package name from a java string or file.
 
-221 L<javaPackage|/javaPackage> - Extract the package name from a java string or file.
+221 L<javaPackageAsFileName|/javaPackageAsFileName> - Extract the package name from a java string or file and convert it to a file name.
 
-222 L<javaPackageAsFileName|/javaPackageAsFileName> - Extract the package name from a java string or file and convert it to a file name.
+222 L<javaScriptExports|/javaScriptExports> - Extract the Javascript functions marked for export in a file or string.
 
-223 L<javaScriptExports|/javaScriptExports> - Extract the Javascript functions marked for export in a file or string.
+223 L<keyCount|/keyCount> - Count keys down to the specified level.
 
-224 L<keyCount|/keyCount> - Count keys down to the specified level.
+224 L<lengthOfLongestSubArray|/lengthOfLongestSubArray> - Given an array of arrays find the length of the longest sub array.
 
-225 L<lengthOfLongestSubArray|/lengthOfLongestSubArray> - Given an array of arrays find the length of the longest sub array.
+225 L<lll|/lll> - Log messages with a time stamp and originating file and line number.
 
-226 L<lll|/lll> - Log messages with a time stamp and originating file and line number.
+226 L<loadArrayArrayFromLines|/loadArrayArrayFromLines> - Load an array of arrays from lines of text: each line is an array of words.
 
-227 L<loadArrayArrayFromLines|/loadArrayArrayFromLines> - Load an array of arrays from lines of text: each line is an array of words.
+227 L<loadArrayFromLines|/loadArrayFromLines> - Load an array from lines of text in a string.
 
-228 L<loadArrayFromLines|/loadArrayFromLines> - Load an array from lines of text in a string.
+228 L<loadArrayHashFromLines|/loadArrayHashFromLines> - Load an array of hashes from lines of text: each line is a hash of words.
 
-229 L<loadArrayHashFromLines|/loadArrayHashFromLines> - Load an array of hashes from lines of text: each line is a hash of words.
+229 L<loadHash|/loadHash> - Load the specified blessed B<$hash> generated with L<genHash|/genHash> with B<%attributes>.
 
-230 L<loadHash|/loadHash> - Load the specified blessed B<$hash> generated with L<genHash|/genHash> with B<%attributes>.
+230 L<loadHashArrayFromLines|/loadHashArrayFromLines> - Load a hash of arrays from lines of text: the first word of each line is the key, the remaining words are the array contents.
 
-231 L<loadHashArrayFromLines|/loadHashArrayFromLines> - Load a hash of arrays from lines of text: the first word of each line is the key, the remaining words are the array contents.
+231 L<loadHashFromLines|/loadHashFromLines> - Load a hash: first word of each line is the key and the rest is the value.
 
-232 L<loadHashFromLines|/loadHashFromLines> - Load a hash: first word of each line is the key and the rest is the value.
+232 L<loadHashHashFromLines|/loadHashHashFromLines> - Load a hash of hashes from lines of text: the first word of each line is the key, the remaining words are the sub hash contents.
 
-233 L<loadHashHashFromLines|/loadHashHashFromLines> - Load a hash of hashes from lines of text: the first word of each line is the key, the remaining words are the sub hash contents.
+233 L<lpad|/lpad> - Left Pad the specified B<$string> to a multiple of the specified B<$length>  with blanks or the specified padding character to a multiple of a specified length.
 
-234 L<lpad|/lpad> - Left Pad the specified B<$string> to a multiple of the specified B<$length>  with blanks or the specified padding character to a multiple of a specified length.
+234 L<makeDieConfess|/makeDieConfess> - Force die to confess where the death occurred.
 
-235 L<makeDieConfess|/makeDieConfess> - Force die to confess where the death occurred.
+235 L<makePath|/makePath> - Make the path for the specified file name or folder on the local machine.
 
-236 L<makePath|/makePath> - Make the path for the specified file name or folder on the local machine.
+236 L<makePathRemote|/makePathRemote> - Make the path for the specified B<$file> or folder on the L<Amazon Web Services|http://aws.amazon.com> instance whose ip address is specified by B<$ip> or returned by L<awsIp>.
 
-237 L<makePathRemote|/makePathRemote> - Make the path for the specified B<$file> or folder on the L<Amazon Web Services|http://aws.amazon.com> instance whose ip address is specified by B<$ip> or returned by L<awsIp>.
+237 L<matchPath|/matchPath> - Return the deepest folder that exists along a given file name path.
 
-238 L<matchPath|/matchPath> - Return the deepest folder that exists along a given file name path.
+238 L<mathematicalBoldItalicString|/mathematicalBoldItalicString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Bold Italic.
 
-239 L<mathematicalBoldItalicString|/mathematicalBoldItalicString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Bold Italic.
+239 L<mathematicalBoldItalicStringUndo|/mathematicalBoldItalicStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Bold Italic.
 
-240 L<mathematicalBoldItalicStringUndo|/mathematicalBoldItalicStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Bold Italic.
+240 L<mathematicalBoldString|/mathematicalBoldString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Bold.
 
-241 L<mathematicalBoldString|/mathematicalBoldString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Bold.
+241 L<mathematicalBoldStringUndo|/mathematicalBoldStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Bold.
 
-242 L<mathematicalBoldStringUndo|/mathematicalBoldStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Bold.
+242 L<mathematicalItalicString|/mathematicalItalicString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Italic.
 
-243 L<mathematicalItalicString|/mathematicalItalicString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Italic.
+243 L<mathematicalMonoSpaceString|/mathematicalMonoSpaceString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical MonoSpace.
 
-244 L<mathematicalMonoSpaceString|/mathematicalMonoSpaceString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical MonoSpace.
+244 L<mathematicalMonoSpaceStringUndo|/mathematicalMonoSpaceStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical MonoSpace.
 
-245 L<mathematicalMonoSpaceStringUndo|/mathematicalMonoSpaceStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical MonoSpace.
+245 L<mathematicalSansSerifBoldItalicString|/mathematicalSansSerifBoldItalicString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Bold Italic.
 
-246 L<mathematicalSansSerifBoldItalicString|/mathematicalSansSerifBoldItalicString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Bold Italic.
+246 L<mathematicalSansSerifBoldItalicStringUndo|/mathematicalSansSerifBoldItalicStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Bold Italic.
 
-247 L<mathematicalSansSerifBoldItalicStringUndo|/mathematicalSansSerifBoldItalicStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Bold Italic.
+247 L<mathematicalSansSerifBoldString|/mathematicalSansSerifBoldString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Bold.
 
-248 L<mathematicalSansSerifBoldString|/mathematicalSansSerifBoldString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Bold.
+248 L<mathematicalSansSerifBoldStringUndo|/mathematicalSansSerifBoldStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Bold.
 
-249 L<mathematicalSansSerifBoldStringUndo|/mathematicalSansSerifBoldStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Bold.
+249 L<mathematicalSansSerifItalicString|/mathematicalSansSerifItalicString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Italic.
 
-250 L<mathematicalSansSerifItalicString|/mathematicalSansSerifItalicString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Italic.
+250 L<mathematicalSansSerifItalicStringUndo|/mathematicalSansSerifItalicStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Italic.
 
-251 L<mathematicalSansSerifItalicStringUndo|/mathematicalSansSerifItalicStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif Italic.
+251 L<mathematicalSansSerifString|/mathematicalSansSerifString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif.
 
-252 L<mathematicalSansSerifString|/mathematicalSansSerifString> - Convert alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif.
+252 L<mathematicalSansSerifStringUndo|/mathematicalSansSerifStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif.
 
-253 L<mathematicalSansSerifStringUndo|/mathematicalSansSerifStringUndo> - Undo alphanumerics in a string to L<Unicode|https://en.wikipedia.org/wiki/Unicode> Mathematical Sans Serif.
+253 L<max|/max> - Find the maximum number in a list of numbers confessing to any ill defined values.
 
-254 L<max|/max> - Find the maximum number in a list of numbers confessing to any ill defined values.
+254 L<maximum|/maximum> - Find the maximum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
 
-255 L<maximum|/maximum> - Find the maximum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
+255 L<maximumLineLength|/maximumLineLength> - Find the longest line in a B<$string>.
 
-256 L<maximumLineLength|/maximumLineLength> - Find the longest line in a B<$string>.
+256 L<md5FromGuid|/md5FromGuid> - Recover an md5 sum from a guid.
 
-257 L<md5FromGuid|/md5FromGuid> - Recover an md5 sum from a guid.
+257 L<mergeFolder|/mergeFolder> - Copy the B<$source> folder into the B<$target> folder retaining any existing files not replaced by copied files.
 
-258 L<mergeFolder|/mergeFolder> - Copy the B<$source> folder into the B<$target> folder retaining any existing files not replaced by copied files.
+258 L<mergeFolderFromRemote|/mergeFolderFromRemote> - Merge the specified B<$Source> folder from the corresponding remote folder on the server whose ip address is specified by B<$ip> or returned by L<awsIp>.
 
-259 L<mergeFolderFromRemote|/mergeFolderFromRemote> - Merge the specified B<$Source> folder from the corresponding remote folder on the server whose ip address is specified by B<$ip> or returned by L<awsIp>.
+259 L<mergeHashesBySummingValues|/mergeHashesBySummingValues> - Merge a list of hashes B<@h> by summing their values.
 
-260 L<mergeHashesBySummingValues|/mergeHashesBySummingValues> - Merge a list of hashes B<@h> by summing their values.
+260 L<microSecondsSinceEpoch|/microSecondsSinceEpoch> - Micro seconds since unix epoch.
 
-261 L<microSecondsSinceEpoch|/microSecondsSinceEpoch> - Micro seconds since unix epoch.
+261 L<min|/min> - Find the minimum number in a list of numbers confessing to any ill defined values.
 
-262 L<min|/min> - Find the minimum number in a list of numbers confessing to any ill defined values.
+262 L<minimum|/minimum> - Find the minimum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
 
-263 L<minimum|/minimum> - Find the minimum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
+263 L<mmm|/mmm> - Log messages with a differential time in milliseconds and originating file and line number.
 
-264 L<mmm|/mmm> - Log messages with a differential time in milliseconds and originating file and line number.
+264 L<moveFileNoClobber|/moveFileNoClobber> - Rename the B<$source> file, which must exist, to the B<$target> file but only if the $target file does not exist already.
 
-265 L<moveFileNoClobber|/moveFileNoClobber> - Rename the B<$source> file, which must exist, to the B<$target> file but only if the $target file does not exist already.
+265 L<moveFileWithClobber|/moveFileWithClobber> - Rename the B<$source> file, which must exist, to the B<$target> file but only if the $target file does not exist already.
 
-266 L<moveFileWithClobber|/moveFileWithClobber> - Rename the B<$source> file, which must exist, to the B<$target> file but only if the $target file does not exist already.
+266 L<nameFromFolder|/nameFromFolder> - Create a name from the last folder in the path of a file name.
 
-267 L<nameFromFolder|/nameFromFolder> - Create a name from the last folder in the path of a file name.
+267 L<nameFromString|/nameFromString> - Create a readable name from an arbitrary string of text.
 
-268 L<nameFromString|/nameFromString> - Create a readable name from an arbitrary string of text.
+268 L<nameFromStringRestrictedToTitle|/nameFromStringRestrictedToTitle> - Create a readable name from a string of text that might contain a title tag - fall back to L<nameFromString|/nameFromString> if that is not possible.
 
-269 L<nameFromStringRestrictedToTitle|/nameFromStringRestrictedToTitle> - Create a readable name from a string of text that might contain a title tag - fall back to L<nameFromString|/nameFromString> if that is not possible.
+269 L<newLine|/newLine> - Return a new line - useful for writing L<Perl|http://www.perl.org/> one liners
 
-270 L<newLine|/newLine> - Return a new line - useful for writing L<Perl|http://www.perl.org/> one liners
+270 L<newProcessStarter|/newProcessStarter> - Create a new L<process starter|/Data::Table::Text::Starter Definition> with which to start parallel processes up to a specified B<$maximumNumberOfProcesses> maximum number of parallel processes at a time, wait for all the started processes to finish and then optionally retrieve their saved results as an array from the folder named by B<$transferArea>.
 
-271 L<newProcessStarter|/newProcessStarter> - Create a new L<process starter|/Data::Table::Text::Starter Definition> with which to start parallel processes up to a specified B<$maximumNumberOfProcesses> maximum number of parallel processes at a time, wait for all the started processes to finish and then optionally retrieve their saved results as an array from the folder named by B<$transferArea>.
+271 L<newServiceIncarnation|/newServiceIncarnation> - Create a new service incarnation to record the start up of a new instance of a service and return the description as a L<Data::Exchange::Service Definition hash|/Data::Exchange::Service Definition>.
 
-272 L<newServiceIncarnation|/newServiceIncarnation> - Create a new service incarnation to record the start up of a new instance of a service and return the description as a L<Data::Exchange::Service Definition hash|/Data::Exchange::Service Definition>.
+272 L<newUdsr|/newUdsr> - Create a communicator - a means to communicate between processes on the same machine via L<Udsr::read|/Udsr::read> and L<Udsr::write|/Udsr::write>.
 
-273 L<newUdsr|/newUdsr> - Create a communicator - a means to communicate between processes on the same machine via L<Udsr::read|/Udsr::read> and L<Udsr::write|/Udsr::write>.
+273 L<newUdsrClient|/newUdsrClient> - Create a new communications client - a means to communicate between processes on the same machine via L<Udsr::read|/Udsr::read> and L<Udsr::write|/Udsr::write>.
 
-274 L<newUdsrClient|/newUdsrClient> - Create a new communications client - a means to communicate between processes on the same machine via L<Udsr::read|/Udsr::read> and L<Udsr::write|/Udsr::write>.
+274 L<newUdsrServer|/newUdsrServer> - Create a communications server - a means to communicate between processes on the same machine via L<Udsr::read|/Udsr::read> and L<Udsr::write|/Udsr::write>.
 
-275 L<newUdsrServer|/newUdsrServer> - Create a communications server - a means to communicate between processes on the same machine via L<Udsr::read|/Udsr::read> and L<Udsr::write|/Udsr::write>.
+275 L<numberOfCpus|/numberOfCpus> - Number of cpus scaled by an optional factor - but only if you have nproc.
 
-276 L<numberOfCpus|/numberOfCpus> - Number of cpus scaled by an optional factor - but only if you have nproc.
+276 L<numberOfLinesInFile|/numberOfLinesInFile> - Return the number of lines in a file.
 
-277 L<numberOfLinesInFile|/numberOfLinesInFile> - Return the number of lines in a file.
+277 L<numberOfLinesInString|/numberOfLinesInString> - The number of lines in a string.
 
-278 L<numberOfLinesInString|/numberOfLinesInString> - The number of lines in a string.
+278 L<numberWithCommas|/numberWithCommas> - Place commas in a number.
 
-279 L<numberWithCommas|/numberWithCommas> - Place commas in a number.
+279 L<nws|/nws> - Normalize white space in a string to make comparisons easier.
 
-280 L<nws|/nws> - Normalize white space in a string to make comparisons easier.
+280 L<onAws|/onAws> - Returns 1 if we are on AWS else return 0.
 
-281 L<onAws|/onAws> - Returns 1 if we are on AWS else return 0.
+281 L<onAwsPrimary|/onAwsPrimary> - Return 1 if we are on L<Amazon Web Services|http://aws.amazon.com> and we are on the primary session instance as defined by L<awsParallelPrimaryInstanceId>, return 0 if we are on a secondary session instance, else return B<undef> if we are not on L<Amazon Web Services|http://aws.amazon.com>.
 
-282 L<onAwsPrimary|/onAwsPrimary> - Return 1 if we are on L<Amazon Web Services|http://aws.amazon.com> and we are on the primary session instance as defined by L<awsParallelPrimaryInstanceId>, return 0 if we are on a secondary session instance, else return B<undef> if we are not on L<Amazon Web Services|http://aws.amazon.com>.
+282 L<onAwsSecondary|/onAwsSecondary> - Return 1 if we are on L<Amazon Web Services|http://aws.amazon.com> but we are not on the primary session instance as defined by L<awsParallelPrimaryInstanceId>, return 0 if we are on the primary session instance, else return B<undef> if we are not on L<Amazon Web Services|http://aws.amazon.com>.
 
-283 L<onAwsSecondary|/onAwsSecondary> - Return 1 if we are on L<Amazon Web Services|http://aws.amazon.com> but we are not on the primary session instance as defined by L<awsParallelPrimaryInstanceId>, return 0 if we are on the primary session instance, else return B<undef> if we are not on L<Amazon Web Services|http://aws.amazon.com>.
+283 L<onMac|/onMac> - Are we on mac.
 
-284 L<onMac|/onMac> - Are we on mac.
+284 L<onWindows|/onWindows> - Are we on windows.
 
-285 L<onWindows|/onWindows> - Are we on windows.
+285 L<overrideAndReabsorbMethods|/overrideAndReabsorbMethods> - Override methods down the list of B<@packages> then reabsorb any unused methods back up the list of packages so that all the packages have the same methods as the last package with methods from packages mentioned earlier overriding methods from packages mentioned later.
 
-286 L<overrideAndReabsorbMethods|/overrideAndReabsorbMethods> - Override methods down the list of B<@packages> then reabsorb any unused methods back up the list of packages so that all the packages have the same methods as the last package with methods from packages mentioned earlier overriding methods from packages mentioned later.
+286 L<overrideMethods|/overrideMethods> - For each method, if it exists in package B<$from> then export it to package B<$to> replacing any existing method in B<$to>, otherwise export the method from package B<$to> to package B<$from> in order to merge the behavior of the B<$from> and B<$to> packages with respect to the named methods with duplicates resolved if favour of package B<$from>.
 
-287 L<overrideMethods|/overrideMethods> - For each method, if it exists in package B<$from> then export it to package B<$to> replacing any existing method in B<$to>, otherwise export the method from package B<$to> to package B<$from> in order to merge the behavior of the B<$from> and B<$to> packages with respect to the named methods with duplicates resolved if favour of package B<$from>.
+287 L<overWriteBinaryFile|/overWriteBinaryFile> - Write to B<$file>, after creating a path to the file with L<makePath> if necessary, the binary content in B<$string>.
 
-288 L<overWriteBinaryFile|/overWriteBinaryFile> - Write to B<$file>, after creating a path to the file with L<makePath> if necessary, the binary content in B<$string>.
+288 L<overWriteFile|/overWriteFile> - Write to a B<$file>, after creating a path to the $file with L<makePath> if necessary, a B<$string> of L<Unicode|https://en.wikipedia.org/wiki/Unicode> content encoded as L<utf8|https://en.wikipedia.org/wiki/UTF-8>.
 
-289 L<overWriteFile|/overWriteFile> - Write to a B<$file>, after creating a path to the $file with L<makePath> if necessary, a B<$string> of L<Unicode|https://en.wikipedia.org/wiki/Unicode> content encoded as L<utf8|https://en.wikipedia.org/wiki/UTF-8>.
+289 L<overWriteHtmlFile|/overWriteHtmlFile> - Write an L<HTML|https://en.wikipedia.org/wiki/HTML> file to /var/www/html and make it readable.
 
-290 L<overWriteHtmlFile|/overWriteHtmlFile> - Write an L<HTML|https://en.wikipedia.org/wiki/HTML> file to /var/www/html and make it readable.
+290 L<overWritePerlCgiFile|/overWritePerlCgiFile> - Write a L<Perl|http://www.perl.org/> file to /usr/lib/cgi-bin and make it executable after checking it for syntax errors.
 
-291 L<overWritePerlCgiFile|/overWritePerlCgiFile> - Write a L<Perl|http://www.perl.org/> file to /usr/lib/cgi-bin and make it executable after checking it for syntax errors.
+291 L<packBySize|/packBySize> - Given B<$N> buckets and a list B<@sizes> of ([size of file, name of file].
 
-292 L<packBySize|/packBySize> - Given B<$N> buckets and a list B<@sizes> of ([size of file, name of file].
+292 L<pad|/pad> - Pad the specified B<$string> to a multiple of the specified B<$length>  with blanks or the specified padding character to a multiple of a specified length.
 
-293 L<pad|/pad> - Pad the specified B<$string> to a multiple of the specified B<$length>  with blanks or the specified padding character to a multiple of a specified length.
+293 L<parseCommandLineArguments|/parseCommandLineArguments> - Call the specified B<$sub> after classifying the specified array of [arguments] in B<$args> into positional and keyword parameters.
 
-294 L<parseCommandLineArguments|/parseCommandLineArguments> - Call the specified B<$sub> after classifying the specified array of [arguments] in B<$args> into positional and keyword parameters.
+294 L<parseDitaRef|/parseDitaRef> - Parse a dita reference B<$ref> into its components (file name, topic id, id) .
 
-295 L<parseDitaRef|/parseDitaRef> - Parse a dita reference B<$ref> into its components (file name, topic id, id) .
+295 L<parseFileName|/parseFileName> - Parse a file name into (path, name, extension) considering .
 
-296 L<parseFileName|/parseFileName> - Parse a file name into (path, name, extension) considering .
+296 L<parseIntoWordsAndStrings|/parseIntoWordsAndStrings> - Parse a B<$string> into words and quoted strings.
 
-297 L<parseIntoWordsAndStrings|/parseIntoWordsAndStrings> - Parse a B<$string> into words and quoted strings.
+297 L<parseS3BucketAndFolderName|/parseS3BucketAndFolderName> - Parse an L<S3|https://aws.amazon.com/s3/> bucket/folder name into a bucket and a folder name removing any initial s3://.
 
-298 L<parseS3BucketAndFolderName|/parseS3BucketAndFolderName> - Parse an L<S3|https://aws.amazon.com/s3/> bucket/folder name into a bucket and a folder name removing any initial s3://.
+298 L<parseXmlDocType|/parseXmlDocType> - Parse an L<Xml|https://en.wikipedia.org/wiki/XML> DOCTYPE and return a hash indicating its components.
 
-299 L<parseXmlDocType|/parseXmlDocType> - Parse an L<Xml|https://en.wikipedia.org/wiki/XML> DOCTYPE and return a hash indicating its components.
+299 L<partitionStringsOnPrefixBySize|/partitionStringsOnPrefixBySize> - Partition a hash of strings and associated sizes into partitions with either a maximum size B<$maxSize> or only one element; the hash B<%Sizes> consisting of a mapping {string=>size}; with each partition being named with the shortest string prefix that identifies just the strings in that partition.
 
-300 L<partitionStringsOnPrefixBySize|/partitionStringsOnPrefixBySize> - Partition a hash of strings and associated sizes into partitions with either a maximum size B<$maxSize> or only one element; the hash B<%Sizes> consisting of a mapping {string=>size}; with each partition being named with the shortest string prefix that identifies just the strings in that partition.
+300 L<perlPackage|/perlPackage> - Extract the package name from a perl string or file.
 
-301 L<perlPackage|/perlPackage> - Extract the package name from a perl string or file.
+301 L<postProcessImagesForDocumentation|/postProcessImagesForDocumentation> - Post process svg images into png and reload into repo for use by documentation.
 
 302 L<powerOfTwo|/powerOfTwo> - Test whether a number B<$n> is a power of two, return the power if it is else B<undef>.
 
@@ -24379,6 +24410,11 @@ END
 #latest:;
 if (1) {                                                                        #TnewLine
   is_deeply newLine, "\n";
+}
+
+#latest:;
+if (0) {                                                                        #TpostProcessImagesForDocumentation
+  postProcessImagesForDocumentation;
 }
 
 done_testing;
