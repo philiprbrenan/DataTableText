@@ -5540,7 +5540,7 @@ sub postProcessImagesForDocumentation()                                         
   for my $s(@f)                                                                 # Svg files
    {my $t = setFileExtension $s, q(png);
        $t = swapFilePrefix $t, $svg, $png;                                      # Matching png
-    my $c = qq(cairosvg -o $t --output-width 10000 --output-height 10000 $s);
+    my $c = qq(cairosvg -o $t --output-width 10000 $s);
     my $r = qx($c);
     say STDERR $r if $r =~ m(\S);
    }
