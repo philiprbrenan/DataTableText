@@ -5543,12 +5543,12 @@ sub postProcessImagesForDocumentation(%)                                        
    {my $t = setFileExtension $s, q(png);
        $t = swapFilePrefix $t, $svg, $png;                                      # Matching png
     my $x = readFile $s;
-    if ($x =~ m(viewBox="0 0\s+(\d+)\s+(\d+)"))
+    if ($x =~ m(viewBox="0 0\s+(\d+)\s+(\d+)"))                                 # Dimensions of image
      {my ($x, $y) = ($1, $2);
-      my $m = maximum $x, $y;
-      $x *= 10000 / $m;
-      $y *= 10000 / $m;
-      my $c = qq(cairosvg -o $t --output-width $x --output-height $y $s);
+      my $m = maximum $x, $y;                                                   # Scale image to maximum requested size
+      $x *= $size / $m;
+      $y *= $size / $m;
+      my $c = qq(cairosvg -o $t --output-width $x --output-height $y $s);       # Convert svg to png
       my $r = qx($c);
       say STDERR $r if $r =~ m(\S);
      }
