@@ -5550,7 +5550,7 @@ sub postProcessImagesForDocumentation(%)                                        
       my $m = maximum $x, $y;                                                   # Scale image to maximum requested size
       $x *= int($size / $m);
       $y *= int($size / $m);
-      lll "  Convert svg file: x=$x, y=$y, size=$size" if $log;
+      lll sprintf "  Convert svg file: x=%5d, y=%5d", $x, $y if $log;
       my $c = qq(cairosvg -o $t --output-width $x --output-height $y $s);       # Convert svg to png
       my $r = qx($c);
       say STDERR $r if $r =~ m(\S);
