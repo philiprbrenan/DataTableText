@@ -5541,8 +5541,7 @@ sub postProcessImagesForDocumentation(%)                                        
   my @f = searchDirectoryTreesForMatchingFiles $svg, qw(.svg);                  # Svg files from which we make png files
 
   for my $s(@f)                                                                 # Svg files
-   {say STDERR "Convert svg file:", $s if $log;                                 # Log conversion
-    my $t = setFileExtension $s, q(png);
+   {my $t = setFileExtension $s, q(png);
        $t = swapFilePrefix $t, $svg, $png;                                      # Matching png
     my $x = readFile $s;
     if ($x =~ m(viewBox="0 0\s+(\d+)\s+(\d+)"))                                 # Dimensions of image
@@ -5550,7 +5549,7 @@ sub postProcessImagesForDocumentation(%)                                        
       my $m = maximum $x, $y;                                                   # Scale image to maximum requested size
       $x *= int($size / $m);
       $y *= int($size / $m);
-      say STDERR sprintf "  Convert svg file: x=%5d, y=%5d", $x, $y if $log;
+      say STDERR sprintf "Convert svg: x=%5d, y=%5d  ".$s, $x, $y if $log;      # Log change
       my $c = qq(cairosvg -o $t --output-width $x --output-height $y $s);       # Convert svg to png
       my $r = qx($c);
       say STDERR $r if $r =~ m(\S);
