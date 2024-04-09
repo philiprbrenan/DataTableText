@@ -8712,9 +8712,12 @@ Get the contents of a **$user** **$repo** **$file** from  a public repo on GitHu
 
     
 
-## postProcessImagesForDocumentation   ()
+## postProcessImagesForDocumentation   (%options)
 
 Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the ping files are larger.
+
+       Parameter  Description
+    1  %options   Options
 
 **Example:**
 
@@ -11915,6 +11918,6 @@ Thanks to the following people for their help with this module:
 
 Hey! **The above document had some coding errors, which are explained below:**
 
-- Around line 12612:
+- Around line 12614:
 
     Unterminated L<...> sequence
