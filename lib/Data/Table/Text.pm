@@ -5548,8 +5548,8 @@ sub postProcessImagesForDocumentation(%)                                        
     if ($x =~ m(viewBox="0 0\s+(\d+)\s+(\d+)"))                                 # Dimensions of image
      {my ($x, $y) = ($1, $2);
       my $m = maximum $x, $y;                                                   # Scale image to maximum requested size
-      $x *= $size / $m;
-      $y *= $size / $m;
+      $x *= int($size / $m);
+      $y *= int($size / $m);
       lll "  Convert svg file: x=$x, y=$y, size=$size" if $log;
       my $c = qq(cairosvg -o $t --output-width $x --output-height $y $s);       # Convert svg to png
       my $r = qx($c);
