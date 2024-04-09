@@ -5526,6 +5526,7 @@ sub downloadGitHubPublicRepoFile($$$)                                           
 
 sub postProcessImagesForDocumentation(%)                                        # Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the ping files are larger.
  {my (%options) = @_;                                                           # Options
+  my $log   = $options{log}  // 0;                                              # Show actions if true
   my $size  = $options{size} // 10000;                                          # Longest size of png images to produce from svg while mainta
   my $home  = currentDirectory;                                                 # Home folder
   my $dir   = fpd qw(lib Silicon Chip);                                         # Target folder for images
@@ -5540,7 +5541,8 @@ sub postProcessImagesForDocumentation(%)                                        
   my @f = searchDirectoryTreesForMatchingFiles $svg, qw(.svg);                  # Svg files from which we make png files
 
   for my $s(@f)                                                                 # Svg files
-   {my $t = setFileExtension $s, q(png);
+   {lll "Convert svg file:", $s if $log;
+    my $t = setFileExtension $s, q(png);
        $t = swapFilePrefix $t, $svg, $png;                                      # Matching png
     my $x = readFile $s;
     if ($x =~ m(viewBox="0 0\s+(\d+)\s+(\d+)"))                                 # Dimensions of image
@@ -5548,6 +5550,7 @@ sub postProcessImagesForDocumentation(%)                                        
       my $m = maximum $x, $y;                                                   # Scale image to maximum requested size
       $x *= $size / $m;
       $y *= $size / $m;
+      lll "  Convert svg file: x=$x, y=$y, size=$size" if $log;
       my $c = qq(cairosvg -o $t --output-width $x --output-height $y $s);       # Convert svg to png
       my $r = qx($c);
       say STDERR $r if $r =~ m(\S);
