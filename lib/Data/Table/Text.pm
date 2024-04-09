@@ -5524,8 +5524,10 @@ sub downloadGitHubPublicRepoFile($$$)                                           
   $r                                                                            # Return data read from github
  }
 
-sub postProcessImagesForDocumentation()                                         # Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the ping files are larger.
- {my $home  = currentDirectory;                                                 # Home folder
+sub postProcessImagesForDocumentation(%)                                        # Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the ping files are larger.
+ {my (%options) = @_;                                                           # Options
+  my $size  = $options{size} // 10000;                                          # Longest size of png images to produce from svg while mainta
+  my $home  = currentDirectory;                                                 # Home folder
   my $dir   = fpd qw(lib Silicon Chip);                                         # Target folder for images
   my $imgs  = fpd $home, $dir;                                                  # Images source folder
      $imgs  = $home if $ENV{GITHUB_TOKEN};                                      # Change folders for github
@@ -5540,9 +5542,16 @@ sub postProcessImagesForDocumentation()                                         
   for my $s(@f)                                                                 # Svg files
    {my $t = setFileExtension $s, q(png);
        $t = swapFilePrefix $t, $svg, $png;                                      # Matching png
-    my $c = qq(cairosvg -o $t --output-width 10000 $s);
-    my $r = qx($c);
-    say STDERR $r if $r =~ m(\S);
+    my $x = readFile $s;
+    if ($x =~ m(viewBox="0 0\s+(\d+)\s+(\d+)"))
+     {my ($x, $y) = ($1, $2);
+      my $m = maximum $x, $y;
+      $x *= 10000 / $m;
+      $y *= 10000 / $m;
+      my $c = qq(cairosvg -o $t --output-width $x --output-height $y $s);
+      my $r = qx($c);
+      say STDERR $r if $r =~ m(\S);
+     }
    }
 
   my @r;
@@ -17695,10 +17704,12 @@ B<Example:>
 
   
 
-=head2 postProcessImagesForDocumentation   ()
+=head2 postProcessImagesForDocumentation   (%options)
 
 Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the ping files are larger.
 
+     Parameter  Description
+  1  %options   Options
 
 B<Example:>
 
