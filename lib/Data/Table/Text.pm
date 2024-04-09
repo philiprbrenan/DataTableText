@@ -7363,11 +7363,9 @@ END
               last unless -e $f;                                                # Include file if it exists locally
               push @svg, qq(\n\n=for html <img src="$u">) unless $svg{$u}++;    # The new line takes the directive out of an example.  Only include images otherwise the document gets very big very quickly
              }
-            if ($l =~ m(svgs=>(\d+)))                                           # Svg count provided
-             {my $n = $1;                                                       # Svg url count
-              for my $i(1..$n)                                                  # Add any additional svgs
-               {my $u = "$svg${s}_$i.svg";                                      # Svg url
-                   $u = "$png${s}_$i.png" if $p;                                # Png url
+            if (defined $p)                                                     # Png count
+             {for my $i(1..$p)                                                  # Add any additional svgs
+               {my $u = "$png${s}_$i.png";                                      # Png url
                 push @svg, qq(\n\n=for html <img src="$u">) unless $svg{$u}++;  # The new line takes the directive out of an example.  Only include images otherwise the document gets very big very quickly
                }
              }
