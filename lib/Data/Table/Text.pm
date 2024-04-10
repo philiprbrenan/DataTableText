@@ -898,7 +898,7 @@ sub clearFolder($$;$)                                                           
  {my ($folder, $limitCount, $noMsg) = @_;                                       # Folder, maximum number of files to remove to limit damage, no message if the folder cannot be completely removed.
   return unless -d $folder;                                                     # Only works on a folder that exists
   my @files = findFiles($folder);                                               # Find files to be removed
-  if (@files > $limitCount)                                                     # Limit the number of files that can be deleted to limit potential opportunity for damage
+  if (defined($limitCount) and @files > $limitCount)                            # Limit the number of files that can be deleted to limit potential opportunity for damage
    {my $f = @files;
     confess "Limit is $limitCount, but $f files under folder:\n$folder\n";
    }
@@ -5564,6 +5564,7 @@ END
    {my $s = fpd $imgs, $x;
     my $t = fpd $dir,  $x;
     copyFolder($s, $t);
+    clearFolder($s, undef);
    }
   push @r, yyy(<<END);                                                          # Prep for push
 git config --global user.name 'a 1'
