@@ -5527,7 +5527,7 @@ sub downloadGitHubPublicRepoFile($$$)                                           
 sub postProcessImagesForDocumentation(%)                                        # Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the ping files are larger.
  {my (%options) = @_;                                                           # Options
   my $log   = $options{log}  // 0;                                              # Show actions if true
-  my $size  = $options{size} // 10000;                                          # Longest size of png images to produce from svg while mainta
+  my $size  = $options{size} // 4096;                                           # Longest size of png images to produce from svg while mainta
   my $home  = currentDirectory;                                                 # Home folder
   my $dir   = fpd qw(lib Silicon Chip);                                         # Target folder for images
   my $imgs  = fpd $home, $dir;                                                  # Images source folder
