@@ -5537,9 +5537,13 @@ sub postProcessImagesForDocumentation(%)                                        
   my ($user, $repo) =  split m(/), $ENV{GITHUB_REPOSITORY}//'';                 # Userid and repo from github
 
   makePath($png);                                                               # Make png folder
+  eval <<END;                                                                   # Avoid making this module directly dependent on ghc as we only use it here
+use GitHub::Crud qw(:all);
+END
 
   my @f = searchDirectoryTreesForMatchingFiles $svg, qw(.svg);                  # Svg files from which we make png files
 
+  my @r;
   for my $s(@f)                                                                 # Svg files
    {my $t = setFileExtension $s, q(png);
        $t = swapFilePrefix $t, $svg, $png;                                      # Matching png
@@ -5553,17 +5557,13 @@ sub postProcessImagesForDocumentation(%)                                        
       my $c = qq(cairosvg -o $t --output-width $x --output-height $y $s);       # Convert svg to png
       my $r = qx($c);
       say STDERR $r if $r =~ m(\S);
+      for my $x(qw(gds png svg))                                                # Upload images to target location
+       {push @r, writeFolderUsingSavedToken
+         ("$user", "$repo", fpd("$dir", "$x"), fpd("$imgs", "$x"));
+       }
      }
    }
-
-  my @r;
-  for my $x(qw(gds png svg))                                                    # Upload images to target location
-   {eval <<END;                                                                 # Avoid making this module directly dependent on ghc as we only use it here
-use GitHub::Crud qw(:all);
-END
-    push @r, writeFolderUsingSavedToken("$user","$repo",fpd("$dir","$x"),fpd("$imgs","$x"));
-   }
-  @r
+  @r                                                                            # Results of each upload
  }
 
 #D1 Processes                                                                   # Start processes, wait for them to terminate and retrieve their results
