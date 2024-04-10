@@ -5557,9 +5557,12 @@ END
       my $c = qq(cairosvg -o $t --output-width $x --output-height $y $s);       # Convert svg to png
       my $r = qx($c);
       say STDERR $r if $r =~ m(\S);
+
       for my $x(qw(gds png svg))                                                # Upload images to target location
-       {push @r, writeFolderUsingSavedToken
-         ("$user", "$repo", fpd("$dir", "$x"), fpd("$imgs", "$x"));
+       {my $t = fpd $dir,  $x;
+        my $s = fpd $imgs, $x;
+        next unless -e $s;
+        push @r, writeFolderUsingSavedToken($user, $repo, $t, $s);
        }
      }
    }
