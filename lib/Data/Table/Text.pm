@@ -5529,7 +5529,7 @@ sub postProcessImagesForDocumentation(%)                                        
   my $log   = $options{log}  // 1;                                              # Show actions if true
   my $size  = $options{size} // 4096;                                           # Longest size of png images to produce from svg while mainta
   my $home  = currentDirectory;                                                 # Home folder
-  my $dir   = fpd qw(lib Silicon Chip);                                         # Target folder for images
+  my $dir   = $options{target} // fpd qw(lib Silicon Chip);                     # Target folder for images
   my $imgs  = fpd $home, $dir;                                                  # Images source folder
      $imgs  = $home if $ENV{GITHUB_TOKEN};                                      # Change folders for github
   my $svg   = fpd $imgs, qw(svg);                                               # Svg folder
@@ -5543,11 +5543,12 @@ END
 
   my @f = searchDirectoryTreesForMatchingFiles $svg, qw(.svg);                  # Svg files from which we make png files
 
-  my @r;
+  my @r;                                                                        # Results
   for my $s(@f)                                                                 # Svg files
    {my $t = setFileExtension $s, q(png);
        $t = swapFilePrefix $t, $svg, $png;                                      # Matching png
     my $x = readFile $s;
+    push @r, $s;                                                                # Record file being processed
     if ($x =~ m(viewBox="0 0\s+(\d+)\s+(\d+)"))                                 # Dimensions of image
      {my ($x, $y) = ($1, $2);
       my $m = maximum $x, $y;                                                   # Scale image to maximum requested size
@@ -5562,10 +5563,18 @@ END
        {my $t = fpd $dir,  $x;
         my $s = fpd $imgs, $x;
         next unless -e $s;
-        push @r, writeFolderUsingSavedToken($user, $repo, $t, $s);
+        makePath($t);
+        copyBinaryFile($s, $t);
+        # push @r, writeFolderUsingSavedToken($user, $repo, $t, $s);
        }
      }
    }
+   yyy(<<END);                                                                  # Push results
+git config --global user.name 'a 1'
+git config --global user.email 'a1\@a1.com'
+git commit -am "push"
+git push
+END
   @r                                                                            # Results of each upload
  }
 
