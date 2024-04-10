@@ -5581,6 +5581,7 @@ END
    {my $s = fpd $imgs, $x;
     my $t = fpd $dir,  $x;
     copyFolder($s, $t);
+    clearFolder($s, scalar(@F));
    }
   yyy(<<END);                                                                   # Push results
 git config --global user.name 'a 1'
