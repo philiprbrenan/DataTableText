@@ -5565,7 +5565,7 @@ END
     my $t = fpd $dir,  $x;
     copyFolder($s, $t);
    }
-  yyy(<<END);                                                                   # Prep for push
+  push @r, yyy(<<END);                                                          # Prep for push
 git config --global user.name 'a 1'
 git config --global user.email 'a1\@a1.com'
 END
@@ -5573,20 +5573,8 @@ END
   for my $f(@F)
    {say STDERR qx(git add "$f");
    }
-  yyy(<<END);                                                                   # Push results
+  push @r, yyy(<<END);                                                          # Push results
 git commit -m "push"
-git push
-END
-  for my $x(qw(gds png svg))                                                    # Move images to target location
-   {my $s = fpd $imgs, $x;
-    my $t = fpd $dir,  $x;
-    copyFolder($s, $t);
-    clearFolder($s, scalar(@F));
-   }
-  yyy(<<END);                                                                   # Push results
-git config --global user.name 'a 1'
-git config --global user.email 'a1\@a1.com'
-git commit -am "push"
 git push
 END
   @r                                                                            # Results of each upload
