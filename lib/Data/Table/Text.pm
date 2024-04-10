@@ -5558,18 +5558,14 @@ END
       my $c = qq(cairosvg -o $t --output-width $x --output-height $y $s);       # Convert svg to png
       my $r = qx($c);
       say STDERR $r if $r =~ m(\S);
-
-      for my $x(qw(gds png svg))                                                # Move images to target location
-       {my $t = fpd $dir,  $x;
-        my $s = fpd $imgs, $x;
-        next unless -e $s;
-        makePath($t);
-        copyBinaryFile($s, $t);
-        # push @r, writeFolderUsingSavedToken($user, $repo, $t, $s);
-       }
      }
    }
-   yyy(<<END);                                                                  # Push results
+  for my $x(qw(gds png svg))                                                    # Move images to target location
+   {my $s = fpd $imgs, $x;
+    my $t = fpd $dir,  $x;
+    copyFolder($s, $t);
+   }
+  yyy(<<END);                                                                   # Push results
 git config --global user.name 'a 1'
 git config --global user.email 'a1\@a1.com'
 git commit -am "push"
@@ -5577,6 +5573,7 @@ git push
 END
   @r                                                                            # Results of each upload
  }
+# writeFolderUsingSavedToken($user, $repo, $t, $s);
 
 #D1 Processes                                                                   # Start processes, wait for them to terminate and retrieve their results
 
