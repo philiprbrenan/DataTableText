@@ -5565,6 +5565,23 @@ END
     my $t = fpd $dir,  $x;
     copyFolder($s, $t);
    }
+  yyy(<<END);                                                                   # Prep for push
+git config --global user.name 'a 1'
+git config --global user.email 'a1\@a1.com'
+END
+  my @F = searchDirectoryTreesForMatchingFiles(q(.), qw(.gds .png .svg));       # Add images to commit                                             # Move images to target location
+  for my $f(@F)
+   {say STDERR qx(git add "$f");
+   }
+  yyy(<<END);                                                                   # Push results
+git commit -m "push"
+git push
+END
+  for my $x(qw(gds png svg))                                                    # Move images to target location
+   {my $s = fpd $imgs, $x;
+    my $t = fpd $dir,  $x;
+    copyFolder($s, $t);
+   }
   yyy(<<END);                                                                   # Push results
 git config --global user.name 'a 1'
 git config --global user.email 'a1\@a1.com'
