@@ -5559,7 +5559,7 @@ END
       my $r = qx($c);
       say STDERR $r if $r =~ m(\S);
 
-      for my $x(qw(gds png svg))                                                # Upload images to target location
+      for my $x(qw(gds png svg))                                                # Move images to target location
        {my $t = fpd $dir,  $x;
         my $s = fpd $imgs, $x;
         next unless -e $s;
