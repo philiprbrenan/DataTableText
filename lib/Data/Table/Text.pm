@@ -5548,7 +5548,7 @@ END
    {my $t = setFileExtension $s, q(png);
        $t = swapFilePrefix $t, $svg, $png;                                      # Matching png
     my $x = readFile $s;
-    push @r, $s;                                                                # Record file being processed
+    push @r, [$s];                                                                # Record file being processed
     if ($x =~ m(viewBox="0 0\s+(\d+)\s+(\d+)"))                                 # Dimensions of image
      {my ($x, $y) = ($1, $2);
       my $m = maximum $x, $y;                                                   # Scale image to maximum requested size
@@ -5557,6 +5557,7 @@ END
       say STDERR sprintf "Convert svg: x=%5d, y=%5d  ".$s, $x, $y if $log;      # Log change
       my $c = qq(cairosvg -o $t --output-width $x --output-height $y $s);       # Convert svg to png
       my $r = qx($c);
+      push $r[-1]->@*, $r;                                                      # Save result
       say STDERR $r if $r =~ m(\S);
      }
    }
@@ -5566,18 +5567,18 @@ END
     copyFolder($s, $t);
     clearFolder($s, undef);
    }
-  push @r, yyy(<<END);                                                          # Prep for push
-git config --global user.name 'a 1'
-git config --global user.email 'a1\@a1.com'
-END
-  my @F = searchDirectoryTreesForMatchingFiles(q(.), qw(.gds .png .svg));       # Add images to commit                                             # Move images to target location
-  for my $f(@F)
-   {say STDERR qx(git add "$f");
-   }
-  push @r, yyy(<<END);                                                          # Push results
-git commit -m "push"
-git push
-END
+#  push @r, yyy(<<END);                                                          # Prep for push
+#git config --global user.name 'a 1'
+#git config --global user.email 'a1\@a1.com'
+#END
+#  my @F = searchDirectoryTreesForMatchingFiles(q(.), qw(.gds .png .svg));       # Add images to commit                                             # Move images to target location
+#  for my $f(@F)
+#   {say STDERR qx(git add "$f");
+#   }
+#  push @r, yyy(<<END);                                                          # Push results
+#git commit -m "push"
+#git push
+#END
   @r                                                                            # Results of each upload
  }
 # writeFolderUsingSavedToken($user, $repo, $t, $s);
