@@ -5563,6 +5563,7 @@ END
    }
   for my $x(qw(gds png svg))                                                    # Move images to target location
    {my $s = fpd $imgs, $x;
+    next unless -e $s;
     my $t = fpd $dir,  $x;
     copyFolder($s, $t);
     clearFolder($s, undef);
