@@ -5526,10 +5526,10 @@ sub downloadGitHubPublicRepoFile($$$)                                           
 
 sub postProcessImagesForDocumentation(%)                                        # Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the ping files are larger.
  {my (%options) = @_;                                                           # Options
-  my $log   = $options{log}  // 1;                                              # Show actions if true
-  my $size  = $options{size} // 4096;                                           # Longest size of png images to produce from svg while mainta
+  my $log   = $options{log}     // 1;                                           # Show actions if true
+  my $size  = $options{pngSize} // 4096;                                        # Longest size of png images to produce from svg while mainta
   my $home  = currentDirectory;                                                 # Home folder
-  my $dir   = $options{target} // fpd qw(lib Silicon Chip);                     # Target folder for images
+  my $dir   = $options{target}  // fpd qw(lib Silicon Chip);                    # Target folder for images
   my $imgs  = fpd $home, $dir;                                                  # Images source folder
      $imgs  = $home if $ENV{GITHUB_TOKEN};                                      # Change folders for github
   my $svg   = fpd $imgs, qw(svg);                                               # Svg folder
@@ -5568,18 +5568,6 @@ END
     copyFolder($s, $t);
     clearFolder($s, undef);
    }
-#  push @r, yyy(<<END);                                                          # Prep for push
-#git config --global user.name 'a 1'
-#git config --global user.email 'a1\@a1.com'
-#END
-#  my @F = searchDirectoryTreesForMatchingFiles(q(.), qw(.gds .png .svg));       # Add images to commit                                             # Move images to target location
-#  for my $f(@F)
-#   {say STDERR qx(git add "$f");
-#   }
-#  push @r, yyy(<<END);                                                          # Push results
-#git commit -m "push"
-#git push
-#END
   @r                                                                            # Results of each upload
  }
 # writeFolderUsingSavedToken($user, $repo, $t, $s);
