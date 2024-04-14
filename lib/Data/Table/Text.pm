@@ -5524,7 +5524,7 @@ sub downloadGitHubPublicRepoFile($$$)                                           
   $r                                                                            # Return data read from github
  }
 
-sub postProcessImagesForDocumentation(%)                                        # Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the ping files are larger.
+sub postProcessImagesForDocumentation(%)                                        # Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the png files are larger.  Files large enough to require this processing typically take some time to produce so are this conversion if often incorporated into indirect testing on GitHub rather than during local testing.
  {my (%options) = @_;                                                           # Options
   my $log   = $options{log}  // 1;                                              # Show actions if true
   my $size  = $options{size} // 4096;                                           # Longest size of png images to produce from svg while mainta
@@ -17712,7 +17712,7 @@ B<Example:>
 
 =head2 postProcessImagesForDocumentation   (%options)
 
-Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the ping files are larger.
+Post process svg images into png and reload into repo for use by documentation. Useful for detailsed svg images which can take a long time to load into a browser - it transpires it is faster to load them as png even if the png files are larger.  Files large enough to require this processing typically take some time to produce so are this conversion if often incorporated into indirect testing on GitHub rather than during local testing.
 
      Parameter  Description
   1  %options   Options
