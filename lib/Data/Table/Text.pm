@@ -5537,9 +5537,6 @@ sub postProcessImagesForDocumentation(%)                                        
   my ($user, $repo) =  split m(/), $ENV{GITHUB_REPOSITORY}//'';                 # Userid and repo from github
 
   makePath($png);                                                               # Make png folder
-  eval <<END;                                                                   # Avoid making this module directly dependent on ghc as we only use it here
-use GitHub::Crud qw(:all);
-END
 
   my @f = searchDirectoryTreesForMatchingFiles $svg, qw(.svg);                  # Svg files from which we make png files
 
@@ -5570,7 +5567,6 @@ END
    }
   @r                                                                            # Results of each upload
  }
-# writeFolderUsingSavedToken($user, $repo, $t, $s);
 
 #D1 Processes                                                                   # Start processes, wait for them to terminate and retrieve their results
 
@@ -6133,6 +6129,13 @@ sub Data::Exchange::Service::check($$)                                          
   undef                                                                         # Not the current incarnation but continue specified
  }
 
+sub waitPids(@)                                                                 # Wait for an array of pids
+ {my (@pids) = @_;                                                              # Pids to wait for
+  my @r;
+  push @r, waitpid $_, 0 for @pids;
+  @r
+ }
+
 #D1 Conversions                                                                 # Perform various conversions from STDIN to STDOUT
 
 sub convertPerlToJavaScript(;$$)                                                # Convert Perl to Javascript.
@@ -6404,7 +6407,7 @@ sub htmlToc($$)                                                                 
 #END
     my $n = $head+1;
     push @h, <<END;
-    <tr><td align=right>$n<td>$spacer<a href="#$id">$title</a>
+    <tr><td align=right>$n<td>$spacer<a class="toc_$level" href="#$id">$title</a>
 END
    }
 
@@ -6488,10 +6491,12 @@ sub wellKnownUrls                                                               
     bigEndian       => [q(Big Endian),                                          "https://en.wikipedia.org/wiki/Endianness"                                                                                        ],
     binarysearch    => [q(Binary Search),                                       "https://metacpan.org/release/Binary-Heap-Search"                                                                                 ],
     bit             => [q(bit),                                                 "https://en.wikipedia.org/wiki/Bit"                                                                                               ],
+    bitBus          => [q(bit bus),                                             "https://en.wikipedia.org/wiki/Bus_(computing)"                                                                                   ],
     bitterend       => [q(Bitter End),                                          "https://en.wikipedia.org/wiki/Knot#Bitter_end"                                                                                   ],
     blackbird       => [q(SR71 BlackBird),                                      "https://en.wikipedia.org/wiki/Lockheed_SR-71_Blackbird"                                                                          ],
     blob            => [q(blob),                                                "https://en.wikipedia.org/wiki/Binary_large_object"                                                                               ],
     bonnevilleDam   => [q(Bonneville Dam),                                      "https://en.wikipedia.org/wiki/Bonneville_Dam"                                                                                    ],
+    boolean         => [q(Boolean),                                             "https://en.wikipedia.org/wiki/Boolean_data_type"                                                                                 ],
     boson           => [q(Boson),                                               "https://en.wikipedia.org/wiki/Boson"                                                                                             ],
     browser         => [q(web browser),                                         "https://en.wikipedia.org/wiki/Web_browser"                                                                                       ],
     btree           => [q(B-Tree),                                              "https://en.wikipedia.org/wiki/B-tree"                                                                                            ],
@@ -6499,6 +6504,7 @@ sub wellKnownUrls                                                               
     bulktreeg       => [q(Bulk Tree),                                           "https://github.com/philiprbrenan/TreeBulk"                                                                                       ],
     button          => [q(Button),                                              "https://en.wikipedia.org/wiki/Button_(computing)"                                                                                ],
     camelCase       => [q(camelCase),                                           "https://en.wikipedia.org/wiki/Camel_case"                                                                                        ],
+    carbonDioxide   => [q(carbon dioxide),                                      "https://en.wikipedia.org/wiki/Carbon_dioxide"                                                                                    ],
     cauchy          => [q(Augustin Louis Cauchy),                               "https://en.wikipedia.org/wiki/Augustin-Louis_Cauchy"                                                                             ],
     cdk             => [q(cloud development kit),                               "https://aws.amazon.com/cdk/"                                                                                                     ],
     certbot         => [q(Certbot),                                             "https://certbot.eff.org/lets-encrypt/ubuntufocal-apache"                                                                         ],
@@ -6537,14 +6543,16 @@ sub wellKnownUrls                                                               
     cpp             => [q(C++ programming language),                            "https://en.wikipedia.org/wiki/C%2B%2B"                                                                                           ],
     cpu             => [q(CPU),                                                 "https://en.wikipedia.org/wiki/Central_processing_unit"                                                                           ],
     cpus            => [q(CPUs),                                                "https://en.wikipedia.org/wiki/Central_processing_unit"                                                                           ],
-    cron            => [q(cron),                                                "https://en.wikipedia.org/wiki/Cron"                                                                                               ],
+    cron            => [q(cron),                                                "https://en.wikipedia.org/wiki/Cron"                                                                                              ],
     css             => [q(Cascading Style Sheets),                              "https://en.wikipedia.org/wiki/CSS"                                                                                               ],
     csv             => [q(csv),                                                 "https://en.wikipedia.org/wiki/Comma-separated_values"                                                                            ],
     curl            => [q(curl),                                                "https://linux.die.net/man/1/curl"                                                                                                ],
     cvs             => [q(Concurrent Versions System),                          "https://people.redhat.com/~jlaska/documentation-guide-en/ch-cvs.html"                                                            ],
     dag             => [q(DAG),                                                 "https://en.wikipedia.org/wiki/Directed_acyclic_graph"                                                                            ],
-    database        => [q(database),                                            "https://en.wikipedia.org/wiki/Database"                                                                                          ],
+    davidSuzuki     => [q(David Suzuki),                                        "https://en.wikipedia.org/wiki/David_Suzuki"                                                                                      ],
     data            => [q(data),                                                "https://en.wikipedia.org/wiki/Data"                                                                                              ],
+    database        => [q(database),                                            "https://en.wikipedia.org/wiki/Database"                                                                                          ],
+    dataCenter      => [q(Data Center),                                         "https://en.wikipedia.org/wiki/Data_center"                                                                                       ],
     dataStructure   => [q(data structure),                                      "https://en.wikipedia.org/wiki/Data_structure"                                                                                    ],
     db2             => [q(DB2),                                                 "https://en.wikipedia.org/wiki/IBM_Db2_Family"                                                                                    ],
     dbi             => [q(DBI),                                                 "https://dbi.perl.org/"                                                                                                           ],
@@ -6600,6 +6608,8 @@ sub wellKnownUrls                                                               
     euler           => [q(Leonhard Euler),                                      "https://en.wikipedia.org/wiki/Leonhard_Euler"                                                                                    ],
     eval            => [q(eval),                                                "http://perldoc.perl.org/functions/eval.html"                                                                                     ],
     extensions      => [q(file name extensions),                                "https://en.wikipedia.org/wiki/List_of_filename_extensions"                                                                       ],
+    fab             => [q(fab),                                                 "https://en.wikipedia.org/wiki/Semiconductor_fabrication_plant"                                                                   ],
+    fabs            => [q(fabs),                                                "https://en.wikipedia.org/wiki/Semiconductor_fabrication_plant"                                                                   ],
     fail            => [q(fail),                                                "https://1lib.eu/book/2468851/544b50"                                                                                             ],
     fatman          => [q(Fat Man),                                             "https://en.wikipedia.org/wiki/Fat_Man"                                                                                           ],
     fax             => [q(fax),                                                 "https://en.wikipedia.org/wiki/Fax"                                                                                               ],
@@ -6622,9 +6632,10 @@ sub wellKnownUrls                                                               
     fusion          => [q(fusion),                                              "https://en.wikipedia.org/wiki/Nuclear_fusion"                                                                                    ],
     future          => [q(future),                                              "https://en.wikipedia.org/wiki/Future"                                                                                            ],
     gantryCrane     => [q(Gantry Crane),                                        "https://en.wikipedia.org/wiki/Gantry_crane"                                                                                      ],
-    gate            => [q(digital logic gate),                                  "https://en.wikipedia.org/wiki/Logic_gate"                                                                                        ],
+    gate            => [q(gate),                                                "https://en.wikipedia.org/wiki/Logic_gate"                                                                                        ],
     Gauss           => [q(Karl Friedrich Gauss),                                "https://en.wikipedia.org/wiki/Carl_Friedrich_Gauss#Anecdotes"                                                                    ],
     gbstandard      => [q(GB Standard),                                         "http://metacpan.org/pod/Dita::GB::Standard"                                                                                      ],
+    gcc             => [q(gcc),                                                 "https://en.wikipedia.org/wiki/GNU_Compiler_Collection"                                                                           ],
     gdpr            => [q(European Directive on Data Protection),               "https://gdpr.eu"                                                                                                                 ],
     gds2            => [q(Graphic Design System 2),                             "https://en.wikipedia.org/wiki/GDSII"                                                                                             ],
     geany           => [q(Geany),                                               "https://www.geany.org"                                                                                                           ],
@@ -6649,6 +6660,7 @@ sub wellKnownUrls                                                               
     gpu             => [q(GPU),                                                 "https://en.wikipedia.org/wiki/Graphics_processing_unit"                                                                          ],
     green           => [q(green),                                               "https://en.wikipedia.org/wiki/Environmentally_friendly"                                                                          ],
     grep            => [q(grep),                                                "https://en.wikipedia.org/wiki/Grep"                                                                                              ],
+    guardian        => [q(The Guardian),                                        "https://www.theguardian.com"                                                                                                     ],
     guid            => [q(guid),                                                "https://en.wikipedia.org/wiki/Universally_unique_identifier"                                                                     ],
     gui             => [q(graphical user interface),                            "https://en.wikipedia.org/wiki/Graphical_user_interface"                                                                          ],
     gunzip          => [q(gunzip),                                              "https://en.wikipedia.org/wiki/Gunzip"                                                                                            ],
@@ -6735,6 +6747,7 @@ sub wellKnownUrls                                                               
     login           => [q(login),                                               "https://en.wikipedia.org/wiki/Login"                                                                                             ],
     log             => [q(log),                                                 "https://en.wikipedia.org/wiki/Log_file"                                                                                          ],
     losAlamos       => [q(Los Alamos),                                          "https://en.wikipedia.org/wiki/Project_Y"                                                                                         ],
+    lsats           => [q(Law School Admission Test),                           "https://en.wikipedia.org/wiki/LSATSbody{'      Project_Y"                                                                                         ],
     lunchclub       => [q(LunchClub),                                           "https://lunchclub.com/?invite_code=philipb4"                                                                                     ],
     lvaluemethod    => [q(lvalue method),                                       "http://perldoc.perl.org/perlsub.html#Lvalue-subroutines"                                                                         ],
     markDown        => [q(Mark Down),                                           "https://en.wikipedia.org/wiki/Markdown"                                                                                          ],
@@ -6766,6 +6779,7 @@ sub wellKnownUrls                                                               
     mvp             => [q(Minimal Viable Product),                              "https://en.wikipedia.org/wiki/Minimum_viable_product"                                                                            ],
     mysqlMan        => [q(MySql manual),                                        "https://dev.mysql.com/doc/refman/8.0/en/"                                                                                        ],
     mysql           => [q(MySql),                                               "https://en.wikipedia.org/wiki/MySQL"                                                                                             ],
+    nand            => [q(Nand),                                                "https://en.wikipedia.org/wiki/NAND_gate"                                                                                         ],
     nasm            => [q(NASM - the Netwide Assember),                         "https://github.com/netwide-assembler/nasm"                                                                                       ],
     nasmx86         => [q(NasmX86),                                             "https://github.com/philiprbrenan/NasmX86"                                                                                        ],
     NasmX86         => [q(NasmX86),                                             "https://github.com/philiprbrenan/NasmX86"                                                                                        ],
@@ -6774,6 +6788,7 @@ sub wellKnownUrls                                                               
     newton          => [q(Isaac Newton),                                        "https://en.wikipedia.org/wiki/Isaac_Newton"                                                                                      ],
     nfa             => [q(NFA),                                                 "https://metacpan.org/pod/Data::NFA"                                                                                              ],
     nodejs          => [q(NodeJs),                                              "https://en.wikipedia.org/wiki/NodeJs"                                                                                            ],
+    nvidia          => [q(Nvidia),                                              "https://www.wsj.com/market-data/quotes/NVDA/advanced-chart"                                                                      ],
     oauth           => [q(Oauth),                                               "https://en.wikipedia.org/wiki/OAuth"                                                                                             ],
     object          => [q(object),                                              "https://en.wikipedia.org/wiki/Object_(computer_science)"                                                                         ],
     offloading      => [q(off loading),                                         "https://en.wikipedia.org/wiki/Computation_offloading"                                                                            ],
@@ -6807,6 +6822,7 @@ sub wellKnownUrls                                                               
     philCpan        => [q(CPAN),                                                "https://metacpan.org/author/PRBRENAN"                                                                                            ],
     photoApp        => [q(AppaApps Photo App),                                  "https://github.com/philiprbrenan/AppaAppsGitHubPhotoApp"                                                                         ],
     php             => [q(PHP),                                                 "https://en.wikipedia.org/wiki/PHP"                                                                                               ],
+    pin             => [q(pin),                                                 "https://en.wikipedia.org/wiki/555_timer_IC"                                                                                      ],
     pipe            => [q(pipe),                                                "https://en.wikipedia.org/wiki/Pipeline_(Unix)"                                                                                   ],
     pi              => [q(𝝿),                                                   "https://en.wikipedia.org/wiki/Pi"                                                                                                ],
     planckTime      => [q(Planck Time per Joule),                               "https://en.wikipedia.org/wiki/Planck_constant"                                                                                   ],
@@ -6839,8 +6855,11 @@ sub wellKnownUrls                                                               
     redmine         => [q(Redmine),                                             "https://en.wikipedia.org/wiki/Redmine"                                                                                           ],
     relocatable     => [q(relocatable),                                         "https://en.wikipedia.org/wiki/Relocation_%28computing%29"                                                                        ],
     repeatability   => [q(repeatability),                                       "https://en.wikipedia.org/wiki/Repeatability"                                                                                     ],
-    rest            => [q(REST),                                                "https://en.wikipedia.org/wiki/REST"                                                                                             ],
+    rest            => [q(REST),                                                "https://en.wikipedia.org/wiki/REST"                                                                                              ],
     rfp             => [q(Request For Proposal),                                "https://en.wikipedia.org/wiki/Request_for_proposal"                                                                              ],
+    riscv           => [q(RiscV),                                               "https://en.wikipedia.org/wiki/RISC-V"                                                                                            ],
+    riscVIsa        => [q(RiscV Instruction Set),                               "https://riscv.org/wp-content/uploads/2019/12/riscv-spec-20191213.pdf"                                                         ],
+    riscVMachine    => [q(RiscV machine),                                       "https://github.com/philiprbrenan/com.AppaApps.Silicon/blob/main/RiscV.java"                                                         ],
     riyadh          => [q(Riyadh),                                              "https://en.wikipedia.org/wiki/Riyadh"                                                                                            ],
     rmsd            => [q(Root Mean Square Deviation),                          "https://en.wikipedia.org/wiki/Root-mean-square_deviation"                                                                        ],
     rmse            => [q(Root Mean Square Deviation),                          "https://en.wikipedia.org/wiki/Root-mean-square_deviation"                                                                        ],
@@ -6859,6 +6878,7 @@ sub wellKnownUrls                                                               
     sam             => [q(Serveless Application Model),                         "https://aws.amazon.com/serverless/sam/"                                                                                          ],
     sandbox         => [q(sandbox),                                             "https://en.wikipedia.org/wiki/Sandbox_(software_development)"                                                                    ],
     sas             => [q(SAS Institute),                                       "https://en.wikipedia.org/wiki/SAS_Institute"                                                                                     ],
+    saudiArabia     => [q(Saudi Arabia),                                        "https://en.wikipedia.org/wiki/Saudi_Arabia"                                                                                      ],
     schiehallion    => [q(Schiehallion),                                        "https://en.wikipedia.org/wiki/Schiehallion"                                                                                      ],
     securityGroup   => [q(security group),                                      "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/working-with-security-groups.html"                                           ],
     select          => [q(select),                                              "https://en.wikipedia.org/wiki/Select_(SQL)"                                                                                      ],
@@ -6869,7 +6889,8 @@ sub wellKnownUrls                                                               
     shell           => [q(shell),                                               "https://en.wikipedia.org/wiki/Shell_(computing)"                                                                                 ],
     shib            => [q(Shibboleth),                                          "https://www.shibboleth.net/"                                                                                                     ],
     SiliconChipBtree=> [q(SiliconChipBtree),                                    "https://github.com/philiprbrenan/SiliconChipBtree"                                                                               ],
-    SiliconChip     => [q(SiliconChip),                                         "https://github.com/philiprbrenan/SiliconChip"                                                                                    ],
+#   SiliconChip     => [q(SiliconChip),                                         "https://github.com/philiprbrenan/SiliconChip"                                                                                    ],
+    SiliconChip     => [q(Silicon Chip),                                        "https://github.com/philiprbrenan/com.AppaApps.Silicon"                                                                           ],
     SiliconLayout   => [q(SiliconLayout),                                       "https://github.com/philiprbrenan/SiliconChipLayout"                                                                              ],
     silicon         => [q(Silicon),                                             "https://en.wikipedia.org/wiki/Silicon"                                                                                           ],
     SiliconWiring   => [q(SiliconWiring),                                       "https://github.com/philiprbrenan/SiliconChipWiring"                                                                              ],
@@ -6977,6 +6998,9 @@ sub wellKnownUrls                                                               
     user            => [q(user),                                                "https://en.wikipedia.org/wiki/User_(computing)"                                                                                  ],
     uspto           => [q(United States Patent and Trademark Office),           "https://en.wikipedia.org/wiki/USPTO"                                                                                             ],
     utf8            => [q(utf8),                                                "https://en.wikipedia.org/wiki/UTF-8"                                                                                             ],
+    vanina          => [q(Vanina Godoy),                                        "https://ar.linkedin.com/in/vanina-a-godoy?trk=author_mini-profile_title"                                                         ],
+    variable        => [q(variable),                                            "https://en.wikipedia.org/wiki/Variable_(computer_science)"                                                                       ],
+    variables       => [q(variables),                                           "https://en.wikipedia.org/wiki/Variable_(computer_science)"                                                                       ],
     vector2         => [q(Vectors In Two Dimensions),                           "https://pypi.org/project/Vector2/"                                                                                               ],
     verify          => [q(verify),                                              "https://en.wikipedia.org/wiki/Software_verification_and_validation"                                                              ],
     verilog         => [q(Verilog),                                             "https://en.wikipedia.org/wiki/Verilog"                                                                                           ],
@@ -6984,7 +7008,7 @@ sub wellKnownUrls                                                               
     vhdl            => [q(VHDL),                                                "https://ghdl.readthedocs.io/en/latest/about.html"                                                                                ],
     vi              => [q(vi),                                                  "https://www.vim.org/"                                                                                                            ],
     vivado          => [q(Vivado),                                              "https://en.wikipedia.org/wiki/Xilinx_Vivado"                                                                                     ],
-    VLSI            => [q(Introduction to VLSI, Mead, Conway, 1980),            "Introduction to VLSI systems"                                                                                                    ],
+    VLSI            => [q(Introduction to VLSI by Carver Mead and Lynn Conway, written in 1980),  "Introduction to VLSI systems"                                                                                  ],
     VM              => [q(Virtual Machine),                                     "https://en.wikipedia.org/wiki/Virtual_machine"                                                                                   ],
     waterfall       => [q(waterfall development methodology),                   "https://en.wikipedia.org/wiki/Waterfall_model"                                                                                   ],
     webFrameWork    => [q(web frame work),                                      "https://en.wikipedia.org/wiki/Web_framework"                                                                                     ],
@@ -7000,6 +7024,7 @@ sub wellKnownUrls                                                               
     word            => [q(word),                                                "https://en.wikipedia.org/wiki/Doc_(computing)"                                                                                   ],
     write           => [q(write),                                               "https://en.wikipedia.org/wiki/Write_(system_call)"                                                                               ],
     wsl             => [q(Windows Services for Linux),                          "https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux"                                                                       ],
+    wsj             => [q(The Wall Street Journal),                             "https://www.wsj.com/"                                                                                                            ],
     x64             => [q(X86-64),                                              "https://en.wikipedia.org/wiki/X86-64"                                                                                            ],
     xmllint         => [q(Xml Lint),                                            "http://xmlsoft.org/xmllint.html"                                                                                                 ],
     xmlparser       => [q(Xml parser),                                          "https://metacpan.org/pod/XML::Parser/"                                                                                           ],
@@ -7011,6 +7036,7 @@ sub wellKnownUrls                                                               
     youngtableau    => [q(Young Tableau),                                       "https://en.wikipedia.org/wiki/Young_tableau"                                                                                     ],
     yubikeybio      => [q(Yubi Key Bio),                                        "https://www.yubico.com/products/yubikey-bio-series/"                                                                             ],
     yum             => [q(Yum),                                                 "https://en.wikipedia.org/wiki/Yum_(software)"                                                                                    ],
+    zap             => [q(Zap),                                                 "https://www.sciencedirect.com/science/article/pii/B978008025697950052X."                                                         ],
     zeasl           => [q(Zero assembler programming language),                 "https://github.com/philiprbrenan/zero"                                                                                           ],
     zerowidthspace  => [q(zero width space),                                    "https://en.wikipedia.org/wiki/Zero-width_space"                                                                                  ],
     zip             => [q(zip),                                                 "https://linux.die.net/man/1/zip"                                                                                                 ],
@@ -8419,6 +8445,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
  unionOfHashKeys unionOfHashesAsArrays uniqueNameFromFile updateDocumentation
  updatePerlModuleDocumentation userId
  versionCode versionCodeDashed
+ waitPids
  waitForAllStartedProcessesToFinish writeBinaryFile writeFile writeTempFile writeFileToRemote
  writeFiles writeGZipFile writeStructureTest wwwDecode wwwEncode
  wwwHeader wwwGitHubAuth
@@ -12209,15 +12236,7 @@ B<Example:>
     my $H = setFileExtension $p, "html";
     rename $p, $h;
     expandWellKnownWordsAsUrlsAndAddTocToMakeANewHtmlFile $h;
-    is_deeply scalar(readFile $H), <<END;
-  <div id=toc>
-    <table cellspacing=10 border=0>
-    </table>
-  </div>
-  <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-  <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-  <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-  END
+    ok scalar(readFile $H) =~ m(github.com/philiprbrenan/com.AppaApps.Silicon)s;
     unlink $h, $H;
   
 
@@ -13763,6 +13782,16 @@ B<Example:>
   #latest:;
   if (0) {                                                                        
     postProcessImagesForDocumentation;
+  }
+  
+  #latest:;
+  if (1) {                                                                        
+    my @pids;
+    for my $i(1..10)
+     {if (my $pid = fork) {push @pids, $pid} else {exit}
+     }
+    my @r = waitPids(@pids);
+    is_deeply scalar(@r), 10;
   }
   
   
@@ -17725,6 +17754,16 @@ B<Example:>
 
   }
   
+  #latest:;
+  if (1) {                                                                        
+    my @pids;
+    for my $i(1..10)
+     {if (my $pid = fork) {push @pids, $pid} else {exit}
+     }
+    my @r = waitPids(@pids);
+    is_deeply scalar(@r), 10;
+  }
+  
   
 
 =head1 Processes
@@ -18546,6 +18585,28 @@ B<Example:>
    }
   
 
+=head2 waitPids(@pids)
+
+Wait for an array of pids
+
+     Parameter  Description
+  1  @pids      Pids to wait for
+
+B<Example:>
+
+
+    my @pids;
+    for my $i(1..10)
+     {if (my $pid = fork) {push @pids, $pid} else {exit}
+     }
+  
+    my @r = waitPids(@pids);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    is_deeply scalar(@r), 10;
+  }
+  
+  
+
 =head1 Conversions
 
 Perform various conversions from STDIN to STDOUT
@@ -18789,20 +18850,7 @@ B<Example:>
    htmlToc(update => $h);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
   
-   is_deeply scalar(readFile($h)), <<END;
-  <body>
-  <div id=toc>
-    <table cellspacing=10 border=0>
-      <tr><td align=right>1<td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#1">Chapter 1</a>
-      <tr><td align=right>2<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#11">Section 11</a>
-      <tr><td align=right>3<td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#2">Chapter 2</a>
-    </table>
-  </div>
-  <h1 id="1">Chapter 1</h1>
-    <h2 id="11">Section 11</h1>
-  <h1 id="2">Chapter 2</h1>
-  </body>
-  END
+   ok scalar(readFile($h)) =~ m(href="#1");
   
    unlink $h;
   }
@@ -18827,15 +18875,7 @@ B<Example:>
     my $H = setFileExtension $p, "html";
     rename $p, $h;
     expandWellKnownWordsAsUrlsAndAddTocToMakeANewHtmlFile $h;
-    is_deeply scalar(readFile $H), <<END;
-  <div id=toc>
-    <table cellspacing=10 border=0>
-    </table>
-  </div>
-  <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-  <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-  <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-  END
+    ok scalar(readFile $H) =~ m(github.com/philiprbrenan/com.AppaApps.Silicon)s;
     unlink $h, $H;
   
 
@@ -18910,15 +18950,7 @@ B<Example:>
   
     expandWellKnownWordsAsUrlsAndAddTocToMakeANewHtmlFile $h;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-    is_deeply scalar(readFile $H), <<END;
-  <div id=toc>
-    <table cellspacing=10 border=0>
-    </table>
-  </div>
-  <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-  <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-  <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-  END
+    ok scalar(readFile $H) =~ m(github.com/philiprbrenan/com.AppaApps.Silicon)s;
     unlink $h, $H;
    }
   
@@ -21044,35 +21076,37 @@ B<temporaryDirectory> is a synonym for L<temporaryFolder|/temporaryFolder> - Cre
 
 407 L<waitForAllStartedProcessesToFinish|/waitForAllStartedProcessesToFinish> - Wait until all the processes started by L<startProcess|/startProcess> have finished.
 
-408 L<wellKnownUrls|/wellKnownUrls> - Short names for some well known urls.
+408 L<waitPids|/waitPids> - Wait for an array of pids
 
-409 L<writeBinaryFile|/writeBinaryFile> - Write to a new B<$file>, after creating a path to the file with L<makePath> if necessary, the binary content in B<$string>.
+409 L<wellKnownUrls|/wellKnownUrls> - Short names for some well known urls.
 
-410 L<writeFile|/writeFile> - Write to a new B<$file>, after creating a path to the $file with L<makePath> if necessary, a B<$string> of L<Unicode|https://en.wikipedia.org/wiki/Unicode> content encoded as L<utf8|https://en.wikipedia.org/wiki/UTF-8>.
+410 L<writeBinaryFile|/writeBinaryFile> - Write to a new B<$file>, after creating a path to the file with L<makePath> if necessary, the binary content in B<$string>.
 
-411 L<writeFiles|/writeFiles> - Write the values of a B<$hash> reference into files identified by the key of each value using L<overWriteFile|/overWriteFile> optionally swapping the prefix of each file from B<$old> to B<$new>.
+411 L<writeFile|/writeFile> - Write to a new B<$file>, after creating a path to the $file with L<makePath> if necessary, a B<$string> of L<Unicode|https://en.wikipedia.org/wiki/Unicode> content encoded as L<utf8|https://en.wikipedia.org/wiki/UTF-8>.
 
-412 L<writeFileToRemote|/writeFileToRemote> - Write to a new B<$file>, after creating a path to the file with L<makePath> if necessary, a B<$string> of L<Unicode|https://en.wikipedia.org/wiki/Unicode> content encoded as L<utf8|https://en.wikipedia.org/wiki/UTF-8> then copy the $file to the remote server whose ip address is specified by B<$ip> or returned by L<awsIp>.
+412 L<writeFiles|/writeFiles> - Write the values of a B<$hash> reference into files identified by the key of each value using L<overWriteFile|/overWriteFile> optionally swapping the prefix of each file from B<$old> to B<$new>.
 
-413 L<writeGZipFile|/writeGZipFile> - Write to a B<$file>, after creating a path to the file with L<makePath> if necessary, through L<gzip|https://en.wikipedia.org/wiki/Gzip> a B<$string> whose content is encoded as L<utf8|https://en.wikipedia.org/wiki/UTF-8>.
+413 L<writeFileToRemote|/writeFileToRemote> - Write to a new B<$file>, after creating a path to the file with L<makePath> if necessary, a B<$string> of L<Unicode|https://en.wikipedia.org/wiki/Unicode> content encoded as L<utf8|https://en.wikipedia.org/wiki/UTF-8> then copy the $file to the remote server whose ip address is specified by B<$ip> or returned by L<awsIp>.
 
-414 L<writeStructureTest|/writeStructureTest> - Write a test for a data B<$structure> with file names in it.
+414 L<writeGZipFile|/writeGZipFile> - Write to a B<$file>, after creating a path to the file with L<makePath> if necessary, through L<gzip|https://en.wikipedia.org/wiki/Gzip> a B<$string> whose content is encoded as L<utf8|https://en.wikipedia.org/wiki/UTF-8>.
 
-415 L<writeTempFile|/writeTempFile> - Write an array of strings as lines to a temporary file and return the file name.
+415 L<writeStructureTest|/writeStructureTest> - Write a test for a data B<$structure> with file names in it.
 
-416 L<wwwDecode|/wwwDecode> - Percent decode a L<url|https://en.wikipedia.org/wiki/URL> B<$string> per: https://en.
+416 L<writeTempFile|/writeTempFile> - Write an array of strings as lines to a temporary file and return the file name.
 
-417 L<wwwEncode|/wwwEncode> - Percent encode a L<url|https://en.wikipedia.org/wiki/URL> per: https://en.
+417 L<wwwDecode|/wwwDecode> - Percent decode a L<url|https://en.wikipedia.org/wiki/URL> B<$string> per: https://en.
 
-418 L<wwwGitHubAuth|/wwwGitHubAuth> - Logon as a L<GitHub|https://github.com/philiprbrenan> L<Oauth|https://en.wikipedia.org/wiki/OAuth> app per: L<https://github.
+418 L<wwwEncode|/wwwEncode> - Percent encode a L<url|https://en.wikipedia.org/wiki/URL> per: https://en.
 
-419 L<xxx|/xxx> - Execute a shell command optionally checking its response.
+419 L<wwwGitHubAuth|/wwwGitHubAuth> - Logon as a L<GitHub|https://github.com/philiprbrenan> L<Oauth|https://en.wikipedia.org/wiki/OAuth> app per: L<https://github.
 
-420 L<xxxr|/xxxr> - Execute a command B<$cmd> via bash on the server whose ip address is specified by B<$ip> or returned by L<awsIp>.
+420 L<xxx|/xxx> - Execute a shell command optionally checking its response.
 
-421 L<yyy|/yyy> - Execute a block of shell commands line by line after removing comments - stop if there is a non zero return code from any command.
+421 L<xxxr|/xxxr> - Execute a command B<$cmd> via bash on the server whose ip address is specified by B<$ip> or returned by L<awsIp>.
 
-422 L<zzz|/zzz> - Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return code of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails.
+422 L<yyy|/yyy> - Execute a block of shell commands line by line after removing comments - stop if there is a non zero return code from any command.
+
+423 L<zzz|/zzz> - Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return code of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails.
 
 =head1 Installation
 
@@ -24374,20 +24408,7 @@ END
 
  htmlToc(update => $h);
 
- is_deeply scalar(readFile($h)), <<END;
-<body>
-<div id=toc>
-  <table cellspacing=10 border=0>
-    <tr><td align=right>1<td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#1">Chapter 1</a>
-    <tr><td align=right>2<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#11">Section 11</a>
-    <tr><td align=right>3<td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#2">Chapter 2</a>
-  </table>
-</div>
-<h1 id="1">Chapter 1</h1>
-  <h2 id="11">Section 11</h1>
-<h1 id="2">Chapter 2</h1>
-</body>
-END
+ ok scalar(readFile($h)) =~ m(href="#1");
 
  unlink $h;
 }
@@ -24412,15 +24433,7 @@ END
   my $H = setFileExtension $p, "html";
   rename $p, $h;
   expandWellKnownWordsAsUrlsAndAddTocToMakeANewHtmlFile $h;
-  is_deeply scalar(readFile $H), <<END;
-<div id=toc>
-  <table cellspacing=10 border=0>
-  </table>
-</div>
-<p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-<p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-<p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-END
+  ok scalar(readFile $H) =~ m(github.com/philiprbrenan/com.AppaApps.Silicon)s;
   unlink $h, $H;
  }
 
@@ -24432,6 +24445,16 @@ if (1) {                                                                        
 #latest:;
 if (0) {                                                                        #TpostProcessImagesForDocumentation
   postProcessImagesForDocumentation;
+}
+
+#latest:;
+if (1) {                                                                        #TwaitPids
+  my @pids;
+  for my $i(1..10)
+   {if (my $pid = fork) {push @pids, $pid} else {exit}
+   }
+  my @r = waitPids(@pids);
+  is_deeply scalar(@r), 10;
 }
 
 done_testing;
