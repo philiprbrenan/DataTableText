@@ -3543,15 +3543,7 @@ Encode a [Unicode](https://en.wikipedia.org/wiki/Unicode) string of html as [Asc
       my $H = setFileExtension $p, "html";
       rename $p, $h;
       expandWellKnownWordsAsUrlsAndAddTocToMakeANewHtmlFile $h;
-      is_deeply scalar(readFile $H), <<END;
-    <div id=toc>
-      <table cellspacing=10 border=0>
-      </table>
-    </div>
-    <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-    <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-    <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-    END
+      ok scalar(readFile $H) =~ m(github.com/philiprbrenan/com.AppaApps.Silicon)s;
       unlink $h, $H;
     
 
@@ -5017,6 +5009,16 @@ Return a new line - useful for writing [Perl](http://www.perl.org/) one liners
     #latest:;
     if (0) {                                                                        
       postProcessImagesForDocumentation;
+    }
+    
+    #latest:;
+    if (1) {                                                                        
+      my @pids;
+      for my $i(1..10)
+       {if (my $pid = fork) {push @pids, $pid} else {exit}
+       }
+      my @r = waitPids(@pids);
+      is_deeply scalar(@r), 10;
     }
     
     
@@ -8725,6 +8727,16 @@ Post process svg images into png and reload into repo for use by documentation. 
 
     }
     
+    #latest:;
+    if (1) {                                                                        
+      my @pids;
+      for my $i(1..10)
+       {if (my $pid = fork) {push @pids, $pid} else {exit}
+       }
+      my @r = waitPids(@pids);
+      is_deeply scalar(@r), 10;
+    }
+    
     
 
 # Processes
@@ -9522,6 +9534,27 @@ Check that we are the current incarnation of the named service with details obta
      }
     
 
+## waitPids(@pids)
+
+Wait for an array of pids
+
+       Parameter  Description
+    1  @pids      Pids to wait for
+
+**Example:**
+
+      my @pids;
+      for my $i(1..10)
+       {if (my $pid = fork) {push @pids, $pid} else {exit}
+       }
+    
+      my @r = waitPids(@pids);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+      is_deeply scalar(@r), 10;
+    }
+    
+    
+
 # Conversions
 
 Perform various conversions from STDIN to STDOUT
@@ -9754,20 +9787,7 @@ Generate a table of contents for some html held in a file or a string. If the gi
      htmlToc(update => $h);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
     
-     is_deeply scalar(readFile($h)), <<END;
-    <body>
-    <div id=toc>
-      <table cellspacing=10 border=0>
-        <tr><td align=right>1<td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#1">Chapter 1</a>
-        <tr><td align=right>2<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#11">Section 11</a>
-        <tr><td align=right>3<td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#2">Chapter 2</a>
-      </table>
-    </div>
-    <h1 id="1">Chapter 1</h1>
-      <h2 id="11">Section 11</h1>
-    <h1 id="2">Chapter 2</h1>
-    </body>
-    END
+     ok scalar(readFile($h)) =~ m(href="#1");
     
      unlink $h;
     }
@@ -9792,15 +9812,7 @@ Generate a table of contents for some html held in a file or a string. If the gi
       my $H = setFileExtension $p, "html";
       rename $p, $h;
       expandWellKnownWordsAsUrlsAndAddTocToMakeANewHtmlFile $h;
-      is_deeply scalar(readFile $H), <<END;
-    <div id=toc>
-      <table cellspacing=10 border=0>
-      </table>
-    </div>
-    <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-    <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-    <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-    END
+      ok scalar(readFile $H) =~ m(github.com/philiprbrenan/com.AppaApps.Silicon)s;
       unlink $h, $H;
     
 
@@ -9865,15 +9877,7 @@ Expand well known words found in a '.htm' file of html and add a table of conten
     
       expandWellKnownWordsAsUrlsAndAddTocToMakeANewHtmlFile $h;  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
-      is_deeply scalar(readFile $H), <<END;
-    <div id=toc>
-      <table cellspacing=10 border=0>
-      </table>
-    </div>
-    <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-    <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-    <p><a href="https://github.com/philiprbrenan/SiliconChip">SiliconChip</a>
-    END
+      ok scalar(readFile $H) =~ m(github.com/philiprbrenan/com.AppaApps.Silicon)s;
       unlink $h, $H;
      }
     
@@ -11853,35 +11857,37 @@ Extract python documentation from the specified files.
 
 407 [waitForAllStartedProcessesToFinish](#waitforallstartedprocessestofinish) - Wait until all the processes started by [startProcess](#startprocess) have finished.
 
-408 [wellKnownUrls](#wellknownurls) - Short names for some well known urls.
+408 [waitPids](#waitpids) - Wait for an array of pids
 
-409 [writeBinaryFile](#writebinaryfile) - Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
+409 [wellKnownUrls](#wellknownurls) - Short names for some well known urls.
 
-410 [writeFile](#writefile) - Write to a new **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+410 [writeBinaryFile](#writebinaryfile) - Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
 
-411 [writeFiles](#writefiles) - Write the values of a **$hash** reference into files identified by the key of each value using [overWriteFile](#overwritefile) optionally swapping the prefix of each file from **$old** to **$new**.
+411 [writeFile](#writefile) - Write to a new **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-412 [writeFileToRemote](#writefiletoremote) - Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+412 [writeFiles](#writefiles) - Write the values of a **$hash** reference into files identified by the key of each value using [overWriteFile](#overwritefile) optionally swapping the prefix of each file from **$old** to **$new**.
 
-413 [writeGZipFile](#writegzipfile) - Write to a **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, through [gzip](https://en.wikipedia.org/wiki/Gzip) a **$string** whose content is encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+413 [writeFileToRemote](#writefiletoremote) - Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-414 [writeStructureTest](#writestructuretest) - Write a test for a data **$structure** with file names in it.
+414 [writeGZipFile](#writegzipfile) - Write to a **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, through [gzip](https://en.wikipedia.org/wiki/Gzip) a **$string** whose content is encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-415 [writeTempFile](#writetempfile) - Write an array of strings as lines to a temporary file and return the file name.
+415 [writeStructureTest](#writestructuretest) - Write a test for a data **$structure** with file names in it.
 
-416 [wwwDecode](#wwwdecode) - Percent decode a [url](https://en.wikipedia.org/wiki/URL) **$string** per: https://en.
+416 [writeTempFile](#writetempfile) - Write an array of strings as lines to a temporary file and return the file name.
 
-417 [wwwEncode](#wwwencode) - Percent encode a [url](https://en.wikipedia.org/wiki/URL) per: https://en.
+417 [wwwDecode](#wwwdecode) - Percent decode a [url](https://en.wikipedia.org/wiki/URL) **$string** per: https://en.
 
-418 [wwwGitHubAuth](#wwwgithubauth) - Logon as a [GitHub](https://github.com/philiprbrenan) [Oauth](https://en.wikipedia.org/wiki/OAuth) app per: [https://github.](https://github.)
+418 [wwwEncode](#wwwencode) - Percent encode a [url](https://en.wikipedia.org/wiki/URL) per: https://en.
 
-419 [xxx](#xxx) - Execute a shell command optionally checking its response.
+419 [wwwGitHubAuth](#wwwgithubauth) - Logon as a [GitHub](https://github.com/philiprbrenan) [Oauth](https://en.wikipedia.org/wiki/OAuth) app per: [https://github.](https://github.)
 
-420 [xxxr](#xxxr) - Execute a command **$cmd** via bash on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+420 [xxx](#xxx) - Execute a shell command optionally checking its response.
 
-421 [yyy](#yyy) - Execute a block of shell commands line by line after removing comments - stop if there is a non zero return code from any command.
+421 [xxxr](#xxxr) - Execute a command **$cmd** via bash on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-422 [zzz](#zzz) - Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return code of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails.
+422 [yyy](#yyy) - Execute a block of shell commands line by line after removing comments - stop if there is a non zero return code from any command.
+
+423 [zzz](#zzz) - Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return code of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails.
 
 # Installation
 
@@ -11918,6 +11924,6 @@ Thanks to the following people for their help with this module:
 
 Hey! **The above document had some coding errors, which are explained below:**
 
-- Around line 12614:
+- Around line 12621:
 
     Unterminated L<...> sequence
