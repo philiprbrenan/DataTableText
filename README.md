@@ -680,7 +680,7 @@ Get the size of a **$folder** in bytes.
 Get the Md5 sum of the content of a **$file**.
 
        Parameter  Description
-    1  $file      File or string
+    1  $file      File
 
 **Example:**
 
@@ -915,6 +915,39 @@ Returns the name of the first file from **@files** that exists or **undef** if n
     
       ok $d eq firstFileThatExists("$d/$d", $d);                                      # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
 
+    
+
+### changedFiles($md5File, @files)
+
+Returns the files that are new or changed from the last run - needs a test
+
+       Parameter  Description
+    1  $md5File   File to hold md5 sums for each file
+    2  @files     Files to be checked
+
+**Example:**
+
+      my $d = temporaryFolder;
+      my $a = fpe($d, qw(aaa txt));
+      my $b = fpe($d, qw(bbb txt));
+      my $c = fpe($d, qw(ccc txt));
+      my $m = fpe($d, qw(mmm txt));
+    
+      writeFile($a, q(a));
+      writeFile($b, q(b));
+    
+    
+      my @a = map {swapFilePrefix $_, $d} changedFiles($m, $a, $b, $c);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+      owf($a, q(A));
+    
+      my @b = map {swapFilePrefix $_, $d} changedFiles($m, $a, $b, $c);  # 𝗘𝘅𝗮𝗺𝗽𝗹𝗲
+
+    
+      is_deeply \@a, ["aaa.txt", "bbb.txt", "ccc.txt"];;
+      is_deeply \@b, ["aaa.txt", "ccc.txt"];
+    
+      clearFolder($d, 11);
     
 
 ### fileInWindowsFormat ($file)
@@ -5021,6 +5054,26 @@ Return a new line - useful for writing [Perl](http://www.perl.org/) one liners
       is_deeply scalar(@r), 10;
     }
     
+    #latest:;
+    
+    if (1) {                                                                        
+      my $d = temporaryFolder;
+      my $a = fpe($d, qw(aaa txt));
+      my $b = fpe($d, qw(bbb txt));
+      my $c = fpe($d, qw(ccc txt));
+      my $m = fpe($d, qw(mmm txt));
+    
+      writeFile($a, q(a));
+      writeFile($b, q(b));
+    
+      my @a = map {swapFilePrefix $_, $d} changedFiles($m, $a, $b, $c);
+      owf($a, q(A));
+      my @b = map {swapFilePrefix $_, $d} changedFiles($m, $a, $b, $c);
+    
+      is_deeply \@a, ["aaa.txt", "bbb.txt", "ccc.txt"];;
+      is_deeply \@b, ["aaa.txt", "ccc.txt"];
+    
+      clearFolder($d, 11);
     
 
 ## loadArrayFromLines  ($string)
@@ -8737,6 +8790,26 @@ Post process svg images into png and reload into repo for use by documentation. 
       is_deeply scalar(@r), 10;
     }
     
+    #latest:;
+    
+    if (1) {                                                                        
+      my $d = temporaryFolder;
+      my $a = fpe($d, qw(aaa txt));
+      my $b = fpe($d, qw(bbb txt));
+      my $c = fpe($d, qw(ccc txt));
+      my $m = fpe($d, qw(mmm txt));
+    
+      writeFile($a, q(a));
+      writeFile($b, q(b));
+    
+      my @a = map {swapFilePrefix $_, $d} changedFiles($m, $a, $b, $c);
+      owf($a, q(A));
+      my @b = map {swapFilePrefix $_, $d} changedFiles($m, $a, $b, $c);
+    
+      is_deeply \@a, ["aaa.txt", "bbb.txt", "ccc.txt"];;
+      is_deeply \@b, ["aaa.txt", "ccc.txt"];
+    
+      clearFolder($d, 11);
     
 
 # Processes
@@ -9553,6 +9626,26 @@ Wait for an array of pids
       is_deeply scalar(@r), 10;
     }
     
+    #latest:;
+    
+    if (1) {                                                                        
+      my $d = temporaryFolder;
+      my $a = fpe($d, qw(aaa txt));
+      my $b = fpe($d, qw(bbb txt));
+      my $c = fpe($d, qw(ccc txt));
+      my $m = fpe($d, qw(mmm txt));
+    
+      writeFile($a, q(a));
+      writeFile($b, q(b));
+    
+      my @a = map {swapFilePrefix $_, $d} changedFiles($m, $a, $b, $c);
+      owf($a, q(A));
+      my @b = map {swapFilePrefix $_, $d} changedFiles($m, $a, $b, $c);
+    
+      is_deeply \@a, ["aaa.txt", "bbb.txt", "ccc.txt"];;
+      is_deeply \@b, ["aaa.txt", "ccc.txt"];
+    
+      clearFolder($d, 11);
     
 
 # Conversions
@@ -11146,748 +11239,750 @@ Extract python documentation from the specified files.
 
 54 [callSubInParallel](#callsubinparallel) - Call a sub reference in parallel to avoid memory fragmentation and return its results.
 
-55 [checkFile](#checkfile) - Return the name of the specified file if it exists, else confess the maximum extent of the path that does exist.
+55 [changedFiles](#changedfiles) - Returns the files that are new or changed from the last run - needs a test
 
-56 [checkKeys](#checkkeys) - Check the keys in a **hash** confirm to those **$permitted**.
+56 [checkFile](#checkfile) - Return the name of the specified file if it exists, else confess the maximum extent of the path that does exist.
 
-57 [childPids](#childpids) - Recursively find the pids of all the sub processes of a **$process** and all their sub processes and so on returning the specified pid and all its child pids as a list.
+57 [checkKeys](#checkkeys) - Check the keys in a **hash** confirm to those **$permitted**.
 
-58 [chooseStringAtRandom](#choosestringatrandom) - Choose a string at random from the list of **@strings** supplied.
+58 [childPids](#childpids) - Recursively find the pids of all the sub processes of a **$process** and all their sub processes and so on returning the specified pid and all its child pids as a list.
 
-59 [clearFolder](#clearfolder) - Remove all the files and folders under and including the specified **$folder** as long as the number of files to be removed is less than the specified **$limitCount**.
+59 [chooseStringAtRandom](#choosestringatrandom) - Choose a string at random from the list of **@strings** supplied.
 
-60 [cmpArrays](#cmparrays) - Compare two arrays of strings.
+60 [clearFolder](#clearfolder) - Remove all the files and folders under and including the specified **$folder** as long as the number of files to be removed is less than the specified **$limitCount**.
 
-61 [compareArraysAndExplain](#comparearraysandexplain) - Compare two arrays of strings and provide an explanation as to why they differ if they differ or undef if they do not.
+61 [cmpArrays](#cmparrays) - Compare two arrays of strings.
 
-62 [confirmHasCommandLineCommand](#confirmhascommandlinecommand) - Check that the specified b&lt;$cmd> is present on the current system.
+62 [compareArraysAndExplain](#comparearraysandexplain) - Compare two arrays of strings and provide an explanation as to why they differ if they differ or undef if they do not.
 
-63 [containingFolderName](#containingfoldername) - The name of a folder containing a file.
+63 [confirmHasCommandLineCommand](#confirmhascommandlinecommand) - Check that the specified b&lt;$cmd> is present on the current system.
 
-64 [containingPowerOfTwo](#containingpoweroftwo) - Find log two of the lowest power of two greater than or equal to a number **$n**.
+64 [containingFolderName](#containingfoldername) - The name of a folder containing a file.
 
-65 [contains](#contains) - Returns the indices at which an **$item** matches elements of the specified **@array**.
+65 [containingPowerOfTwo](#containingpoweroftwo) - Find log two of the lowest power of two greater than or equal to a number **$n**.
 
-66 [convertDocxToFodt](#convertdocxtofodt) - Convert a _docx_ **$inputFile** file to a _fodt_ **$outputFile** using **unoconv** which must not be running elsewhere at the time.
+66 [contains](#contains) - Returns the indices at which an **$item** matches elements of the specified **@array**.
 
-67 [convertImageToJpx](#convertimagetojpx) - Convert a **$source** image to a **$target** image in jpx format.
+67 [convertDocxToFodt](#convertdocxtofodt) - Convert a _docx_ **$inputFile** file to a _fodt_ **$outputFile** using **unoconv** which must not be running elsewhere at the time.
 
-68 [convertImageToJpx690](#convertimagetojpx690) - Convert a **$source** image to a **$target** image in jpx format using versions of [Imagemagick](https://www.imagemagick.org/script/index.php) version 6.
+68 [convertImageToJpx](#convertimagetojpx) - Convert a **$source** image to a **$target** image in jpx format.
 
-69 [convertPerlToJavaScript](#convertperltojavascript) - Convert Perl to Javascript.
+69 [convertImageToJpx690](#convertimagetojpx690) - Convert a **$source** image to a **$target** image in jpx format using versions of [Imagemagick](https://www.imagemagick.org/script/index.php) version 6.
 
-70 [convertUnicodeToXml](#convertunicodetoxml) - Convert a **$string** with [Unicode](https://en.wikipedia.org/wiki/Unicode) code points that are not directly representable in [Ascii](https://en.wikipedia.org/wiki/ASCII) into string that replaces these code points with their representation in [Xml](https://en.wikipedia.org/wiki/XML) making the string usable in [Xml](https://en.wikipedia.org/wiki/XML) documents.
+70 [convertPerlToJavaScript](#convertperltojavascript) - Convert Perl to Javascript.
 
-71 [convertUtf32ToUtf8](#convertutf32toutf8) - Convert a number representing a single unicode point coded in utf32 to utf8 big endian.
+71 [convertUnicodeToXml](#convertunicodetoxml) - Convert a **$string** with [Unicode](https://en.wikipedia.org/wiki/Unicode) code points that are not directly representable in [Ascii](https://en.wikipedia.org/wiki/ASCII) into string that replaces these code points with their representation in [Xml](https://en.wikipedia.org/wiki/XML) making the string usable in [Xml](https://en.wikipedia.org/wiki/XML) documents.
 
-72 [convertUtf32ToUtf8LE](#convertutf32toutf8le) - Convert a number representing a single unicode point coded in utf32 to utf8 little endian.
+72 [convertUtf32ToUtf8](#convertutf32toutf8) - Convert a number representing a single unicode point coded in utf32 to utf8 big endian.
 
-73 [convertUtf8ToUtf32](#convertutf8toutf32) - Convert a number representing a single unicode point coded in utf8 to utf32.
+73 [convertUtf32ToUtf8LE](#convertutf32toutf8le) - Convert a number representing a single unicode point coded in utf32 to utf8 little endian.
 
-74 [copyBinaryFile](#copybinaryfile) - Copy the binary file **$source** to a file named <%target> and return the target file name,.
+74 [convertUtf8ToUtf32](#convertutf8toutf32) - Convert a number representing a single unicode point coded in utf8 to utf32.
 
-75 [copyFile](#copyfile) - Copy the **$source** file encoded in utf8 to the specified **$target** file in and return $target.
+75 [copyBinaryFile](#copybinaryfile) - Copy the binary file **$source** to a file named <%target> and return the target file name,.
 
-76 [copyFileFromRemote](#copyfilefromremote) - Copy the specified **$file** from the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+76 [copyFile](#copyfile) - Copy the **$source** file encoded in utf8 to the specified **$target** file in and return $target.
 
-77 [copyFileToFolder](#copyfiletofolder) - Copy the file named in **$source** to the specified **$targetFolder/** or if $targetFolder/ is in fact a file into the folder containing this file and return the target file name.
+77 [copyFileFromRemote](#copyfilefromremote) - Copy the specified **$file** from the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-78 [copyFileToRemote](#copyfiletoremote) - Copy the specified local **$file** to the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+78 [copyFileToFolder](#copyfiletofolder) - Copy the file named in **$source** to the specified **$targetFolder/** or if $targetFolder/ is in fact a file into the folder containing this file and return the target file name.
 
-79 [copyFolder](#copyfolder) - Copy the **$source** folder to the **$target** folder after clearing the $target folder.
+79 [copyFileToRemote](#copyfiletoremote) - Copy the specified local **$file** to the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-80 [copyFolderToRemote](#copyfoldertoremote) - Copy the specified local **$Source** folder to the corresponding remote folder on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+80 [copyFolder](#copyfolder) - Copy the **$source** folder to the **$target** folder after clearing the $target folder.
 
-81 [countFileExtensions](#countfileextensions) - Return a hash which counts the file extensions in and below the folders in the specified list.
+81 [copyFolderToRemote](#copyfoldertoremote) - Copy the specified local **$Source** folder to the corresponding remote folder on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-82 [countFileTypes](#countfiletypes) - Return a hash which counts, in parallel with a maximum number of processes: **$maximumNumberOfProcesses**, the results of applying the **file** command to each file in and under the specified **@folders**.
+82 [countFileExtensions](#countfileextensions) - Return a hash which counts the file extensions in and below the folders in the specified list.
 
-83 [countOccurencesInString](#countoccurencesinstring) - Returns the number of occurrences in **$inString** of **$searchFor**.
+83 [countFileTypes](#countfiletypes) - Return a hash which counts, in parallel with a maximum number of processes: **$maximumNumberOfProcesses**, the results of applying the **file** command to each file in and under the specified **@folders**.
 
-84 [countSquareArray](#countsquarearray) - Count the number of elements in a square array.
+84 [countOccurencesInString](#countoccurencesinstring) - Returns the number of occurrences in **$inString** of **$searchFor**.
 
-85 [createEmptyFile](#createemptyfile) - Create an empty file unless the file already exists and return the name of the file else confess if the file cannot be created.
+85 [countSquareArray](#countsquarearray) - Count the number of elements in a square array.
 
-86 [currentDirectory](#currentdirectory) - Get the current working directory.
+86 [createEmptyFile](#createemptyfile) - Create an empty file unless the file already exists and return the name of the file else confess if the file cannot be created.
 
-87 [currentDirectoryAbove](#currentdirectoryabove) - Get the path to the folder above the current working folder.
+87 [currentDirectory](#currentdirectory) - Get the current working directory.
 
-88 [cutOutImagesInFodtFile](#cutoutimagesinfodtfile) - Cut out the images embedded in a **fodt** file, perhaps produced via [convertDocxToFodt](#convertdocxtofodt), placing them in the specified folder and replacing them in the source file with:
+88 [currentDirectoryAbove](#currentdirectoryabove) - Get the path to the folder above the current working folder.
+
+89 [cutOutImagesInFodtFile](#cutoutimagesinfodtfile) - Cut out the images embedded in a **fodt** file, perhaps produced via [convertDocxToFodt](#convertdocxtofodt), placing them in the specified folder and replacing them in the source file with:
 
     <image href="$imageFile" outputclass="imageType">.
 
-89 [Data::Exchange::Service::check](#data-exchange-service-check) - Check that we are the current incarnation of the named service with details obtained from [newServiceIncarnation](#newserviceincarnation).
+90 [Data::Exchange::Service::check](#data-exchange-service-check) - Check that we are the current incarnation of the named service with details obtained from [newServiceIncarnation](#newserviceincarnation).
 
-90 [Data::Table::Text::Starter::averageProcessTime](#data-table-text-starter-averageprocesstime) - Average elapsed time spent by each process.
+91 [Data::Table::Text::Starter::averageProcessTime](#data-table-text-starter-averageprocesstime) - Average elapsed time spent by each process.
 
-91 [Data::Table::Text::Starter::finish](#data-table-text-starter-finish) - Wait for all started processes to finish and return their results as an array.
+92 [Data::Table::Text::Starter::finish](#data-table-text-starter-finish) - Wait for all started processes to finish and return their results as an array.
 
-92 [Data::Table::Text::Starter::logEntry](#data-table-text-starter-logentry) - Create a log entry showing progress and eta.
+93 [Data::Table::Text::Starter::logEntry](#data-table-text-starter-logentry) - Create a log entry showing progress and eta.
 
-93 [Data::Table::Text::Starter::say](#data-table-text-starter-say) - Write to the log file if it is available.
+94 [Data::Table::Text::Starter::say](#data-table-text-starter-say) - Write to the log file if it is available.
 
-94 [Data::Table::Text::Starter::start](#data-table-text-starter-start) - Start a new process to run the specified **$sub**.
+95 [Data::Table::Text::Starter::start](#data-table-text-starter-start) - Start a new process to run the specified **$sub**.
 
-95 [Data::Table::Text::Starter::waitOne](#data-table-text-starter-waitone) - Wait for at least one process to finish and consolidate its results.
+96 [Data::Table::Text::Starter::waitOne](#data-table-text-starter-waitone) - Wait for at least one process to finish and consolidate its results.
 
-96 [dateStamp](#datestamp) - Year-monthName-day.
+97 [dateStamp](#datestamp) - Year-monthName-day.
 
-97 [dateTimeStamp](#datetimestamp) - Year-monthNumber-day at hours:minute:seconds.
+98 [dateTimeStamp](#datetimestamp) - Year-monthNumber-day at hours:minute:seconds.
 
-98 [dateTimeStampName](#datetimestampname) - Date time stamp without white space.
+99 [dateTimeStampName](#datetimestampname) - Date time stamp without white space.
 
-99 [ddd](#ddd) - Dump data.
+100 [ddd](#ddd) - Dump data.
 
-100 [decodeBase64](#decodebase64) - Decode an [Ascii](https://en.wikipedia.org/wiki/ASCII) **$string** in base 64.
+101 [decodeBase64](#decodebase64) - Decode an [Ascii](https://en.wikipedia.org/wiki/ASCII) **$string** in base 64.
 
-101 [decodeJson](#decodejson) - Convert a [Json](https://en.wikipedia.org/wiki/JSON) **$string** to a [Perl](http://www.perl.org/) data structure.
+102 [decodeJson](#decodejson) - Convert a [Json](https://en.wikipedia.org/wiki/JSON) **$string** to a [Perl](http://www.perl.org/) data structure.
 
-102 [deduplicateSequentialWordsInString](#deduplicatesequentialwordsinstring) - Remove sequentially duplicate words in a string.
+103 [deduplicateSequentialWordsInString](#deduplicatesequentialwordsinstring) - Remove sequentially duplicate words in a string.
 
-103 [denormalizeFolderName](#denormalizefoldername) - Remove any trailing folder separator from a folder name.
+104 [denormalizeFolderName](#denormalizefoldername) - Remove any trailing folder separator from a folder name.
 
-104 [deSquareArray](#desquarearray) - Create a one dimensional array from a two dimensional array of arrays.
+105 [deSquareArray](#desquarearray) - Create a one dimensional array from a two dimensional array of arrays.
 
-105 [detagString](#detagstring) - Remove [HTML](https://en.wikipedia.org/wiki/HTML) or [Xml](https://en.wikipedia.org/wiki/XML) tags from a string.
+106 [detagString](#detagstring) - Remove [HTML](https://en.wikipedia.org/wiki/HTML) or [Xml](https://en.wikipedia.org/wiki/XML) tags from a string.
 
-106 [divideCharactersIntoRanges](#dividecharactersintoranges) - Divide a string of characters into ranges.
+107 [divideCharactersIntoRanges](#dividecharactersintoranges) - Divide a string of characters into ranges.
 
-107 [divideIntegersIntoRanges](#divideintegersintoranges) - Divide an array of integers into ranges.
+108 [divideIntegersIntoRanges](#divideintegersintoranges) - Divide an array of integers into ranges.
 
-108 [docUserFlags](#docuserflags) - Generate documentation for a method by calling the extractDocumentationFlags method in the package being documented, passing it the flags for a method and the name of the method.
+109 [docUserFlags](#docuserflags) - Generate documentation for a method by calling the extractDocumentationFlags method in the package being documented, passing it the flags for a method and the name of the method.
 
-109 [downloadGitHubPublicRepo](#downloadgithubpublicrepo) - Get the contents of a public repo on GitHub and place them in a temporary folder whose name is returned to the caller or confess if no such repo exists.
+110 [downloadGitHubPublicRepo](#downloadgithubpublicrepo) - Get the contents of a public repo on GitHub and place them in a temporary folder whose name is returned to the caller or confess if no such repo exists.
 
-110 [downloadGitHubPublicRepoFile](#downloadgithubpublicrepofile) - Get the contents of a **$user** **$repo** **$file** from  a public repo on GitHub and return them as a string.
+111 [downloadGitHubPublicRepoFile](#downloadgithubpublicrepofile) - Get the contents of a **$user** **$repo** **$file** from  a public repo on GitHub and return them as a string.
 
-111 [dumpFile](#dumpfile) - Dump to a **$file** the referenced data **$structure**.
+112 [dumpFile](#dumpfile) - Dump to a **$file** the referenced data **$structure**.
 
-112 [dumpFileAsJson](#dumpfileasjson) - Dump to a **$file** the referenced data **$structure** represented as [Json](https://en.wikipedia.org/wiki/JSON) string.
+113 [dumpFileAsJson](#dumpfileasjson) - Dump to a **$file** the referenced data **$structure** represented as [Json](https://en.wikipedia.org/wiki/JSON) string.
 
-113 [dumpGZipFile](#dumpgzipfile) - Write to a **$file** a data **$structure** through [gzip](https://en.wikipedia.org/wiki/Gzip).
+114 [dumpGZipFile](#dumpgzipfile) - Write to a **$file** a data **$structure** through [gzip](https://en.wikipedia.org/wiki/Gzip).
 
-114 [dumpTempFile](#dumptempfile) - Dump a data structure to a temporary file and return the name of the file created.
+115 [dumpTempFile](#dumptempfile) - Dump a data structure to a temporary file and return the name of the file created.
 
-115 [dumpTempFileAsJson](#dumptempfileasjson) - Dump a data structure represented as [Json](https://en.wikipedia.org/wiki/JSON) string to a temporary file and return the name of the file created.
+116 [dumpTempFileAsJson](#dumptempfileasjson) - Dump a data structure represented as [Json](https://en.wikipedia.org/wiki/JSON) string to a temporary file and return the name of the file created.
 
-116 [enclosedReversedString](#enclosedreversedstring) - Convert alphanumerics in a string to enclosed reversed alphanumerics.
+117 [enclosedReversedString](#enclosedreversedstring) - Convert alphanumerics in a string to enclosed reversed alphanumerics.
 
-117 [enclosedReversedStringUndo](#enclosedreversedstringundo) - Undo alphanumerics in a string to enclosed reversed alphanumerics.
+118 [enclosedReversedStringUndo](#enclosedreversedstringundo) - Undo alphanumerics in a string to enclosed reversed alphanumerics.
 
-118 [enclosedString](#enclosedstring) - Convert alphanumerics in a string to enclosed alphanumerics.
+119 [enclosedString](#enclosedstring) - Convert alphanumerics in a string to enclosed alphanumerics.
 
-119 [enclosedStringUndo](#enclosedstringundo) - Undo alphanumerics in a string to enclosed alphanumerics.
+120 [enclosedStringUndo](#enclosedstringundo) - Undo alphanumerics in a string to enclosed alphanumerics.
 
-120 [encodeBase64](#encodebase64) - Encode an [Ascii](https://en.wikipedia.org/wiki/ASCII) **$string** in base 64.
+121 [encodeBase64](#encodebase64) - Encode an [Ascii](https://en.wikipedia.org/wiki/ASCII) **$string** in base 64.
 
-121 [encodeJson](#encodejson) - Convert a [Perl](http://www.perl.org/) data **$structure** to a [Json](https://en.wikipedia.org/wiki/JSON) string.
+122 [encodeJson](#encodejson) - Convert a [Perl](http://www.perl.org/) data **$structure** to a [Json](https://en.wikipedia.org/wiki/JSON) string.
 
-122 [encodeUnicodeHtmlAsAscii](#encodeunicodehtmlasascii) - Encode a [Unicode](https://en.wikipedia.org/wiki/Unicode) string of html as [Ascii](https://en.wikipedia.org/wiki/ASCII) by replacing unicode characters with an expression.
+123 [encodeUnicodeHtmlAsAscii](#encodeunicodehtmlasascii) - Encode a [Unicode](https://en.wikipedia.org/wiki/Unicode) string of html as [Ascii](https://en.wikipedia.org/wiki/ASCII) by replacing unicode characters with an expression.
 
-123 [evalFile](#evalfile) - Read a file containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, confess to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each hash element.
+124 [evalFile](#evalfile) - Read a file containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, confess to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each hash element.
 
-124 [evalFileAsJson](#evalfileasjson) - Read a **$file** containing [Json](https://en.wikipedia.org/wiki/JSON) and return the corresponding [Perl](http://www.perl.org/) data structure.
+125 [evalFileAsJson](#evalfileasjson) - Read a **$file** containing [Json](https://en.wikipedia.org/wiki/JSON) and return the corresponding [Perl](http://www.perl.org/) data structure.
 
-125 [evalGZipFile](#evalgzipfile) - Read a file compressed with [gzip](https://en.wikipedia.org/wiki/Gzip) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, confess to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each hash element.
+126 [evalGZipFile](#evalgzipfile) - Read a file compressed with [gzip](https://en.wikipedia.org/wiki/Gzip) containing [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8), ["eval" in perlfunc](https://metacpan.org/pod/perlfunc#eval) the content, confess to any errors and then return any result with [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) methods to access each hash element.
 
-126 [evalOrConfess](#evalorconfess) - Evaluate some code successfully or confess as to why it failed to evaluate successfully.
+127 [evalOrConfess](#evalorconfess) - Evaluate some code successfully or confess as to why it failed to evaluate successfully.
 
-127 [execPerlOnRemote](#execperlonremote) - Execute some Perl **$code** on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+128 [execPerlOnRemote](#execperlonremote) - Execute some Perl **$code** on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-128 [expandNewLinesInDocumentation](#expandnewlinesindocumentation) - Expand new lines in documentation, specifically 
+129 [expandNewLinesInDocumentation](#expandnewlinesindocumentation) - Expand new lines in documentation, specifically 
  for new line and 
 
     for two new lines.
 
-129 [expandWellKnownUrlsInDitaFormat](#expandwellknownurlsinditaformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] in the L\[Dita\] **xref**format.
+130 [expandWellKnownUrlsInDitaFormat](#expandwellknownurlsinditaformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] in the L\[Dita\] **xref**format.
 
-130 [expandWellKnownUrlsInHtmlFormat](#expandwellknownurlsinhtmlformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] using the html **a** tag.
+131 [expandWellKnownUrlsInHtmlFormat](#expandwellknownurlsinhtmlformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] using the html **a** tag.
 
-131 [expandWellKnownUrlsInHtmlFromPerl](#expandwellknownurlsinhtmlfromperl) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] using the html **a** tag.
+132 [expandWellKnownUrlsInHtmlFromPerl](#expandwellknownurlsinhtmlfromperl) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L\[url-name\] using the html **a** tag.
 
-132 [expandWellKnownUrlsInPerlFormat](#expandwellknownurlsinperlformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L&lt;url-name> using the Perl POD syntax.
+133 [expandWellKnownUrlsInPerlFormat](#expandwellknownurlsinperlformat) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format L&lt;url-name> using the Perl POD syntax.
 
-133 [expandWellKnownUrlsInPod2Html](#expandwellknownurlsinpod2html) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format =begin html format.
+134 [expandWellKnownUrlsInPod2Html](#expandwellknownurlsinpod2html) - Expand short [url](https://en.wikipedia.org/wiki/URL) names found in a string in the format =begin html format.
 
-134 [expandWellKnownWordsAsUrlsAndAddTocToMakeANewHtmlFile](#expandwellknownwordsasurlsandaddtoctomakeanewhtmlfile) - Expand well known words found in a '.
+135 [expandWellKnownWordsAsUrlsAndAddTocToMakeANewHtmlFile](#expandwellknownwordsasurlsandaddtoctomakeanewhtmlfile) - Expand well known words found in a '.
 
-135 [expandWellKnownWordsAsUrlsInHtmlFormat](#expandwellknownwordsasurlsinhtmlformat) - Expand words found in a string using the html **a** tag to supply a definition of that word.
+136 [expandWellKnownWordsAsUrlsInHtmlFormat](#expandwellknownwordsasurlsinhtmlformat) - Expand words found in a string using the html **a** tag to supply a definition of that word.
 
-136 [expandWellKnownWordsAsUrlsInMdFormat](#expandwellknownwordsasurlsinmdformat) - Expand words found in a string using the md url to supply a definition of that word.
+137 [expandWellKnownWordsAsUrlsInMdFormat](#expandwellknownwordsasurlsinmdformat) - Expand words found in a string using the md url to supply a definition of that word.
 
-137 [expandWellKnownWordsInMarkDownFile](#expandwellknownwordsinmarkdownfile) - Expand well known words in a mark down file.
+138 [expandWellKnownWordsInMarkDownFile](#expandwellknownwordsinmarkdownfile) - Expand well known words in a mark down file.
 
-138 [extractCodeBlock](#extractcodeblock) - Extract the block of code delimited by **$comment**, starting at qq($comment-begin), ending at qq($comment-end) from the named **$file** else the current Perl program $0 and return it as a string or confess if this is not possible.
+139 [extractCodeBlock](#extractcodeblock) - Extract the block of code delimited by **$comment**, starting at qq($comment-begin), ending at qq($comment-end) from the named **$file** else the current Perl program $0 and return it as a string or confess if this is not possible.
 
-139 [extractPodDocumentation](#extractpoddocumentation) - Extract pod from a file
+140 [extractPodDocumentation](#extractpoddocumentation) - Extract pod from a file
 
-140 [extractPythonDocumentationFromFiles](#extractpythondocumentationfromfiles) - Extract python documentation from the specified files.
+141 [extractPythonDocumentationFromFiles](#extractpythondocumentationfromfiles) - Extract python documentation from the specified files.
 
-141 [extractTest](#extracttest) - Remove example markers from test code.
+142 [extractTest](#extracttest) - Remove example markers from test code.
 
-142 [fe](#fe) - Get the extension of a file name.
+143 [fe](#fe) - Get the extension of a file name.
 
-143 [fff](#fff) - Confess a message with a line position and a file that Geany will jump to if clicked on.
+144 [fff](#fff) - Confess a message with a line position and a file that Geany will jump to if clicked on.
 
-144 [fileInWindowsFormat](#fileinwindowsformat) - Convert a unix **$file** name to windows format.
+145 [fileInWindowsFormat](#fileinwindowsformat) - Convert a unix **$file** name to windows format.
 
-145 [fileLargestSize](#filelargestsize) - Return the largest **$file**.
+146 [fileLargestSize](#filelargestsize) - Return the largest **$file**.
 
-146 [fileList](#filelist) - Files that match a given search pattern interpreted by ["bsd\_glob" in perlfunc](https://metacpan.org/pod/perlfunc#bsd_glob).
+147 [fileList](#filelist) - Files that match a given search pattern interpreted by ["bsd\_glob" in perlfunc](https://metacpan.org/pod/perlfunc#bsd_glob).
 
-147 [fileMd5Sum](#filemd5sum) - Get the Md5 sum of the content of a **$file**.
+148 [fileMd5Sum](#filemd5sum) - Get the Md5 sum of the content of a **$file**.
 
-148 [fileModTime](#filemodtime) - Get the modified time of a **$file** as seconds since the epoch.
+149 [fileModTime](#filemodtime) - Get the modified time of a **$file** as seconds since the epoch.
 
-149 [fileOutOfDate](#fileoutofdate) - Calls the specified sub **$make** for each source file that is missing and then again against the **$target** file if any of the **@source** files were missing or the $target file is older than any of the @source files or if the target does not exist.
+150 [fileOutOfDate](#fileoutofdate) - Calls the specified sub **$make** for each source file that is missing and then again against the **$target** file if any of the **@source** files were missing or the $target file is older than any of the @source files or if the target does not exist.
 
-150 [filePath](#filepath) - Create a file name from a list of  names.
+151 [filePath](#filepath) - Create a file name from a list of  names.
 
-151 [filePathDir](#filepathdir) - Create a folder name from a list of  names.
+152 [filePathDir](#filepathdir) - Create a folder name from a list of  names.
 
-152 [filePathExt](#filepathext) - Create a file name from a list of  names the last of which is assumed to be the extension of the file name.
+153 [filePathExt](#filepathext) - Create a file name from a list of  names the last of which is assumed to be the extension of the file name.
 
-153 [filePathSeparatorChar](#filepathseparatorchar) - File path separator.
+154 [filePathSeparatorChar](#filepathseparatorchar) - File path separator.
 
-154 [fileSize](#filesize) - Get the size of a **$file** in bytes.
+155 [fileSize](#filesize) - Get the size of a **$file** in bytes.
 
-155 [findAllFilesAndFolders](#findallfilesandfolders) - Find all the files and folders under a folder.
+156 [findAllFilesAndFolders](#findallfilesandfolders) - Find all the files and folders under a folder.
 
-156 [findDirs](#finddirs) - Find all the folders under a **$folder** and optionally **$filter** the selected folders with a regular expression.
+157 [findDirs](#finddirs) - Find all the folders under a **$folder** and optionally **$filter** the selected folders with a regular expression.
 
-157 [findFiles](#findfiles) - Find all the files under a **$folder** and optionally **$filter** the selected files with a regular expression.
+158 [findFiles](#findfiles) - Find all the files under a **$folder** and optionally **$filter** the selected files with a regular expression.
 
-158 [findFileWithExtension](#findfilewithextension) - Find the first file that exists with a path and name of **$file** and an extension drawn from <@ext>.
+159 [findFileWithExtension](#findfilewithextension) - Find the first file that exists with a path and name of **$file** and an extension drawn from <@ext>.
 
-159 [firstFileThatExists](#firstfilethatexists) - Returns the name of the first file from **@files** that exists or **undef** if none of the named @files exist.
+160 [firstFileThatExists](#firstfilethatexists) - Returns the name of the first file from **@files** that exists or **undef** if none of the named @files exist.
 
-160 [firstNChars](#firstnchars) - First N characters of a string.
+161 [firstNChars](#firstnchars) - First N characters of a string.
 
-161 [flattenArrayAndHashValues](#flattenarrayandhashvalues) - Flatten an array of scalars, array and hash references to make an array of scalars by flattening the array references and hash values.
+162 [flattenArrayAndHashValues](#flattenarrayandhashvalues) - Flatten an array of scalars, array and hash references to make an array of scalars by flattening the array references and hash values.
 
-162 [fn](#fn) - Remove the path and extension from a file name.
+163 [fn](#fn) - Remove the path and extension from a file name.
 
-163 [fne](#fne) - Remove the path from a file name.
+164 [fne](#fne) - Remove the path from a file name.
 
-164 [folderSize](#foldersize) - Get the size of a **$folder** in bytes.
+165 [folderSize](#foldersize) - Get the size of a **$folder** in bytes.
 
-165 [forEachKeyAndValue](#foreachkeyandvalue) - Iterate over a hash for each key and value.
+166 [forEachKeyAndValue](#foreachkeyandvalue) - Iterate over a hash for each key and value.
 
-166 [formatHtmlAndTextTables](#formathtmlandtexttables) - Create text and html versions of a tabular report.
+167 [formatHtmlAndTextTables](#formathtmlandtexttables) - Create text and html versions of a tabular report.
 
-167 [formatHtmlAndTextTablesWaitPids](#formathtmlandtexttableswaitpids) - Wait on all table formatting pids to complete.
+168 [formatHtmlAndTextTablesWaitPids](#formathtmlandtexttableswaitpids) - Wait on all table formatting pids to complete.
 
-168 [formatHtmlTable](#formathtmltable) - Format an array of arrays of scalars as an html table using the  **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
+169 [formatHtmlTable](#formathtmltable) - Format an array of arrays of scalars as an html table using the  **%options** described in [formatTableCheckKeys](https://metacpan.org/pod/formatTableCheckKeys).
 
-169 [formatHtmlTablesIndex](#formathtmltablesindex) - Create an index of html reports.
+170 [formatHtmlTablesIndex](#formathtmltablesindex) - Create an index of html reports.
 
-170 [formatSourcePodAsHtml](#formatsourcepodashtml) - Format the [POD](https://perldoc.perl.org/perlpod.html) in the current source file as [HTML](https://en.wikipedia.org/wiki/HTML).
+171 [formatSourcePodAsHtml](#formatsourcepodashtml) - Format the [POD](https://perldoc.perl.org/perlpod.html) in the current source file as [HTML](https://en.wikipedia.org/wiki/HTML).
 
-171 [formatString](#formatstring) - Format the specified **$string** so it can be displayed in **$width** columns.
+172 [formatString](#formatstring) - Format the specified **$string** so it can be displayed in **$width** columns.
 
-172 [formatTable](#formattable) - Format various **$data** structures as a table with titles as specified by **$columnTitles**: either a reference to an array of column titles or a string each line of which contains the column title as the first word with the rest of the line describing that column.
+173 [formatTable](#formattable) - Format various **$data** structures as a table with titles as specified by **$columnTitles**: either a reference to an array of column titles or a string each line of which contains the column title as the first word with the rest of the line describing that column.
 
-173 [formatTableA](#formattablea) - Tabularize an array.
+174 [formatTableA](#formattablea) - Tabularize an array.
 
-174 [formatTableAA](#formattableaa) - Tabularize an array of arrays.
+175 [formatTableAA](#formattableaa) - Tabularize an array of arrays.
 
-175 [formatTableAH](#formattableah) - Tabularize an array of hashes.
+176 [formatTableAH](#formattableah) - Tabularize an array of hashes.
 
-176 [formatTableBasic](#formattablebasic) - Tabularize an array of arrays of text.
+177 [formatTableBasic](#formattablebasic) - Tabularize an array of arrays of text.
 
-177 [formatTableCheckKeys](#formattablecheckkeys) - Options available for formatting tables.
+178 [formatTableCheckKeys](#formattablecheckkeys) - Options available for formatting tables.
 
-178 [formatTableClearUpLeft](#formattableclearupleft) - Blank identical column values up and left.
+179 [formatTableClearUpLeft](#formattableclearupleft) - Blank identical column values up and left.
 
-179 [formatTableH](#formattableh) - Tabularize a hash.
+180 [formatTableH](#formattableh) - Tabularize a hash.
 
-180 [formatTableHA](#formattableha) - Tabularize a hash of arrays.
+181 [formatTableHA](#formattableha) - Tabularize a hash of arrays.
 
-181 [formatTableHH](#formattablehh) - Tabularize a hash of hashes.
+182 [formatTableHH](#formattablehh) - Tabularize a hash of hashes.
 
-182 [formatTableMultiLine](#formattablemultiline) - Tabularize text that has new lines in it.
+183 [formatTableMultiLine](#formattablemultiline) - Tabularize text that has new lines in it.
 
-183 [formattedTablesReport](#formattedtablesreport) - Report of all the reports created.
+184 [formattedTablesReport](#formattedtablesreport) - Report of all the reports created.
 
-184 [fp](#fp) - Get the path from a file name.
+185 [fp](#fp) - Get the path from a file name.
 
-185 [fpn](#fpn) - Remove the extension from a file name.
+186 [fpn](#fpn) - Remove the extension from a file name.
 
-186 [fullFileName](#fullfilename) - Full name of a file.
+187 [fullFileName](#fullfilename) - Full name of a file.
 
-187 [fullyQualifiedFile](#fullyqualifiedfile) - Check whether a **$file** name is fully qualified or not and, optionally, whether it is fully qualified with a specified **$prefix** or not.
+188 [fullyQualifiedFile](#fullyqualifiedfile) - Check whether a **$file** name is fully qualified or not and, optionally, whether it is fully qualified with a specified **$prefix** or not.
 
-188 [fullyQualifyFile](#fullyqualifyfile) - Return the fully qualified name of a file.
+189 [fullyQualifyFile](#fullyqualifyfile) - Return the fully qualified name of a file.
 
-189 [genHash](#genhash) - Return a **$bless**ed hash with the specified **$attributes** accessible via [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) method calls.
+190 [genHash](#genhash) - Return a **$bless**ed hash with the specified **$attributes** accessible via [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) method calls.
 
-190 [genLValueArrayMethods](#genlvaluearraymethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) array methods in the current package.
+191 [genLValueArrayMethods](#genlvaluearraymethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) array methods in the current package.
 
-191 [genLValueHashMethods](#genlvaluehashmethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) hash methods in the current package.
+192 [genLValueHashMethods](#genlvaluehashmethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) hash methods in the current package.
 
-192 [genLValueScalarMethods](#genlvaluescalarmethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) scalar methods in the current package, A method whose value has not yet been set will return a new scalar with value **undef**.
+193 [genLValueScalarMethods](#genlvaluescalarmethods) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) scalar methods in the current package, A method whose value has not yet been set will return a new scalar with value **undef**.
 
-193 [genLValueScalarMethodsWithDefaultValues](#genlvaluescalarmethodswithdefaultvalues) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) scalar methods with default values in the current package.
+194 [genLValueScalarMethodsWithDefaultValues](#genlvaluescalarmethodswithdefaultvalues) - Generate [lvalue method](http://perldoc.perl.org/perlsub.html#Lvalue-subroutines) scalar methods with default values in the current package.
 
-194 [getCCompiler](#getccompiler) - Return the name of the C compiler on this system.
+195 [getCCompiler](#getccompiler) - Return the name of the C compiler on this system.
 
-195 [getCodeContext](#getcodecontext) - Recreate the code context for a referenced sub.
+196 [getCodeContext](#getcodecontext) - Recreate the code context for a referenced sub.
 
-196 [getFieldOffsetInStructureFromIncludeFile](#getfieldoffsetinstructurefromincludefile) - Get the offset of a field in a system structures from an include file.
+197 [getFieldOffsetInStructureFromIncludeFile](#getfieldoffsetinstructurefromincludefile) - Get the offset of a field in a system structures from an include file.
 
-197 [getNumberOfCpus](#getnumberofcpus) - Number of cpus.
+198 [getNumberOfCpus](#getnumberofcpus) - Number of cpus.
 
-198 [getStructureSizeFromIncludeFile](#getstructuresizefromincludefile) - Get the size of a system structure from an include file.
+199 [getStructureSizeFromIncludeFile](#getstructuresizefromincludefile) - Get the size of a system structure from an include file.
 
-199 [getSubName](#getsubname) - Returns the (package, name, file, line) of a perl **$sub** reference.
+200 [getSubName](#getsubname) - Returns the (package, name, file, line) of a perl **$sub** reference.
 
-200 [getSystemConstantsFromIncludeFile](#getsystemconstantsfromincludefile) - Get the value of the named system constants from an include file.
+201 [getSystemConstantsFromIncludeFile](#getsystemconstantsfromincludefile) - Get the value of the named system constants from an include file.
 
-201 [guidFromMd5](#guidfrommd5) - Create a guid from an md5 hash.
+202 [guidFromMd5](#guidfrommd5) - Create a guid from an md5 hash.
 
-202 [guidFromString](#guidfromstring) - Create a guid representation of the [MD5](https://en.wikipedia.org/wiki/MD5) of the content of a string.
+203 [guidFromString](#guidfromstring) - Create a guid representation of the [MD5](https://en.wikipedia.org/wiki/MD5) of the content of a string.
 
-203 [hashifyFolderStructure](#hashifyfolderstructure) - Hashify a list of file names to get the corresponding folder structure.
+204 [hashifyFolderStructure](#hashifyfolderstructure) - Hashify a list of file names to get the corresponding folder structure.
 
-204 [hexToAsciiString](#hextoasciistring) - Decode a string of [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits as an [Ascii](https://en.wikipedia.org/wiki/ASCII) string.
+205 [hexToAsciiString](#hextoasciistring) - Decode a string of [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) digits as an [Ascii](https://en.wikipedia.org/wiki/ASCII) string.
 
-205 [hostName](#hostname) - The name of the host we are running on.
+206 [hostName](#hostname) - The name of the host we are running on.
 
-206 [htmlToc](#htmltoc) - Generate a table of contents for some html held in a file or a string.
+207 [htmlToc](#htmltoc) - Generate a table of contents for some html held in a file or a string.
 
-207 [imageSize](#imagesize) - Return (width, height) of an **$image**.
+208 [imageSize](#imagesize) - Return (width, height) of an **$image**.
 
-208 [includeFiles](#includefiles) - Read the given file and expand all lines that start "includeThisFile " with the file named by the rest of the line and keep doing this until all the included files have been expanded or a repetition is detected.
+209 [includeFiles](#includefiles) - Read the given file and expand all lines that start "includeThisFile " with the file named by the rest of the line and keep doing this until all the included files have been expanded or a repetition is detected.
 
-209 [indentString](#indentstring) - Indent lines contained in a string or formatted table by the specified string.
+210 [indentString](#indentstring) - Indent lines contained in a string or formatted table by the specified string.
 
-210 [indexOfMax](#indexofmax) - Find the index of the maximum number in a list of numbers confessing to any ill defined values.
+211 [indexOfMax](#indexofmax) - Find the index of the maximum number in a list of numbers confessing to any ill defined values.
 
-211 [indexOfMin](#indexofmin) - Find the index of the minimum number in a list of numbers confessing to any ill defined values.
+212 [indexOfMin](#indexofmin) - Find the index of the minimum number in a list of numbers confessing to any ill defined values.
 
-212 [intersectionOfHashesAsArrays](#intersectionofhashesasarrays) - Form the intersection of the specified hashes **@h** as one hash whose values are an array of corresponding values from each hash.
+213 [intersectionOfHashesAsArrays](#intersectionofhashesasarrays) - Form the intersection of the specified hashes **@h** as one hash whose values are an array of corresponding values from each hash.
 
-213 [intersectionOfHashKeys](#intersectionofhashkeys) - Form the intersection of the keys of the specified hashes **@h** as one hash whose keys represent the intersection.
+214 [intersectionOfHashKeys](#intersectionofhashkeys) - Form the intersection of the keys of the specified hashes **@h** as one hash whose keys represent the intersection.
 
-214 [invertHashOfHashes](#inverthashofhashes) - Invert a hash of hashes: given {a}{b} = c return {b}{c} = c.
+215 [invertHashOfHashes](#inverthashofhashes) - Invert a hash of hashes: given {a}{b} = c return {b}{c} = c.
 
-215 [ipAddressOfHost](#ipaddressofhost) - Get the first ip address of the specified host via Domain Name Services.
+216 [ipAddressOfHost](#ipaddressofhost) - Get the first ip address of the specified host via Domain Name Services.
 
-216 [ipAddressViaArp](#ipaddressviaarp) - Get the ip address of a server on the local network by hostname via arp.
+217 [ipAddressViaArp](#ipaddressviaarp) - Get the ip address of a server on the local network by hostname via arp.
 
-217 [isBlank](#isblank) - Test whether a string is blank.
+218 [isBlank](#isblank) - Test whether a string is blank.
 
-218 [isFileUtf8](#isfileutf8) - Return the file name quoted if its contents are in utf8 else return undef.
+219 [isFileUtf8](#isfileutf8) - Return the file name quoted if its contents are in utf8 else return undef.
 
-219 [isSubInPackage](#issubinpackage) - Test whether the specified **$package** contains the subroutine &lt;$sub>.
+220 [isSubInPackage](#issubinpackage) - Test whether the specified **$package** contains the subroutine &lt;$sub>.
 
-220 [javaPackage](#javapackage) - Extract the package name from a java string or file.
+221 [javaPackage](#javapackage) - Extract the package name from a java string or file.
 
-221 [javaPackageAsFileName](#javapackageasfilename) - Extract the package name from a java string or file and convert it to a file name.
+222 [javaPackageAsFileName](#javapackageasfilename) - Extract the package name from a java string or file and convert it to a file name.
 
-222 [javaScriptExports](#javascriptexports) - Extract the Javascript functions marked for export in a file or string.
+223 [javaScriptExports](#javascriptexports) - Extract the Javascript functions marked for export in a file or string.
 
-223 [keyCount](#keycount) - Count keys down to the specified level.
+224 [keyCount](#keycount) - Count keys down to the specified level.
 
-224 [lengthOfLongestSubArray](#lengthoflongestsubarray) - Given an array of arrays find the length of the longest sub array.
+225 [lengthOfLongestSubArray](#lengthoflongestsubarray) - Given an array of arrays find the length of the longest sub array.
 
-225 [lll](#lll) - Log messages with a time stamp and originating file and line number.
+226 [lll](#lll) - Log messages with a time stamp and originating file and line number.
 
-226 [loadArrayArrayFromLines](#loadarrayarrayfromlines) - Load an array of arrays from lines of text: each line is an array of words.
+227 [loadArrayArrayFromLines](#loadarrayarrayfromlines) - Load an array of arrays from lines of text: each line is an array of words.
 
-227 [loadArrayFromLines](#loadarrayfromlines) - Load an array from lines of text in a string.
+228 [loadArrayFromLines](#loadarrayfromlines) - Load an array from lines of text in a string.
 
-228 [loadArrayHashFromLines](#loadarrayhashfromlines) - Load an array of hashes from lines of text: each line is a hash of words.
+229 [loadArrayHashFromLines](#loadarrayhashfromlines) - Load an array of hashes from lines of text: each line is a hash of words.
 
-229 [loadHash](#loadhash) - Load the specified blessed **$hash** generated with [genHash](#genhash) with **%attributes**.
+230 [loadHash](#loadhash) - Load the specified blessed **$hash** generated with [genHash](#genhash) with **%attributes**.
 
-230 [loadHashArrayFromLines](#loadhasharrayfromlines) - Load a hash of arrays from lines of text: the first word of each line is the key, the remaining words are the array contents.
+231 [loadHashArrayFromLines](#loadhasharrayfromlines) - Load a hash of arrays from lines of text: the first word of each line is the key, the remaining words are the array contents.
 
-231 [loadHashFromLines](#loadhashfromlines) - Load a hash: first word of each line is the key and the rest is the value.
+232 [loadHashFromLines](#loadhashfromlines) - Load a hash: first word of each line is the key and the rest is the value.
 
-232 [loadHashHashFromLines](#loadhashhashfromlines) - Load a hash of hashes from lines of text: the first word of each line is the key, the remaining words are the sub hash contents.
+233 [loadHashHashFromLines](#loadhashhashfromlines) - Load a hash of hashes from lines of text: the first word of each line is the key, the remaining words are the sub hash contents.
 
-233 [lpad](#lpad) - Left Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
+234 [lpad](#lpad) - Left Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
 
-234 [makeDieConfess](#makedieconfess) - Force die to confess where the death occurred.
+235 [makeDieConfess](#makedieconfess) - Force die to confess where the death occurred.
 
-235 [makePath](#makepath) - Make the path for the specified file name or folder on the local machine.
+236 [makePath](#makepath) - Make the path for the specified file name or folder on the local machine.
 
-236 [makePathRemote](#makepathremote) - Make the path for the specified **$file** or folder on the [Amazon Web Services](http://aws.amazon.com) instance whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+237 [makePathRemote](#makepathremote) - Make the path for the specified **$file** or folder on the [Amazon Web Services](http://aws.amazon.com) instance whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-237 [matchPath](#matchpath) - Return the deepest folder that exists along a given file name path.
+238 [matchPath](#matchpath) - Return the deepest folder that exists along a given file name path.
 
-238 [mathematicalBoldItalicString](#mathematicalbolditalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
+239 [mathematicalBoldItalicString](#mathematicalbolditalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
 
-239 [mathematicalBoldItalicStringUndo](#mathematicalbolditalicstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
+240 [mathematicalBoldItalicStringUndo](#mathematicalbolditalicstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold Italic.
 
-240 [mathematicalBoldString](#mathematicalboldstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
+241 [mathematicalBoldString](#mathematicalboldstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
 
-241 [mathematicalBoldStringUndo](#mathematicalboldstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
+242 [mathematicalBoldStringUndo](#mathematicalboldstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Bold.
 
-242 [mathematicalItalicString](#mathematicalitalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Italic.
+243 [mathematicalItalicString](#mathematicalitalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Italic.
 
-243 [mathematicalMonoSpaceString](#mathematicalmonospacestring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
+244 [mathematicalMonoSpaceString](#mathematicalmonospacestring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
 
-244 [mathematicalMonoSpaceStringUndo](#mathematicalmonospacestringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
+245 [mathematicalMonoSpaceStringUndo](#mathematicalmonospacestringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical MonoSpace.
 
-245 [mathematicalSansSerifBoldItalicString](#mathematicalsansserifbolditalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
+246 [mathematicalSansSerifBoldItalicString](#mathematicalsansserifbolditalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
 
-246 [mathematicalSansSerifBoldItalicStringUndo](#mathematicalsansserifbolditalicstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
+247 [mathematicalSansSerifBoldItalicStringUndo](#mathematicalsansserifbolditalicstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold Italic.
 
-247 [mathematicalSansSerifBoldString](#mathematicalsansserifboldstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
+248 [mathematicalSansSerifBoldString](#mathematicalsansserifboldstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
 
-248 [mathematicalSansSerifBoldStringUndo](#mathematicalsansserifboldstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
+249 [mathematicalSansSerifBoldStringUndo](#mathematicalsansserifboldstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Bold.
 
-249 [mathematicalSansSerifItalicString](#mathematicalsansserifitalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
+250 [mathematicalSansSerifItalicString](#mathematicalsansserifitalicstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
 
-250 [mathematicalSansSerifItalicStringUndo](#mathematicalsansserifitalicstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
+251 [mathematicalSansSerifItalicStringUndo](#mathematicalsansserifitalicstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif Italic.
 
-251 [mathematicalSansSerifString](#mathematicalsansserifstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
+252 [mathematicalSansSerifString](#mathematicalsansserifstring) - Convert alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
 
-252 [mathematicalSansSerifStringUndo](#mathematicalsansserifstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
+253 [mathematicalSansSerifStringUndo](#mathematicalsansserifstringundo) - Undo alphanumerics in a string to [Unicode](https://en.wikipedia.org/wiki/Unicode) Mathematical Sans Serif.
 
-253 [max](#max) - Find the maximum number in a list of numbers confessing to any ill defined values.
+254 [max](#max) - Find the maximum number in a list of numbers confessing to any ill defined values.
 
-254 [maximum](#maximum) - Find the maximum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
+255 [maximum](#maximum) - Find the maximum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
 
-255 [maximumLineLength](#maximumlinelength) - Find the longest line in a **$string**.
+256 [maximumLineLength](#maximumlinelength) - Find the longest line in a **$string**.
 
-256 [md5FromGuid](#md5fromguid) - Recover an md5 sum from a guid.
+257 [md5FromGuid](#md5fromguid) - Recover an md5 sum from a guid.
 
-257 [mergeFolder](#mergefolder) - Copy the **$source** folder into the **$target** folder retaining any existing files not replaced by copied files.
+258 [mergeFolder](#mergefolder) - Copy the **$source** folder into the **$target** folder retaining any existing files not replaced by copied files.
 
-258 [mergeFolderFromRemote](#mergefolderfromremote) - Merge the specified **$Source** folder from the corresponding remote folder on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+259 [mergeFolderFromRemote](#mergefolderfromremote) - Merge the specified **$Source** folder from the corresponding remote folder on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-259 [mergeHashesBySummingValues](#mergehashesbysummingvalues) - Merge a list of hashes **@h** by summing their values.
+260 [mergeHashesBySummingValues](#mergehashesbysummingvalues) - Merge a list of hashes **@h** by summing their values.
 
-260 [microSecondsSinceEpoch](#microsecondssinceepoch) - Micro seconds since unix epoch.
+261 [microSecondsSinceEpoch](#microsecondssinceepoch) - Micro seconds since unix epoch.
 
-261 [min](#min) - Find the minimum number in a list of numbers confessing to any ill defined values.
+262 [min](#min) - Find the minimum number in a list of numbers confessing to any ill defined values.
 
-262 [minimum](#minimum) - Find the minimum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
+263 [minimum](#minimum) - Find the minimum number in a list of numbers ignoring any undefined values and assuming that all entries are numeric
 
-263 [mmm](#mmm) - Log messages with a differential time in milliseconds and originating file and line number.
+264 [mmm](#mmm) - Log messages with a differential time in milliseconds and originating file and line number.
 
-264 [moveFileNoClobber](#movefilenoclobber) - Rename the **$source** file, which must exist, to the **$target** file but only if the $target file does not exist already.
+265 [moveFileNoClobber](#movefilenoclobber) - Rename the **$source** file, which must exist, to the **$target** file but only if the $target file does not exist already.
 
-265 [moveFileWithClobber](#movefilewithclobber) - Rename the **$source** file, which must exist, to the **$target** file but only if the $target file does not exist already.
+266 [moveFileWithClobber](#movefilewithclobber) - Rename the **$source** file, which must exist, to the **$target** file but only if the $target file does not exist already.
 
-266 [nameFromFolder](#namefromfolder) - Create a name from the last folder in the path of a file name.
+267 [nameFromFolder](#namefromfolder) - Create a name from the last folder in the path of a file name.
 
-267 [nameFromString](#namefromstring) - Create a readable name from an arbitrary string of text.
+268 [nameFromString](#namefromstring) - Create a readable name from an arbitrary string of text.
 
-268 [nameFromStringRestrictedToTitle](#namefromstringrestrictedtotitle) - Create a readable name from a string of text that might contain a title tag - fall back to [nameFromString](#namefromstring) if that is not possible.
+269 [nameFromStringRestrictedToTitle](#namefromstringrestrictedtotitle) - Create a readable name from a string of text that might contain a title tag - fall back to [nameFromString](#namefromstring) if that is not possible.
 
-269 [newLine](#newline) - Return a new line - useful for writing [Perl](http://www.perl.org/) one liners
+270 [newLine](#newline) - Return a new line - useful for writing [Perl](http://www.perl.org/) one liners
 
-270 [newProcessStarter](#newprocessstarter) - Create a new [process starter](#data-table-text-starter-definition) with which to start parallel processes up to a specified **$maximumNumberOfProcesses** maximum number of parallel processes at a time, wait for all the started processes to finish and then optionally retrieve their saved results as an array from the folder named by **$transferArea**.
+271 [newProcessStarter](#newprocessstarter) - Create a new [process starter](#data-table-text-starter-definition) with which to start parallel processes up to a specified **$maximumNumberOfProcesses** maximum number of parallel processes at a time, wait for all the started processes to finish and then optionally retrieve their saved results as an array from the folder named by **$transferArea**.
 
-271 [newServiceIncarnation](#newserviceincarnation) - Create a new service incarnation to record the start up of a new instance of a service and return the description as a [Data::Exchange::Service Definition hash](#data-exchange-service-definition).
+272 [newServiceIncarnation](#newserviceincarnation) - Create a new service incarnation to record the start up of a new instance of a service and return the description as a [Data::Exchange::Service Definition hash](#data-exchange-service-definition).
 
-272 [newUdsr](#newudsr) - Create a communicator - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+273 [newUdsr](#newudsr) - Create a communicator - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
-273 [newUdsrClient](#newudsrclient) - Create a new communications client - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+274 [newUdsrClient](#newudsrclient) - Create a new communications client - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
-274 [newUdsrServer](#newudsrserver) - Create a communications server - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
+275 [newUdsrServer](#newudsrserver) - Create a communications server - a means to communicate between processes on the same machine via [Udsr::read](#udsr-read) and [Udsr::write](#udsr-write).
 
-275 [numberOfCpus](#numberofcpus) - Number of cpus scaled by an optional factor - but only if you have nproc.
+276 [numberOfCpus](#numberofcpus) - Number of cpus scaled by an optional factor - but only if you have nproc.
 
-276 [numberOfLinesInFile](#numberoflinesinfile) - Return the number of lines in a file.
+277 [numberOfLinesInFile](#numberoflinesinfile) - Return the number of lines in a file.
 
-277 [numberOfLinesInString](#numberoflinesinstring) - The number of lines in a string.
+278 [numberOfLinesInString](#numberoflinesinstring) - The number of lines in a string.
 
-278 [numberWithCommas](#numberwithcommas) - Place commas in a number.
+279 [numberWithCommas](#numberwithcommas) - Place commas in a number.
 
-279 [nws](#nws) - Normalize white space in a string to make comparisons easier.
+280 [nws](#nws) - Normalize white space in a string to make comparisons easier.
 
-280 [onAws](#onaws) - Returns 1 if we are on AWS else return 0.
+281 [onAws](#onaws) - Returns 1 if we are on AWS else return 0.
 
-281 [onAwsPrimary](#onawsprimary) - Return 1 if we are on [Amazon Web Services](http://aws.amazon.com) and we are on the primary session instance as defined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), return 0 if we are on a secondary session instance, else return **undef** if we are not on [Amazon Web Services](http://aws.amazon.com).
+282 [onAwsPrimary](#onawsprimary) - Return 1 if we are on [Amazon Web Services](http://aws.amazon.com) and we are on the primary session instance as defined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), return 0 if we are on a secondary session instance, else return **undef** if we are not on [Amazon Web Services](http://aws.amazon.com).
 
-282 [onAwsSecondary](#onawssecondary) - Return 1 if we are on [Amazon Web Services](http://aws.amazon.com) but we are not on the primary session instance as defined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), return 0 if we are on the primary session instance, else return **undef** if we are not on [Amazon Web Services](http://aws.amazon.com).
+283 [onAwsSecondary](#onawssecondary) - Return 1 if we are on [Amazon Web Services](http://aws.amazon.com) but we are not on the primary session instance as defined by [awsParallelPrimaryInstanceId](https://metacpan.org/pod/awsParallelPrimaryInstanceId), return 0 if we are on the primary session instance, else return **undef** if we are not on [Amazon Web Services](http://aws.amazon.com).
 
-283 [onMac](#onmac) - Are we on mac.
+284 [onMac](#onmac) - Are we on mac.
 
-284 [onWindows](#onwindows) - Are we on windows.
+285 [onWindows](#onwindows) - Are we on windows.
 
-285 [overrideAndReabsorbMethods](#overrideandreabsorbmethods) - Override methods down the list of **@packages** then reabsorb any unused methods back up the list of packages so that all the packages have the same methods as the last package with methods from packages mentioned earlier overriding methods from packages mentioned later.
+286 [overrideAndReabsorbMethods](#overrideandreabsorbmethods) - Override methods down the list of **@packages** then reabsorb any unused methods back up the list of packages so that all the packages have the same methods as the last package with methods from packages mentioned earlier overriding methods from packages mentioned later.
 
-286 [overrideMethods](#overridemethods) - For each method, if it exists in package **$from** then export it to package **$to** replacing any existing method in **$to**, otherwise export the method from package **$to** to package **$from** in order to merge the behavior of the **$from** and **$to** packages with respect to the named methods with duplicates resolved if favour of package **$from**.
+287 [overrideMethods](#overridemethods) - For each method, if it exists in package **$from** then export it to package **$to** replacing any existing method in **$to**, otherwise export the method from package **$to** to package **$from** in order to merge the behavior of the **$from** and **$to** packages with respect to the named methods with duplicates resolved if favour of package **$from**.
 
-287 [overWriteBinaryFile](#overwritebinaryfile) - Write to **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
+288 [overWriteBinaryFile](#overwritebinaryfile) - Write to **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
 
-288 [overWriteFile](#overwritefile) - Write to a **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+289 [overWriteFile](#overwritefile) - Write to a **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-289 [overWriteHtmlFile](#overwritehtmlfile) - Write an [HTML](https://en.wikipedia.org/wiki/HTML) file to /var/www/html and make it readable.
+290 [overWriteHtmlFile](#overwritehtmlfile) - Write an [HTML](https://en.wikipedia.org/wiki/HTML) file to /var/www/html and make it readable.
 
-290 [overWritePerlCgiFile](#overwriteperlcgifile) - Write a [Perl](http://www.perl.org/) file to /usr/lib/cgi-bin and make it executable after checking it for syntax errors.
+291 [overWritePerlCgiFile](#overwriteperlcgifile) - Write a [Perl](http://www.perl.org/) file to /usr/lib/cgi-bin and make it executable after checking it for syntax errors.
 
-291 [packBySize](#packbysize) - Given **$N** buckets and a list **@sizes** of (\[size of file, name of file\].
+292 [packBySize](#packbysize) - Given **$N** buckets and a list **@sizes** of (\[size of file, name of file\].
 
-292 [pad](#pad) - Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
+293 [pad](#pad) - Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
 
-293 [parseCommandLineArguments](#parsecommandlinearguments) - Call the specified **$sub** after classifying the specified array of \[arguments\] in **$args** into positional and keyword parameters.
+294 [parseCommandLineArguments](#parsecommandlinearguments) - Call the specified **$sub** after classifying the specified array of \[arguments\] in **$args** into positional and keyword parameters.
 
-294 [parseDitaRef](#parseditaref) - Parse a dita reference **$ref** into its components (file name, topic id, id) .
+295 [parseDitaRef](#parseditaref) - Parse a dita reference **$ref** into its components (file name, topic id, id) .
 
-295 [parseFileName](#parsefilename) - Parse a file name into (path, name, extension) considering .
+296 [parseFileName](#parsefilename) - Parse a file name into (path, name, extension) considering .
 
-296 [parseIntoWordsAndStrings](#parseintowordsandstrings) - Parse a **$string** into words and quoted strings.
+297 [parseIntoWordsAndStrings](#parseintowordsandstrings) - Parse a **$string** into words and quoted strings.
 
-297 [parseS3BucketAndFolderName](#parses3bucketandfoldername) - Parse an [S3](https://aws.amazon.com/s3/) bucket/folder name into a bucket and a folder name removing any initial s3://.
+298 [parseS3BucketAndFolderName](#parses3bucketandfoldername) - Parse an [S3](https://aws.amazon.com/s3/) bucket/folder name into a bucket and a folder name removing any initial s3://.
 
-298 [parseXmlDocType](#parsexmldoctype) - Parse an [Xml](https://en.wikipedia.org/wiki/XML) DOCTYPE and return a hash indicating its components.
+299 [parseXmlDocType](#parsexmldoctype) - Parse an [Xml](https://en.wikipedia.org/wiki/XML) DOCTYPE and return a hash indicating its components.
 
-299 [partitionStringsOnPrefixBySize](#partitionstringsonprefixbysize) - Partition a hash of strings and associated sizes into partitions with either a maximum size **$maxSize** or only one element; the hash **%Sizes** consisting of a mapping {string=>size}; with each partition being named with the shortest string prefix that identifies just the strings in that partition.
+300 [partitionStringsOnPrefixBySize](#partitionstringsonprefixbysize) - Partition a hash of strings and associated sizes into partitions with either a maximum size **$maxSize** or only one element; the hash **%Sizes** consisting of a mapping {string=>size}; with each partition being named with the shortest string prefix that identifies just the strings in that partition.
 
-300 [perlPackage](#perlpackage) - Extract the package name from a perl string or file.
+301 [perlPackage](#perlpackage) - Extract the package name from a perl string or file.
 
-301 [postProcessImagesForDocumentation](#postprocessimagesfordocumentation) - Post process svg images into png and reload into repo for use by documentation.
+302 [postProcessImagesForDocumentation](#postprocessimagesfordocumentation) - Post process svg images into png and reload into repo for use by documentation.
 
-302 [powerOfTwo](#poweroftwo) - Test whether a number **$n** is a power of two, return the power if it is else **undef**.
+303 [powerOfTwo](#poweroftwo) - Test whether a number **$n** is a power of two, return the power if it is else **undef**.
 
-303 [ppp](#ppp) - Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
+304 [ppp](#ppp) - Pad the specified **$string** to a multiple of the specified **$length**  with blanks or the specified padding character to a multiple of a specified length.
 
-304 [prefferedFileName](#prefferedfilename) - Normalize a file name.
+305 [prefferedFileName](#prefferedfilename) - Normalize a file name.
 
-305 [printQw](#printqw) - Print an array of words in qw() format.
+306 [printQw](#printqw) - Print an array of words in qw() format.
 
-306 [processFilesInParallel](#processfilesinparallel) - Process files in parallel using (8 \* the number of CPUs) processes with the process each file is assigned to depending on the size of the file so that each process is loaded with approximately the same number of bytes of data in total from the files it processes.
+307 [processFilesInParallel](#processfilesinparallel) - Process files in parallel using (8 \* the number of CPUs) processes with the process each file is assigned to depending on the size of the file so that each process is loaded with approximately the same number of bytes of data in total from the files it processes.
 
-307 [processJavaFilesInParallel](#processjavafilesinparallel) - Process java files of known size in parallel using (the number of CPUs) processes with the process each item is assigned to depending on the size of the java item so that each process is loaded with approximately the same number of bytes of data in total from the java files it processes.
+308 [processJavaFilesInParallel](#processjavafilesinparallel) - Process java files of known size in parallel using (the number of CPUs) processes with the process each item is assigned to depending on the size of the java item so that each process is loaded with approximately the same number of bytes of data in total from the java files it processes.
 
-308 [processSizesInParallel](#processsizesinparallel) - Process items of known size in parallel using (8 \* the number of CPUs) processes with the process each item is assigned to depending on the size of the item so that each process is loaded with approximately the same number of bytes of data in total from the items it processes.
+309 [processSizesInParallel](#processsizesinparallel) - Process items of known size in parallel using (8 \* the number of CPUs) processes with the process each item is assigned to depending on the size of the item so that each process is loaded with approximately the same number of bytes of data in total from the items it processes.
 
-309 [processSizesInParallelN](#processsizesinparalleln) - Process items of known size in parallel using the specified number **$N** processes with the process each file is assigned to depending on the size of the file so that each process is loaded with approximately the same number of bytes of data in total from the files it processes.
+310 [processSizesInParallelN](#processsizesinparalleln) - Process items of known size in parallel using the specified number **$N** processes with the process each file is assigned to depending on the size of the file so that each process is loaded with approximately the same number of bytes of data in total from the files it processes.
 
-310 [quoteFile](#quotefile) - Quote a file name.
+311 [quoteFile](#quotefile) - Quote a file name.
 
-311 [randomizeArray](#randomizearray) - Randomize an array.
+312 [randomizeArray](#randomizearray) - Randomize an array.
 
-312 [readBinaryFile](#readbinaryfile) - Read a binary file on the local machine.
+313 [readBinaryFile](#readbinaryfile) - Read a binary file on the local machine.
 
-313 [readFile](#readfile) - Return the content of a file residing on the local machine interpreting the content of the file as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+314 [readFile](#readfile) - Return the content of a file residing on the local machine interpreting the content of the file as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-314 [readFileFromRemote](#readfilefromremote) - Copy and read a **$file** from the remote machine whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp) and return the content of $file interpreted as utf8 .
+315 [readFileFromRemote](#readfilefromremote) - Copy and read a **$file** from the remote machine whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp) and return the content of $file interpreted as utf8 .
 
-315 [readFiles](#readfiles) - Read all the files in the specified list of folders into a hash.
+316 [readFiles](#readfiles) - Read all the files in the specified list of folders into a hash.
 
-316 [readGZipFile](#readgzipfile) - Read the specified file containing compressed [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8) through [gzip](https://en.wikipedia.org/wiki/Gzip).
+317 [readGZipFile](#readgzipfile) - Read the specified file containing compressed [Unicode](https://en.wikipedia.org/wiki/Unicode) content represented as [utf8](https://en.wikipedia.org/wiki/UTF-8) through [gzip](https://en.wikipedia.org/wiki/Gzip).
 
-317 [readStdIn](#readstdin) - Return the contents of STDIN and return the results as either an array or a string.
+318 [readStdIn](#readstdin) - Return the contents of STDIN and return the results as either an array or a string.
 
-318 [readUtf16File](#readutf16file) - Read a file containing [Unicode](https://en.wikipedia.org/wiki/Unicode) encoded in utf-16.
+319 [readUtf16File](#readutf16file) - Read a file containing [Unicode](https://en.wikipedia.org/wiki/Unicode) encoded in utf-16.
 
-319 [rectangularArray](#rectangulararray) - Create a two dimensional rectangular array whose first dimension is **$first** from a one dimensional linear array.
+320 [rectangularArray](#rectangulararray) - Create a two dimensional rectangular array whose first dimension is **$first** from a one dimensional linear array.
 
-320 [rectangularArray2](#rectangulararray2) - Create a two dimensional rectangular array whose second dimension is **$second** from a one dimensional linear array.
+321 [rectangularArray2](#rectangulararray2) - Create a two dimensional rectangular array whose second dimension is **$second** from a one dimensional linear array.
 
-321 [reinstateWellKnown](#reinstatewellknown) - Contract references to well known Urls to their abbreviated form.
+322 [reinstateWellKnown](#reinstatewellknown) - Contract references to well known Urls to their abbreviated form.
 
-322 [relFromAbsAgainstAbs](#relfromabsagainstabs) - Relative file from one absolute file **$a** against another **$b**.
+323 [relFromAbsAgainstAbs](#relfromabsagainstabs) - Relative file from one absolute file **$a** against another **$b**.
 
-323 [reloadHashes](#reloadhashes) - Ensures that all the hashes within a tower of data structures have LValue methods to get and set their current keys.
+324 [reloadHashes](#reloadhashes) - Ensures that all the hashes within a tower of data structures have LValue methods to get and set their current keys.
 
-324 [reloadHashes2](#reloadhashes2) - Ensures that all the hashes within a tower of data structures have LValue methods to get and set their current keys.
+325 [reloadHashes2](#reloadhashes2) - Ensures that all the hashes within a tower of data structures have LValue methods to get and set their current keys.
 
-325 [removeDuplicatePrefixes](#removeduplicateprefixes) - Remove duplicated leading directory names from a file name.
+326 [removeDuplicatePrefixes](#removeduplicateprefixes) - Remove duplicated leading directory names from a file name.
 
-326 [removeFilePathsFromStructure](#removefilepathsfromstructure) - Remove all file paths from a specified **$structure** to make said $structure testable with ["is\_deeply" in Test::More](https://metacpan.org/pod/Test%3A%3AMore#is_deeply).
+327 [removeFilePathsFromStructure](#removefilepathsfromstructure) - Remove all file paths from a specified **$structure** to make said $structure testable with ["is\_deeply" in Test::More](https://metacpan.org/pod/Test%3A%3AMore#is_deeply).
 
-327 [removeFilePrefix](#removefileprefix) - Removes a file **$prefix** from an array of **@files**.
+328 [removeFilePrefix](#removefileprefix) - Removes a file **$prefix** from an array of **@files**.
 
-328 [renormalizeFolderName](#renormalizefoldername) - Normalize a folder name by ensuring it has a single trailing directory separator.
+329 [renormalizeFolderName](#renormalizefoldername) - Normalize a folder name by ensuring it has a single trailing directory separator.
 
-329 [replaceStringWithString](#replacestringwithstring) - Replace all instances in **$string** of **$source** with **$target**.
+330 [replaceStringWithString](#replacestringwithstring) - Replace all instances in **$string** of **$source** with **$target**.
 
-330 [reportAttributes](#reportattributes) - Report the attributes present in a **$sourceFile**.
+331 [reportAttributes](#reportattributes) - Report the attributes present in a **$sourceFile**.
 
-331 [reportAttributeSettings](#reportattributesettings) - Report the current values of the attribute methods in the calling file and optionally write the report to **$reportFile**.
+332 [reportAttributeSettings](#reportattributesettings) - Report the current values of the attribute methods in the calling file and optionally write the report to **$reportFile**.
 
-332 [reportExportableMethods](#reportexportablemethods) - Report the exportable methods marked with #e in a **$sourceFile**.
+333 [reportExportableMethods](#reportexportablemethods) - Report the exportable methods marked with #e in a **$sourceFile**.
 
-333 [reportReplacableMethods](#reportreplacablemethods) - Report the replaceable methods marked with #r in a **$sourceFile**.
+334 [reportReplacableMethods](#reportreplacablemethods) - Report the replaceable methods marked with #r in a **$sourceFile**.
 
-334 [reportSettings](#reportsettings) - Report the current values of parameterless subs.
+335 [reportSettings](#reportsettings) - Report the current values of parameterless subs.
 
-335 [retrieveFile](#retrievefile) - Retrieve a **$file** created via [Storable](https://metacpan.org/pod/Storable).
+336 [retrieveFile](#retrievefile) - Retrieve a **$file** created via [Storable](https://metacpan.org/pod/Storable).
 
-336 [runInParallel](#runinparallel) - Process the elements of an array in parallel using a maximum of **$maximumNumberOfProcesses** processes.
+337 [runInParallel](#runinparallel) - Process the elements of an array in parallel using a maximum of **$maximumNumberOfProcesses** processes.
 
-337 [runInSquareRootParallel](#runinsquarerootparallel) - Process the elements of an array in square root parallel using a maximum of **$maximumNumberOfProcesses** processes.
+338 [runInSquareRootParallel](#runinsquarerootparallel) - Process the elements of an array in square root parallel using a maximum of **$maximumNumberOfProcesses** processes.
 
-338 [s3Delete](#s3delete) - Return an S3 --delete keyword from an S3 option set.
+339 [s3Delete](#s3delete) - Return an S3 --delete keyword from an S3 option set.
 
-339 [s3DownloadFolder](#s3downloadfolder) - Download a specified **$folder** on S3 to a **$local** folder using the specified **%options** if any.
+340 [s3DownloadFolder](#s3downloadfolder) - Download a specified **$folder** on S3 to a **$local** folder using the specified **%options** if any.
 
-340 [s3FileExists](#s3fileexists) - Return (name, size, date, time) for a **$file** that exists on S3 else () using the specified **%options** if any.
+341 [s3FileExists](#s3fileexists) - Return (name, size, date, time) for a **$file** that exists on S3 else () using the specified **%options** if any.
 
-341 [s3ListFilesAndSizes](#s3listfilesandsizes) - Return {file=>size} for all the files in a specified **$folderOrFile** on S3 using the specified **%options** if any.
+342 [s3ListFilesAndSizes](#s3listfilesandsizes) - Return {file=>size} for all the files in a specified **$folderOrFile** on S3 using the specified **%options** if any.
 
-342 [s3Profile](#s3profile) - Return an S3 profile keyword from an S3 option set.
+343 [s3Profile](#s3profile) - Return an S3 profile keyword from an S3 option set.
 
-343 [s3ReadFile](#s3readfile) - Read from a **$file** on S3 and write the contents to a local file **$local** using the specified **%options** if any.
+344 [s3ReadFile](#s3readfile) - Read from a **$file** on S3 and write the contents to a local file **$local** using the specified **%options** if any.
 
-344 [s3ReadString](#s3readstring) - Read from a **$file** on S3 and return the contents as a string using specified **%options** if any.
+345 [s3ReadString](#s3readstring) - Read from a **$file** on S3 and return the contents as a string using specified **%options** if any.
 
-345 [s3WriteFile](#s3writefile) - Write to a file **$fileS3** on S3 the contents of a local file **$fileLocal** using the specified **%options** if any.
+346 [s3WriteFile](#s3writefile) - Write to a file **$fileS3** on S3 the contents of a local file **$fileLocal** using the specified **%options** if any.
 
-346 [s3WriteString](#s3writestring) - Write to a **$file** on S3 the contents of **$string** using the specified **%options** if any.
+347 [s3WriteString](#s3writestring) - Write to a **$file** on S3 the contents of **$string** using the specified **%options** if any.
 
-347 [s3ZipFolder](#s3zipfolder) - Zip the specified **$source** folder and write it to the named **$target** file on S3.
+348 [s3ZipFolder](#s3zipfolder) - Zip the specified **$source** folder and write it to the named **$target** file on S3.
 
-348 [s3ZipFolders](#s3zipfolders) - Zip local folders and upload them to S3 in parallel.
+349 [s3ZipFolders](#s3zipfolders) - Zip local folders and upload them to S3 in parallel.
 
-349 [saveAwsDomain](#saveawsdomain) - Make the server at [Amazon Web Services](http://aws.amazon.com) with the given domain name the default primary server as used by all the methods whose names end in **r** or **Remote**.
+350 [saveAwsDomain](#saveawsdomain) - Make the server at [Amazon Web Services](http://aws.amazon.com) with the given domain name the default primary server as used by all the methods whose names end in **r** or **Remote**.
 
-350 [saveAwsIp](#saveawsip) - Make the server at [Amazon Web Services](http://aws.amazon.com) with the given IP address the default primary server as used by all the methods whose names end in **r** or **Remote**.
+351 [saveAwsIp](#saveawsip) - Make the server at [Amazon Web Services](http://aws.amazon.com) with the given IP address the default primary server as used by all the methods whose names end in **r** or **Remote**.
 
-351 [saveCodeToS3](#savecodetos3) - Save source code every **$saveCodeEvery** seconds by zipping folder **$folder** to zip file **$zipFileName** then saving this zip file in the specified [S3](https://aws.amazon.com/s3/) **$bucket** using any additional [S3](https://aws.amazon.com/s3/) parameters in **$S3Parms**.
+352 [saveCodeToS3](#savecodetos3) - Save source code every **$saveCodeEvery** seconds by zipping folder **$folder** to zip file **$zipFileName** then saving this zip file in the specified [S3](https://aws.amazon.com/s3/) **$bucket** using any additional [S3](https://aws.amazon.com/s3/) parameters in **$S3Parms**.
 
-352 [saveSourceToS3](#savesourcetos3) - Save source code.
+353 [saveSourceToS3](#savesourcetos3) - Save source code.
 
-353 [searchDirectoryTreeForSubFolders](#searchdirectorytreeforsubfolders) - Search the specified directory under the specified folder for sub folders.
+354 [searchDirectoryTreeForSubFolders](#searchdirectorytreeforsubfolders) - Search the specified directory under the specified folder for sub folders.
 
-354 [searchDirectoryTreesForMatchingFiles](#searchdirectorytreesformatchingfiles) - Search the specified directory trees for the files (not folders) that match the specified extensions.
+355 [searchDirectoryTreesForMatchingFiles](#searchdirectorytreesformatchingfiles) - Search the specified directory trees for the files (not folders) that match the specified extensions.
 
-355 [setCombination](#setcombination) - Count the elements in sets **@s** represented as arrays of strings and/or the keys of hashes.
+356 [setCombination](#setcombination) - Count the elements in sets **@s** represented as arrays of strings and/or the keys of hashes.
 
-356 [setDifference](#setdifference) - Subtract the keys in the second set represented as a hash from the first set represented as a hash to create a new hash showing the set difference between the two.
+357 [setDifference](#setdifference) - Subtract the keys in the second set represented as a hash from the first set represented as a hash to create a new hash showing the set difference between the two.
 
-357 [setFileExtension](#setfileextension) - Given a **$file**, change its extension to **$extension**.
+358 [setFileExtension](#setfileextension) - Given a **$file**, change its extension to **$extension**.
 
-358 [setIntersection](#setintersection) - Intersection of sets **@s** represented as arrays of strings and/or the keys of hashes.
+359 [setIntersection](#setintersection) - Intersection of sets **@s** represented as arrays of strings and/or the keys of hashes.
 
-359 [setIntersectionOverUnion](#setintersectionoverunion) - Returns the size of the intersection over the size of the union of one or more sets **@s** represented as arrays and/or hashes.
+360 [setIntersectionOverUnion](#setintersectionoverunion) - Returns the size of the intersection over the size of the union of one or more sets **@s** represented as arrays and/or hashes.
 
-360 [setPackageSearchOrder](#setpackagesearchorder) - Set a package search order for methods requested in the current package via AUTOLOAD.
+361 [setPackageSearchOrder](#setpackagesearchorder) - Set a package search order for methods requested in the current package via AUTOLOAD.
 
-361 [setPartitionOnIntersectionOverUnion](#setpartitiononintersectionoverunion) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets** so that within each partition the [setIntersectionOverUnion](#setintersectionoverunion) of any two sets in the partition is never less than the specified level of _$confidence\*\*2_.
+362 [setPartitionOnIntersectionOverUnion](#setpartitiononintersectionoverunion) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets** so that within each partition the [setIntersectionOverUnion](#setintersectionoverunion) of any two sets in the partition is never less than the specified level of _$confidence\*\*2_.
 
-362 [setPartitionOnIntersectionOverUnionOfHashStringSets](#setpartitiononintersectionoverunionofhashstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a hash, each hash value being a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the hash keys of the string sets.
+363 [setPartitionOnIntersectionOverUnionOfHashStringSets](#setpartitiononintersectionoverunionofhashstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a hash, each hash value being a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the hash keys of the string sets.
 
-363 [setPartitionOnIntersectionOverUnionOfHashStringSetsInParallel](#setpartitiononintersectionoverunionofhashstringsetsinparallel) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a hash, each hash value being a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the hash keys of the string sets.
+364 [setPartitionOnIntersectionOverUnionOfHashStringSetsInParallel](#setpartitiononintersectionoverunionofhashstringsetsinparallel) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **$hashSet** represented by a hash, each hash value being a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified **$confidence\*\*2** and the partition entries are the hash keys of the string sets.
 
-364 [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets** of words so that within each partition the [setIntersectionOverUnion](#setintersectionoverunion) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
+365 [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@sets** of words so that within each partition the [setIntersectionOverUnion](#setintersectionoverunion) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
 
-365 [setPartitionOnIntersectionOverUnionOfStringSets](#setpartitiononintersectionoverunionofstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@strings**, each set represented by a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
+366 [setPartitionOnIntersectionOverUnionOfStringSets](#setpartitiononintersectionoverunionofstringsets) - Partition, at a level of **$confidence** between 0 and 1, a set of sets **@strings**, each set represented by a string containing words and punctuation, each word possibly capitalized, so that within each partition the [setPartitionOnIntersectionOverUnionOfSetsOfWords](#setpartitiononintersectionoverunionofsetsofwords) of any two sets of words in the partition is never less than the specified _$confidence\*\*2_.
 
-366 [setPermissionsForFile](#setpermissionsforfile) - Apply [chmod](https://linux.die.net/man/1/chmod) to a **$file** to set its **$permissions**.
+367 [setPermissionsForFile](#setpermissionsforfile) - Apply [chmod](https://linux.die.net/man/1/chmod) to a **$file** to set its **$permissions**.
 
-367 [setUnion](#setunion) - Union of sets **@s** represented as arrays of strings and/or the keys of hashes.
+368 [setUnion](#setunion) - Union of sets **@s** represented as arrays of strings and/or the keys of hashes.
 
-368 [showGotVersusWanted](#showgotversuswanted) - Show the difference between the wanted string and the wanted string.
+369 [showGotVersusWanted](#showgotversuswanted) - Show the difference between the wanted string and the wanted string.
 
-369 [showHashes](#showhashes) - Create a map of all the keys within all the hashes within a tower of data structures.
+370 [showHashes](#showhashes) - Create a map of all the keys within all the hashes within a tower of data structures.
 
-370 [showHashes2](#showhashes2) - Create a map of all the keys within all the hashes within a tower of data structures.
+371 [showHashes2](#showhashes2) - Create a map of all the keys within all the hashes within a tower of data structures.
 
-371 [spellCheck](#spellcheck) - Spell checker
+372 [spellCheck](#spellcheck) - Spell checker
 
-372 [squareArray](#squarearray) - Create a two dimensional square array from a one dimensional linear array.
+373 [squareArray](#squarearray) - Create a two dimensional square array from a one dimensional linear array.
 
-373 [startProcess](#startprocess) - Start new processes while the number of child processes recorded in **%$pids** is less than the specified **$maximum**.
+374 [startProcess](#startprocess) - Start new processes while the number of child processes recorded in **%$pids** is less than the specified **$maximum**.
 
-374 [storeFile](#storefile) - Store into a **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, a data **$structure** via [Storable](https://metacpan.org/pod/Storable).
+375 [storeFile](#storefile) - Store into a **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, a data **$structure** via [Storable](https://metacpan.org/pod/Storable).
 
-375 [stringMd5Sum](#stringmd5sum) - Get the Md5 sum of a **$string** that might contain [utf8](https://en.wikipedia.org/wiki/UTF-8) code points.
+376 [stringMd5Sum](#stringmd5sum) - Get the Md5 sum of a **$string** that might contain [utf8](https://en.wikipedia.org/wiki/UTF-8) code points.
 
-376 [stringsAreNotEqual](#stringsarenotequal) - Return the common start followed by the two non equal tails of two non equal strings or an empty list if the strings are equal.
+377 [stringsAreNotEqual](#stringsarenotequal) - Return the common start followed by the two non equal tails of two non equal strings or an empty list if the strings are equal.
 
-377 [subNameTraceBack](#subnametraceback) - Find the names of the calling subroutines and return them as a blank separated string of names.
+378 [subNameTraceBack](#subnametraceback) - Find the names of the calling subroutines and return them as a blank separated string of names.
 
-378 [subScriptString](#subscriptstring) - Convert alphanumerics in a string to sub scripts.
+379 [subScriptString](#subscriptstring) - Convert alphanumerics in a string to sub scripts.
 
-379 [subScriptStringUndo](#subscriptstringundo) - Undo alphanumerics in a string to sub scripts.
+380 [subScriptStringUndo](#subscriptstringundo) - Undo alphanumerics in a string to sub scripts.
 
-380 [sumAbsAndRel](#sumabsandrel) - Combine zero or more absolute and relative names of **@files** starting at the current working folder to get an absolute file name.
+381 [sumAbsAndRel](#sumabsandrel) - Combine zero or more absolute and relative names of **@files** starting at the current working folder to get an absolute file name.
 
-381 [summarizeColumn](#summarizecolumn) - Count the number of unique instances of each value a column in a table assumes.
+382 [summarizeColumn](#summarizecolumn) - Count the number of unique instances of each value a column in a table assumes.
 
-382 [superScriptString](#superscriptstring) - Convert alphanumerics in a string to super scripts.
+383 [superScriptString](#superscriptstring) - Convert alphanumerics in a string to super scripts.
 
-383 [superScriptStringUndo](#superscriptstringundo) - Undo alphanumerics in a string to super scripts.
+384 [superScriptStringUndo](#superscriptstringundo) - Undo alphanumerics in a string to super scripts.
 
-384 [swapFilePrefix](#swapfileprefix) - Swaps the start of a **$file** name from a **$known** name to a **$new** one if the file does in fact start with the $known name otherwise returns the original file name as it is.
+385 [swapFilePrefix](#swapfileprefix) - Swaps the start of a **$file** name from a **$known** name to a **$new** one if the file does in fact start with the $known name otherwise returns the original file name as it is.
 
-385 [swapFolderPrefix](#swapfolderprefix) - Given a **$file**, swap the folder name of the $file from **$known** to **$new** if the file $file starts with the $known folder name else return the $file as it is.
+386 [swapFolderPrefix](#swapfolderprefix) - Given a **$file**, swap the folder name of the $file from **$known** to **$new** if the file $file starts with the $known folder name else return the $file as it is.
 
-386 [syncFromS3InParallel](#syncfroms3inparallel) - Download from [S3](https://aws.amazon.com/s3/) by using "aws s3 sync --exclude '\*' --include '.
+387 [syncFromS3InParallel](#syncfroms3inparallel) - Download from [S3](https://aws.amazon.com/s3/) by using "aws s3 sync --exclude '\*' --include '.
 
-387 [syncToS3InParallel](#synctos3inparallel) - Upload to [S3](https://aws.amazon.com/s3/) by using "aws s3 sync --exclude '\*' --include '.
+388 [syncToS3InParallel](#synctos3inparallel) - Upload to [S3](https://aws.amazon.com/s3/) by using "aws s3 sync --exclude '\*' --include '.
 
-388 [temporaryFile](#temporaryfile) - Create a new, empty, temporary file.
+389 [temporaryFile](#temporaryfile) - Create a new, empty, temporary file.
 
-389 [temporaryFolder](#temporaryfolder) - Create a new, empty, temporary folder.
+390 [temporaryFolder](#temporaryfolder) - Create a new, empty, temporary folder.
 
-390 [timeStamp](#timestamp) - Hours:minute:seconds.
+391 [timeStamp](#timestamp) - Hours:minute:seconds.
 
-391 [transitiveClosure](#transitiveclosure) - Transitive closure of a hash of hashes.
+392 [transitiveClosure](#transitiveclosure) - Transitive closure of a hash of hashes.
 
-392 [trim](#trim) - Remove any white space from the front and end of a string.
+393 [trim](#trim) - Remove any white space from the front and end of a string.
 
-393 [Udsr::kill](#udsr-kill) - Kill a communications server.
+394 [Udsr::kill](#udsr-kill) - Kill a communications server.
 
-394 [Udsr::read](#udsr-read) - Read a message from the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#newudsrclient).
+395 [Udsr::read](#udsr-read) - Read a message from the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#newudsrclient).
 
-395 [Udsr::webUser](#udsr-webuser) - Create a systemd installed server that processes http requests using a specified userid.
+396 [Udsr::webUser](#udsr-webuser) - Create a systemd installed server that processes http requests using a specified userid.
 
-396 [Udsr::write](#udsr-write) - Write a communications message to the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#newudsrclient).
+397 [Udsr::write](#udsr-write) - Write a communications message to the [newUdsrServer](#newudsrserver) or the [newUdsrClient](#newudsrclient).
 
-397 [unbless](#unbless) - Remove the effects of bless from a [Perl](http://www.perl.org/) data **$structure** enabling it to be converted to [Json](https://en.wikipedia.org/wiki/JSON) or compared with [Test::More::is\_deeply](https://metacpan.org/pod/Test%3A%3AMore%3A%3Ais_deeply).
+398 [unbless](#unbless) - Remove the effects of bless from a [Perl](http://www.perl.org/) data **$structure** enabling it to be converted to [Json](https://en.wikipedia.org/wiki/JSON) or compared with [Test::More::is\_deeply](https://metacpan.org/pod/Test%3A%3AMore%3A%3Ais_deeply).
 
-398 [unionOfHashesAsArrays](#unionofhashesasarrays) - Form the union of the specified hashes **@h** as one hash whose values are a array of corresponding values from each hash.
+399 [unionOfHashesAsArrays](#unionofhashesasarrays) - Form the union of the specified hashes **@h** as one hash whose values are a array of corresponding values from each hash.
 
-399 [unionOfHashKeys](#unionofhashkeys) - Form the union of the keys of the specified hashes **@h** as one hash whose keys represent the union.
+400 [unionOfHashKeys](#unionofhashkeys) - Form the union of the keys of the specified hashes **@h** as one hash whose keys represent the union.
 
-400 [uniqueNameFromFile](#uniquenamefromfile) - Create a unique name from a file name and the md5 sum of its content.
+401 [uniqueNameFromFile](#uniquenamefromfile) - Create a unique name from a file name and the md5 sum of its content.
 
-401 [updateDocumentation](#updatedocumentation) - Update the documentation for a Perl module from the comments in its source code.
+402 [updateDocumentation](#updatedocumentation) - Update the documentation for a Perl module from the comments in its source code.
 
-402 [updatePerlModuleDocumentation](#updateperlmoduledocumentation) - Update the documentation in a **$perlModule** and display said documentation in a web browser.
+403 [updatePerlModuleDocumentation](#updateperlmoduledocumentation) - Update the documentation in a **$perlModule** and display said documentation in a web browser.
 
-403 [userId](#userid) - Get or confirm the userid we are currently running under.
+404 [userId](#userid) - Get or confirm the userid we are currently running under.
 
-404 [validateHash](#validatehash) - Confess if the specified hash does not have all of the specified keys.
+405 [validateHash](#validatehash) - Confess if the specified hash does not have all of the specified keys.
 
-405 [versionCode](#versioncode) - YYYYmmdd-HHMMSS.
+406 [versionCode](#versioncode) - YYYYmmdd-HHMMSS.
 
-406 [versionCodeDashed](#versioncodedashed) - YYYY-mm-dd-HH:MM:SS.
+407 [versionCodeDashed](#versioncodedashed) - YYYY-mm-dd-HH:MM:SS.
 
-407 [waitForAllStartedProcessesToFinish](#waitforallstartedprocessestofinish) - Wait until all the processes started by [startProcess](#startprocess) have finished.
+408 [waitForAllStartedProcessesToFinish](#waitforallstartedprocessestofinish) - Wait until all the processes started by [startProcess](#startprocess) have finished.
 
-408 [waitPids](#waitpids) - Wait for an array of pids
+409 [waitPids](#waitpids) - Wait for an array of pids
 
-409 [wellKnownUrls](#wellknownurls) - Short names for some well known urls.
+410 [wellKnownUrls](#wellknownurls) - Short names for some well known urls.
 
-410 [writeBinaryFile](#writebinaryfile) - Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
+411 [writeBinaryFile](#writebinaryfile) - Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, the binary content in **$string**.
 
-411 [writeFile](#writefile) - Write to a new **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+412 [writeFile](#writefile) - Write to a new **$file**, after creating a path to the $file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-412 [writeFiles](#writefiles) - Write the values of a **$hash** reference into files identified by the key of each value using [overWriteFile](#overwritefile) optionally swapping the prefix of each file from **$old** to **$new**.
+413 [writeFiles](#writefiles) - Write the values of a **$hash** reference into files identified by the key of each value using [overWriteFile](#overwritefile) optionally swapping the prefix of each file from **$old** to **$new**.
 
-413 [writeFileToRemote](#writefiletoremote) - Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+414 [writeFileToRemote](#writefiletoremote) - Write to a new **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, a **$string** of [Unicode](https://en.wikipedia.org/wiki/Unicode) content encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8) then copy the $file to the remote server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-414 [writeGZipFile](#writegzipfile) - Write to a **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, through [gzip](https://en.wikipedia.org/wiki/Gzip) a **$string** whose content is encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
+415 [writeGZipFile](#writegzipfile) - Write to a **$file**, after creating a path to the file with [makePath](https://metacpan.org/pod/makePath) if necessary, through [gzip](https://en.wikipedia.org/wiki/Gzip) a **$string** whose content is encoded as [utf8](https://en.wikipedia.org/wiki/UTF-8).
 
-415 [writeStructureTest](#writestructuretest) - Write a test for a data **$structure** with file names in it.
+416 [writeStructureTest](#writestructuretest) - Write a test for a data **$structure** with file names in it.
 
-416 [writeTempFile](#writetempfile) - Write an array of strings as lines to a temporary file and return the file name.
+417 [writeTempFile](#writetempfile) - Write an array of strings as lines to a temporary file and return the file name.
 
-417 [wwwDecode](#wwwdecode) - Percent decode a [url](https://en.wikipedia.org/wiki/URL) **$string** per: https://en.
+418 [wwwDecode](#wwwdecode) - Percent decode a [url](https://en.wikipedia.org/wiki/URL) **$string** per: https://en.
 
-418 [wwwEncode](#wwwencode) - Percent encode a [url](https://en.wikipedia.org/wiki/URL) per: https://en.
+419 [wwwEncode](#wwwencode) - Percent encode a [url](https://en.wikipedia.org/wiki/URL) per: https://en.
 
-419 [wwwGitHubAuth](#wwwgithubauth) - Logon as a [GitHub](https://github.com/philiprbrenan) [Oauth](https://en.wikipedia.org/wiki/OAuth) app per: [https://github.](https://github.)
+420 [wwwGitHubAuth](#wwwgithubauth) - Logon as a [GitHub](https://github.com/philiprbrenan) [Oauth](https://en.wikipedia.org/wiki/OAuth) app per: [https://github.](https://github.)
 
-420 [xxx](#xxx) - Execute a shell command optionally checking its response.
+421 [xxx](#xxx) - Execute a shell command optionally checking its response.
 
-421 [xxxr](#xxxr) - Execute a command **$cmd** via bash on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
+422 [xxxr](#xxxr) - Execute a command **$cmd** via bash on the server whose ip address is specified by **$ip** or returned by [awsIp](https://metacpan.org/pod/awsIp).
 
-422 [yyy](#yyy) - Execute a block of shell commands line by line after removing comments - stop if there is a non zero return code from any command.
+423 [yyy](#yyy) - Execute a block of shell commands line by line after removing comments - stop if there is a non zero return code from any command.
 
-423 [zzz](#zzz) - Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return code of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails.
+424 [zzz](#zzz) - Execute lines of commands after replacing new lines with && then check that the pipeline execution results in a return code of zero and that the execution results match the optional regular expression if one has been supplied; confess() to an error if either check fails.
 
 # Installation
 
@@ -11924,6 +12019,6 @@ Thanks to the following people for their help with this module:
 
 Hey! **The above document had some coding errors, which are explained below:**
 
-- Around line 12621:
+- Around line 12717:
 
     Unterminated L<...> sequence
