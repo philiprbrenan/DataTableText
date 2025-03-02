@@ -476,7 +476,7 @@ sub prefferedFileName($)                                                        
 sub filePath(@)                                                                 # Create a file name from a list of  names. Identical to L<fpf|/fpf>.
  {my (@file) = @_;                                                              # File name components
   defined($_) or confess "Missing file component\n" for @file;                  # Check that there are no undefined file components
-  my @components = grep {$_} map {denormalizeFolderName($_)} @file;             # Skip blank components
+  my @components = grep {$_ || $_ eq "0"} map {denormalizeFolderName($_)} @file;# Skip blank components but not zero components
   return '' unless @components;                                                 # No components resolves to '' rather than '/'
   prefferedFileName join '/', @components;                                      # Join separate components
  }
