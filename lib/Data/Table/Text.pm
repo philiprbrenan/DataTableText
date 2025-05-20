@@ -11,7 +11,7 @@
 # updateDocumentation - mark synopsis tests with #S and place in synopsis
 package Data::Table::Text;
 use v5.26;
-our $VERSION = 20250302;                                                        # Version
+our $VERSION = 20250520;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
@@ -412,6 +412,7 @@ sub firstFileThatExists(@)                                                      
 
 sub changedFiles($@)                                                            # Returns the files that are new or changed from the last run - needs a test.
  {my ($sha256File, @files) = @_;                                                # File to hold md5 sums for each file, files to be checked
+  return () if @files == 0;                                                     # Nothing to check
   my @f;
   if (-e $sha256File)                                                           # Sums exist
    {my $sha256Files = retrieveFile($sha256File);
@@ -436,7 +437,7 @@ sub changedFiles($@)                                                            
       $$sha256Files{$f} = &stringSha256(&readBinaryFile($f))
         if -e $f and fileSize($f) > 0;
      }
-    storeFile($sha256File, $sha256Files);                                             # Store md5 sums
+    storeFile($sha256File, $sha256Files);                                       # Store md5 sums
    }
   return @f;
  }
@@ -2410,7 +2411,7 @@ sub transitiveClosure($)                                                        
 
 #D1 Format                                                                      # Format data structures as tables.
 
-sub formatTimeDelta($)                                                          # Format a time delta preented in seconds as hours, minutes, seconds ommitting elements that are zero
+sub formatTimeDelta($)                                                          # Format a time delta presented in seconds as hours, minutes, seconds omitting elements that are zero
  {my ($Seconds) = @_;
   my  $seconds  =   int $Seconds;
   return join ":", map {sprintf("%02d", int $_)}
@@ -6447,13 +6448,12 @@ sub htmlToc($$)                                                                 
  {my ($key, $value) = @_;                                                       # Either : "file" from file  or "string" from string or "update" for from file with update in place , the file or string of html to be processed
   $key =~ m(\A(string|file|update)\Z) or confess "String or file or update required not: $key\n";
   my $html = $key =~ m(s)i ? $value :  readFile $value;                         # Source html
-
   my @toc;
   my %toc;
 
   for(split /\n/, $html)                                                        # Scan headers for entries to be included in the table of contents
    {next unless /<h(\d)\s+id="(.+?)"\s*>(.+?)<\/h\d>/;
-    confess "Duplicate id $2\n" if $toc{$2}++;
+    confess "Duplicate id $2\n$_" if $toc{$2}++;
     push @toc, [$1, $2, $3];
    }
 
@@ -6478,7 +6478,7 @@ END
 </div>
 END2
 
-  if    ($html =~ m(\A((.*)<div\s+id=toc>.*?</div>|(.*<body>\s*))(.*?)\Z)s)     # Insert table if contents into html
+  if    ($html =~ m(\A((.*)<div\s+id=toc>.*?</div>|(.*<body>\s*))(.*?)\Z)s)     # Insert table of contents into html either at the indicated place or just before the start of the body
    {my $Html;
     if  ($html =~ m(\A(.*)<div\s+id=toc>.*?</div>(.*?)\Z)s)                     # Replace
      {my ($s, $f) = ($1, $2);
@@ -6524,8 +6524,8 @@ sub wellKnownUrls                                                               
     aramco          => [q(Saudi Aramco),                                        "https://en.wikipedia.org/wiki/Saudi_Aramco"                                                                                      ],
     arena           => [q(arena),                                               "https://en.wikipedia.org/wiki/Region-based_memory_management"                                                                    ],
     arenas          => [q(arenas),                                              "https://en.wikipedia.org/wiki/Region-based_memory_management"                                                                    ],
-    array           => [q(array),                                               "https://en.wikipedia.org/wiki/Dynamic_array"                                                                                     ],
-    arrays          => [q(arrays),                                              "https://en.wikipedia.org/wiki/Dynamic_array"                                                                                     ],
+    arRay           => [q(array),                                               "https://en.wikipedia.org/wiki/Dynamic_array"                                                                                     ],
+    arRays          => [q(arrays),                                              "https://en.wikipedia.org/wiki/Dynamic_array"                                                                                     ],
     as400           => [q(as400),                                               "https://en.wikipedia.org/wiki/IBM_System_i"                                                                                      ],
     ascii           => [q(Ascii),                                               "https://en.wikipedia.org/wiki/ASCII"                                                                                             ],
     asic            => [q(application specific integrated circuit),             "https://en.wikipedia.org/wiki/Application-specific_integrated_circuit"                                                           ],
@@ -6575,7 +6575,7 @@ sub wellKnownUrls                                                               
     chartjs         => [q(Chart.js),                                            "https://www.chartjs.org/"                                                                                                        ],
     chatgpt         => [q(Chat GPT),                                            "https://platform.openai.com/docs/guides/text-generation"                                                                         ],
     china           => [q(Made In China),                                       "https://www.made-in-china.com/"                                                                                                  ],
-    chip            => [q(chip),                                                "https://en.wikipedia.org/wiki/Integrated_circuit"                                                                                ],
+    siliconChip     => [q(chip),                                                "https://en.wikipedia.org/wiki/Integrated_circuit"                                                                                ],
     chips           => [q(chips),                                               "https://en.wikipedia.org/wiki/Integrated_circuit"                                                                                ],
     chmod           => [q(chmod),                                               "https://linux.die.net/man/1/chmod"                                                                                               ],
     chown           => [q(chown),                                               "https://linux.die.net/man/1/chown"                                                                                               ],
@@ -6614,9 +6614,10 @@ sub wellKnownUrls                                                               
     curl            => [q(curl),                                                "https://linux.die.net/man/1/curl"                                                                                                ],
     cvs             => [q(Concurrent Versions System),                          "https://people.redhat.com/~jlaska/documentation-guide-en/ch-cvs.html"                                                            ],
     dag             => [q(DAG),                                                 "https://en.wikipedia.org/wiki/Directed_acyclic_graph"                                                                            ],
+    darpa           => [q(DARPA),                                               "https://en.wikipedia.org/wiki/DARPA"                                                                                             ],
     davidSuzuki     => [q(David Suzuki),                                        "https://en.wikipedia.org/wiki/David_Suzuki"                                                                                      ],
-    data            => [q(data),                                                "https://en.wikipedia.org/wiki/Data"                                                                                              ],
-    database        => [q(database),                                            "https://en.wikipedia.org/wiki/Database"                                                                                          ],
+    daTa            => [q(data),                                                "https://en.wikipedia.org/wiki/Data"                                                                                              ],
+    dataBase        => [q(database),                                            "https://en.wikipedia.org/wiki/Database"                                                                                          ],
     dataCenter      => [q(Data Center),                                         "https://en.wikipedia.org/wiki/Data_center"                                                                                       ],
     dataStructure   => [q(data structure),                                      "https://en.wikipedia.org/wiki/Data_structure"                                                                                    ],
     db2             => [q(DB2),                                                 "https://en.wikipedia.org/wiki/IBM_Db2_Family"                                                                                    ],
@@ -6644,7 +6645,8 @@ sub wellKnownUrls                                                               
     dns             => [q(Domain Name System),                                  "https://en.wikipedia.org/wiki/Domain_Name_System"                                                                                ],
     docBook         => [q(DocBook),                                             "https://tdg.docbook.org/tdg/5.1/"                                                                                                ],
     docker          => [q(Docker),                                              "https://en.wikipedia.org/wiki/Docker_(software)"                                                                                 ],
-    doc             => [q(Database on a Chip),                                  "http://prb.appaapps.com/zesal/pitchdeck/pitchDeck.html"                                                                          ],
+    docPres         => [q(Database on a Chip presentation),                     "https://prb.appaapps.com/zesal/presentation/index.html"                                                                          ],
+    docCode         => [q(Database on a Chip code),                             "https://github.com/philiprbrenan/btreeBlock"                                                                                     ],
     documentation   => [q(documentation),                                       "https://en.wikipedia.org/wiki/Software_documentation"                                                                            ],
     dol             => [q(Division of Labor),                                   "https://en.wikipedia.org/wiki/Division_of_labour#Adam_Smith"                                                                     ],
     domain          => [q(domain name),                                         "https://en.wikipedia.org/wiki/Domain_name"                                                                                       ],
@@ -6704,7 +6706,7 @@ sub wellKnownUrls                                                               
     fusion          => [q(fusion),                                              "https://en.wikipedia.org/wiki/Nuclear_fusion"                                                                                    ],
     future          => [q(future),                                              "https://en.wikipedia.org/wiki/Future"                                                                                            ],
     gantryCrane     => [q(Gantry Crane),                                        "https://en.wikipedia.org/wiki/Gantry_crane"                                                                                      ],
-    gate            => [q(gate),                                                "https://en.wikipedia.org/wiki/Logic_gate"                                                                                        ],
+    gaTe            => [q(gate),                                                "https://en.wikipedia.org/wiki/Logic_gate"                                                                                        ],
     Gauss           => [q(Karl Friedrich Gauss),                                "https://en.wikipedia.org/wiki/Carl_Friedrich_Gauss#Anecdotes"                                                                    ],
     gbstandard      => [q(GB Standard),                                         "http://metacpan.org/pod/Dita::GB::Standard"                                                                                      ],
     gcc             => [q(gcc),                                                 "https://en.wikipedia.org/wiki/GNU_Compiler_Collection"                                                                           ],
@@ -6778,11 +6780,12 @@ sub wellKnownUrls                                                               
     ip6             => [q(IPv6 address),                                        "https://en.wikipedia.org/wiki/IPv6"                                                                                              ],
     ipaddress       => [q(IP address),                                          "https://en.wikipedia.org/wiki/IP_address"                                                                                        ],
     ip              => [q(IP address),                                          "https://en.wikipedia.org/wiki/IP_address"                                                                                        ],
+    ir              => [q(Industrial Revolution),                               "https://en.wikipedia.org/wiki/Industrial_Revolution"                                                                             ],
     ISA             => [q(instruction set architecture),                        "https://en.wikipedia.org/wiki/Instruction_set_architecture"                                                                      ],
     iso14001        => [q(NOM ISO 14001:2015),                                  "https://www.iso.org/obp/ui#iso:std:iso:14001:ed-3:v1:es"                                                                         ],
     iso45001        => [q(NOM ISO 45001:2018),                                  "https://www.iso.org/obp/ui#iso:std:iso:45001:ed-1:v1:es"                                                                         ],
     iso9001         => [q(NOM ISO 9001:2015),                                   "https://www.iso.org/obp/ui#iso:std:iso:9001:ed-5:v1:es"                                                                          ],
-    italy           => [q(Italy),                                               "https://en.wikipedia.org/wiki/Italy"                                                                    ],
+    italy           => [q(Italy),                                               "https://en.wikipedia.org/wiki/Italy"                                                                                             ],
     ITP             => [q(Puebla Institute of Technology),                      "https://en.wikipedia.org/wiki/Puebla_Institute_of_Technology"                                                                    ],
     jasm            => [q(Java Assembly Language),                              "http://www.eg.bucknell.edu/~cs360/java-assembler/jasm.html",                                                                     ],
     java            => [q(Java),                                                "https://en.wikipedia.org/wiki/Java_(programming_language)"                                                                       ],
@@ -6796,7 +6799,7 @@ sub wellKnownUrls                                                               
     jquery          => [q(jQuery),                                              "https://jquery.com/"                                                                                                             ],
     json            => [q(Json),                                                "https://en.wikipedia.org/wiki/JSON"                                                                                              ],
     kattis          => [q(Kattis),                                              "https://open.kattis.com/problems"                                                                                                ],
-    key             => [q(database key),                                        "https://en.wikipedia.org/wiki/Key%E2%80%93value_database"                                                                        ],
+    kEy             => [q(database key),                                        "https://en.wikipedia.org/wiki/Key%E2%80%93value_database"                                                                        ],
     keyboard        => [q(keyboard),                                            "https://en.wikipedia.org/wiki/Computer_keyboard"                                                                                 ],
     kibana          => [q(Kibana),                                              "https://en.wikipedia.org/wiki/Kibana"                                                                                            ],
     killarney       => [q(Killarney),                                           "https://en.wikipedia.org/wiki/Killarney"                                                                                         ],
@@ -6876,6 +6879,7 @@ sub wellKnownUrls                                                               
     oneHot          => [q(one hot),                                             "https://en.wikipedia.org/wiki/One-hot"                                                                                           ],
     oneliner        => [q(one line program),                                    "https://en.wikipedia.org/wiki/One-liner_program"                                                                                 ],
     oneLiner        => [q(one line program),                                    "https://en.wikipedia.org/wiki/One-liner_program"                                                                                 ],
+    OOTC            => [q(Out of the Crisis),                                   "https://en.wikipedia.org/wiki/W._Edwards_Deming#Key_principles"                                                                  ],
     openoffice      => [q(Apache Open Office),                                  "https://www.openoffice.org/download/index.html"                                                                                  ],
     openroad        => [q(Open Road),                                           "https://openroad-flow-scripts.readthedocs.io/en/latest/mainREADME.html"                                                          ],
     opensource      => [q(Open Source),                                         "https://en.wikipedia.org/wiki/Open_source"                                                                                       ],
@@ -6921,7 +6925,7 @@ sub wellKnownUrls                                                               
     prb             => [q(philip r brenan),                                     "https://prb.appaapps.com//"                                                                                                      ],
     preprocessor    => [q(preprocessor),                                        "https://en.wikipedia.org/wiki/Preprocessor"                                                                                      ],
     processes       => [q(processes),                                           "https://en.wikipedia.org/wiki/Process_management_(computing)"                                                                    ],
-    process         => [q(process),                                             "https://en.wikipedia.org/wiki/Process_management_(computing)"                                                                    ],
+    proCess         => [q(process),                                             "https://en.wikipedia.org/wiki/Process_management_(computing)"                                                                    ],
     procfs          => [q(Process File System),                                 "https://en.wikipedia.org/wiki/Procfs"                                                                                            ],
     programLanguage => [q(programming language),                                "https://en.wikipedia.org/wiki/Programming_language"                                                                              ],
     program         => [q(program),                                             "https://en.wikipedia.org/wiki/Computer_program"                                                                                  ],
@@ -6945,6 +6949,7 @@ sub wellKnownUrls                                                               
     repeatability   => [q(repeatability),                                       "https://en.wikipedia.org/wiki/Repeatability"                                                                                     ],
     restful         => [q(REST),                                                "https://en.wikipedia.org/wiki/REST"                                                                                              ],
     rfp             => [q(Request For Proposal),                                "https://en.wikipedia.org/wiki/Request_for_proposal"                                                                              ],
+    risc            => [q(reduced instruction set computer),                    "https://en.wikipedia.org/wiki/Reduced_instruction_set_computer"                                                                  ],
     riscv           => [q(RiscV),                                               "https://en.wikipedia.org/wiki/RISC-V"                                                                                            ],
     riscVIsa        => [q(RiscV Instruction Set),                               "https://riscv.org/wp-content/uploads/2019/12/riscv-spec-20191213.pdf"                                                            ],
     riscVMachine    => [q(RiscV machine),                                       "https://github.com/philiprbrenan/com.AppaApps.Silicon/blob/main/RiscV.java"                                                      ],
@@ -6983,6 +6988,7 @@ sub wellKnownUrls                                                               
     SiliconChip     => [q(Silicon Chip),                                        "https://github.com/philiprbrenan/com.AppaApps.Silicon"                                                                           ],
     SiliconLayout   => [q(SiliconLayout),                                       "https://github.com/philiprbrenan/SiliconChipLayout"                                                                              ],
     silicon         => [q(Silicon),                                             "https://en.wikipedia.org/wiki/Silicon"                                                                                           ],
+    siliconCompiler => [q(Open Source Silicon Compiler),                        "https://docs.siliconcompiler.com/en/latest/index.html"                                                                           ],
     SiliconWiring   => [q(SiliconWiring),                                       "https://github.com/philiprbrenan/SiliconChipWiring"                                                                              ],
     simd            => [q(SIMD),                                                "https://www.officedaytime.com/simd512e/"                                                                                         ],
     smartmatch      => [q(smartmatch),                                          "https://perldoc.perl.org/perlop.html#Smartmatch-Operator"                                                                        ],
@@ -7027,7 +7033,7 @@ sub wellKnownUrls                                                               
     taeKwondo       => [q(Taekwondo),                                           "https://en.wikipedia.org/wiki/Taekwondo"                                                                                         ],
     taocp           => [q(The Art of Computer Programming),                     "https://en.wikipedia.org/wiki/The_Art_of_Computer_Programming"                                                                   ],
     tar             => [q(Tar),                                                 "https://en.wikipedia.org/wiki/Tar_(computing)"                                                                                   ],
-    task            => [q(task),                                                "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/langRef/technicalContent/task.html#task"      ],
+    taSk            => [q(task),                                                "http://docs.oasis-open.org/dita/dita/v1.3/errata02/os/complete/part3-all-inclusive/langRef/technicalContent/task.html#task"      ],
     tcl             => [q(Tcl),                                                 "https://en.wikipedia.org/wiki/Tcl"                                                                                               ],
     tcpip           => [q(TcpIp),                                               "https://en.wikipedia.org/wiki/Internet_protocol_suite"                                                                           ],
     tdd             => [q(test driven development),                             "https://en.wikipedia.org/wiki/Test-driven_development"                                                                           ],
@@ -7098,13 +7104,14 @@ sub wellKnownUrls                                                               
     vector2         => [q(Vectors In Two Dimensions),                           "https://pypi.org/project/Vector2/"                                                                                               ],
     verify          => [q(verify),                                              "https://en.wikipedia.org/wiki/Software_verification_and_validation"                                                              ],
     verilog         => [q(Verilog),                                             "https://en.wikipedia.org/wiki/Verilog"                                                                                           ],
-    version         => [q(version),                                             "https://en.wikipedia.org/wiki/Software_versioning"                                                                               ],
+    verSion         => [q(version),                                             "https://en.wikipedia.org/wiki/Software_versioning"                                                                               ],
     vhdl            => [q(VHDL),                                                "https://ghdl.readthedocs.io/en/latest/about.html"                                                                                ],
     vi              => [q(vi),                                                  "https://www.vim.org/"                                                                                                            ],
     virtex          => [q(Virtex7),                                             "https://www.amd.com/en/products/adaptive-socs-and-fpgas/fpga/virtex-7.html#product-table"                                        ],
     vivado          => [q(Vivado),                                              "https://en.wikipedia.org/wiki/Xilinx_Vivado"                                                                                     ],
-    VLSI            => [q(Introduction to VLSI by Carver Mead and Lynn Conway, written in 1980),  "Introduction to VLSI systems"                                                                                  ],
+    VLSI            => [q(Introduction to VLSI),                                "https://en.wikipedia.org/wiki/Mead%E2%80%93Conway_VLSI_chip_design_revolution"                                                   ],
     VM              => [q(Virtual Machine),                                     "https://en.wikipedia.org/wiki/Virtual_machine"                                                                                   ],
+    watt            => [q(James Watt),                                          "https://en.wikipedia.org/wiki/James_Watt"                                                                                        ],
     waterfall       => [q(waterfall development methodology),                   "https://en.wikipedia.org/wiki/Waterfall_model"                                                                                   ],
     webAsm          => [q(Web Assembly),                                        "https://developer.mozilla.org/en-US/docs/WebAssembly"                                                                            ],
     webFrameWork    => [q(web frame work),                                      "https://en.wikipedia.org/wiki/Web_framework"                                                                                     ],
