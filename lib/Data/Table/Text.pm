@@ -11,7 +11,7 @@
 # updateDocumentation - mark synopsis tests with #S and place in synopsis
 package Data::Table::Text;
 use v5.26;
-our $VERSION = 20250520;                                                        # Version
+our $VERSION = 20250521;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
@@ -160,7 +160,7 @@ sub xxx(@)                                                                      
   $response
  } # xxx
 
-sub xxxr($;$)                                                                   #I Execute a command B<$cmd> via bash on the server whose ip address is specified by B<$ip> or returned by L<awsIp>. The command will be run using the userid listed in F<.ssh/config>.
+sub xxxr($;$)                                                                   # Execute a command B<$cmd> via bash on the server whose ip address is specified by B<$ip> or returned by L<awsIp>. The command will be run using the userid listed in F<.ssh/config>.
  {my ($cmd, $ip) = @_;                                                          # Command string, optional ip address
   my $i = $ip // &awsIp;                                                        # Ip address
   return undef unless confirmHasCommandLineCommand(q(ssh));                     # Confirm we have ssh
@@ -206,7 +206,7 @@ sub zzz($;$$$)                                                                  
   $r
  } # zzz
 
-sub execPerlOnRemote($;$)                                                       #I Execute some Perl B<$code> on the server whose ip address is specified by B<$ip> or returned by L<awsIp>.
+sub execPerlOnRemote($;$)                                                       # Execute some Perl B<$code> on the server whose ip address is specified by B<$ip> or returned by L<awsIp>.
  {my ($code, $ip) = @_;                                                         # Code to execute, optional ip address
   my $file = writeFile(fpe(&temporaryFolder, qw(code pl)),  $code);             # Create code file
   copyFileToRemote($file);                                                      # Copy code to server
@@ -410,7 +410,7 @@ sub firstFileThatExists(@)                                                      
   undef                                                                         # No such file
  } # firstFileThatExists
 
-sub changedFiles($@)                                                            # Returns the files that are new or changed from the last run - needs a test.
+sub changedFiles($@)                                                            #I Returns the files that are new or changed from the last run - needs a test.
  {my ($sha256File, @files) = @_;                                                # File to hold md5 sums for each file, files to be checked
   return () if @files == 0;                                                     # Nothing to check
   my @f;
@@ -479,7 +479,7 @@ sub prefferedFileName($)                                                        
               $name =~ s([\/\\]+)  (/)gsr ;
  }
 
-sub filePath(@)                                                                 # Create a file name from a list of  names. Identical to L<fpf|/fpf>.
+sub filePath(@)                                                                 #I Create a file name from a list of  names. Identical to L<fpf|/fpf>.
  {my (@file) = @_;                                                              # File name components
   defined($_) or confess "Missing file component\n" for @file;                  # Check that there are no undefined file components
   my @components = grep {$_ || $_ eq "0"} map {denormalizeFolderName($_)} @file;# Skip blank components but not zero components
@@ -487,7 +487,7 @@ sub filePath(@)                                                                 
   prefferedFileName join '/', @components;                                      # Join separate components
  }
 
-sub filePathDir(@)                                                              # Create a folder name from a list of  names. Identical to L<fpd|/fpd>.
+sub filePathDir(@)                                                              #I Create a folder name from a list of  names. Identical to L<fpd|/fpd>.
  {my (@file) = @_;                                                              # Directory name components
   my $file = filePath(@_);
   return '' unless $file;                                                       # No components resolves to '' rather than '/'
@@ -696,7 +696,7 @@ sub fullFileName                                                                
   absFromAbsPlusRel(currentDirectory, $file);                                   # Relative to current folder
  } # fullFileName
 
-sub relFromAbsAgainstAbs($$)                                                    #I Relative file from one absolute file B<$a> against another B<$b>.
+sub relFromAbsAgainstAbs($$)                                                    # Relative file from one absolute file B<$a> against another B<$b>.
  {my ($a, $b) = @_;                                                             # Absolute file to be made relative, against this absolute file.
 
   my $m = length($a) < length($b) ? length($a) : length($b);                    # Shortest length
@@ -724,7 +724,7 @@ sub relFromAbsAgainstAbs($$)                                                    
   ((q(../) x $u).substr($a, $s+1)) =~ s(\A\Z) (./)gsr;                          # Jumps up from $b plus remainder of $a avoiding a blank result
  }
 
-sub absFromAbsPlusRel($$)                                                       #I Absolute file from an absolute file B<$a> plus a relative file B<$r>. In the event that the relative file $r is, in fact, an absolute file then it is returned as the result.
+sub absFromAbsPlusRel($$)                                                       # Absolute file from an absolute file B<$a> plus a relative file B<$r>. In the event that the relative file $r is, in fact, an absolute file then it is returned as the result.
  {my ($a, $r) = @_;                                                             # Absolute file, relative file
 
   return $r if $r =~ m(\A/);                                                    # Return absolute file if such is supplied
@@ -850,7 +850,7 @@ sub searchDirectoryTreesForMatchingFiles(@)                                     
   @file                                                                         # Return files
  } # searchDirectoryTreesForMatchingFiles
 
-sub searchDirectoryTreeForSubFolders($)                                         #I Search the specified directory under the specified folder for sub folders.
+sub searchDirectoryTreeForSubFolders($)                                         # Search the specified directory under the specified folder for sub folders.
  {my ($folder) = @_;                                                            # The folder at which to start the search
   my @f;                                                                        # Folders found
   for my $d(findAllFilesAndFolders($folder, 0))                                 # All files and folders beneath the start folder
@@ -991,7 +991,7 @@ sub readStdIn                                                                   
    }
  } # readStdIn
 
-sub readFileFromRemote($;$)                                                     #I Copy and read a B<$file> from the remote machine whose ip address is specified by B<$ip> or returned by L<awsIp> and return the content of $file interpreted as utf8 .
+sub readFileFromRemote($;$)                                                     # Copy and read a B<$file> from the remote machine whose ip address is specified by B<$ip> or returned by L<awsIp> and return the content of $file interpreted as utf8 .
  {my ($file, $ip) = @_;                                                         # Name of file to read, optional ip address of server
   copyFileFromRemote($file, $ip // &awsIp);                                     # Read from specified remote instance
   if (wantarray)
@@ -1136,7 +1136,7 @@ sub writeTempFile(@)                                                            
   overWriteFile(undef, join '', map{"$_\n"} @strings);
  } # writeTempFile
 
-sub writeFileToRemote($$;$)                                                     #I Write to a new B<$file>, after creating a path to the file with L<makePath> if necessary, a B<$string> of L<unicode> content encoded as L<utf8> then copy the $file to the remote server whose ip address is specified by B<$ip> or returned by L<awsIp>. Return the name of the $file on success else confess if the file already exists or any other error occurs.
+sub writeFileToRemote($$;$)                                                     # Write to a new B<$file>, after creating a path to the file with L<makePath> if necessary, a B<$string> of L<unicode> content encoded as L<utf8> then copy the $file to the remote server whose ip address is specified by B<$ip> or returned by L<awsIp>. Return the name of the $file on success else confess if the file already exists or any other error occurs.
  {my ($file, $string, $ip) = @_;                                                # New file to write to or B<undef> for a temporary file,  string to write, optional ip address
   my $f = writeFile($file, $string);                                            # Create file locally
   copyFileToRemote($f, $ip);                                                    # Copy file created to remote
@@ -3233,7 +3233,7 @@ sub genLValueHashMethods(@)                                                     
 
 my %genHash;                                                                    # Hash of methods created by genHash - these methods can be reused - others not so created cannot.
 
-sub genHash($%)                                                                 #I Return a B<$bless>ed hash with the specified B<$attributes> accessible via L<lvalueMethod> method calls. L<updateDocumentation|/updateDocumentation> will generate documentation at L<Hash Definitions> for the hash defined by the call to L<genHash|/genHash> if the call is laid out as in the example below.
+sub genHash($%)                                                                 # Return a B<$bless>ed hash with the specified B<$attributes> accessible via L<lvalueMethod> method calls. L<updateDocumentation|/updateDocumentation> will generate documentation at L<Hash Definitions> for the hash defined by the call to L<genHash|/genHash> if the call is laid out as in the example below.
  {my ($bless, %attributes) = @_;                                                # Package name, hash of attribute names and values
   my $h = \%attributes;
   bless $h, $bless;
