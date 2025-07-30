@@ -42,8 +42,8 @@ sub dateTimeStampName                                                           
  {strftime('_on_%Y_%m_%d_at_%H_%M_%S', localtime)
  }
 
-sub dateStamp                                                                   # Year-monthName-day.
- {strftime('%Y-%b-%d', localtime)
+sub dateStamp                                                                   # Year-month-day.
+ {strftime('%Y-%m-%d', localtime)
  }
 
 sub versionCode                                                                 # YYYYmmdd-HHMMSS.
@@ -6771,6 +6771,7 @@ sub wellKnownUrls                                                               
     infix           => [q(infix),                                               "https://en.wikipedia.org/wiki/Infix_notation"                                                                                    ],
     infix           => [q(infix),                                               "https://en.wikipedia.org/wiki/Infix_notation"                                                                                    ],
     install         => [q(install),                                             "https://en.wikipedia.org/wiki/Installation_(computer_programs)"                                                                  ],
+    instruction     => [q(instruction),                                         "https://en.wikipedia.org/wiki/Instruction_set_architecture"                                                                      ],
     intellectualPropert => [q(intellectual property),                           "https://en.wikipedia.org/wiki/Intellectual_property"                                                                             ],
     intel           => [q(Intel),                                               "https://en.wikipedia.org/wiki/Intel"                                                                                             ],
     intelsde        => [q(Intel Software Development Emulator),                 "https://software.intel.com/content/www/us/en/develop/articles/intel-software-development-emulator.html"                          ],
@@ -6925,7 +6926,7 @@ sub wellKnownUrls                                                               
     prb             => [q(philip r brenan),                                     "https://prb.appaapps.com//"                                                                                                      ],
     preprocessor    => [q(preprocessor),                                        "https://en.wikipedia.org/wiki/Preprocessor"                                                                                      ],
     processes       => [q(processes),                                           "https://en.wikipedia.org/wiki/Process_management_(computing)"                                                                    ],
-    proCess         => [q(process),                                             "https://en.wikipedia.org/wiki/Process_management_(computing)"                                                                    ],
+    process         => [q(process),                                             "https://en.wikipedia.org/wiki/Process_management_(computing)"                                                                    ],
     procfs          => [q(Process File System),                                 "https://en.wikipedia.org/wiki/Procfs"                                                                                            ],
     programLanguage => [q(programming language),                                "https://en.wikipedia.org/wiki/Programming_language"                                                                              ],
     program         => [q(program),                                             "https://en.wikipedia.org/wiki/Computer_program"                                                                                  ],
@@ -6945,6 +6946,8 @@ sub wellKnownUrls                                                               
     recursively     => [q(recursively),                                         "https://en.wikipedia.org/wiki/Recursion"                                                                                         ],
     recursive       => [q(recursive),                                           "https://en.wikipedia.org/wiki/Recursion"                                                                                         ],
     redmine         => [q(Redmine),                                             "https://en.wikipedia.org/wiki/Redmine"                                                                                           ],
+    register        => [q(register),                                            "https://en.wikipedia.org/wiki/Processor_register"                                                                                ],
+    registers       => [q(registers),                                           "https://en.wikipedia.org/wiki/Processor_register"                                                                                ],
     relocatable     => [q(relocatable),                                         "https://en.wikipedia.org/wiki/Relocation_%28computing%29"                                                                        ],
     repeatability   => [q(repeatability),                                       "https://en.wikipedia.org/wiki/Repeatability"                                                                                     ],
     restful         => [q(REST),                                                "https://en.wikipedia.org/wiki/REST"                                                                                              ],
@@ -22330,7 +22333,7 @@ if (0) {                                                                        
 if (1) {
 ok dateTimeStamp     =~ m(\A\d{4}-\d\d-\d\d at \d\d:\d\d:\d\d\Z), q(dts);       #TdateTimeStamp
 ok dateTimeStampName =~ m(\A_on_\d{4}_\d\d_\d\d_at_\d\d_\d\d_\d\d\Z);           #TdateTimeStampName
-ok dateStamp         =~ m(\A\d{4}-\w{3}-\d\d\Z);                                #TdateStamp
+ok dateStamp         =~ m(\A\d{4}-\d{2}-\d\d\Z);                                #TdateStamp
 ok versionCode       =~ m(\A\d{8}-\d{6}\Z);                                     #TversionCode
 ok versionCodeDashed =~ m(\A\d{4}-\d\d-\d\d-\d\d:\d\d:\d\d\Z);                  #TversionCodeDashed
 ok timeStamp         =~ m(\A\d\d:\d\d:\d\d\Z);                                  #TtimeStamp
