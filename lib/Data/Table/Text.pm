@@ -11,7 +11,7 @@
 # updateDocumentation - mark synopsis tests with #S and place in synopsis
 package Data::Table::Text;
 use v5.26;
-our $VERSION = 20250521;                                                        # Version
+our $VERSION = 20260722;                                                        # Version
 use warnings FATAL => qw(all);
 use strict;
 use Carp qw(confess carp cluck);
@@ -831,7 +831,7 @@ sub searchDirectoryTreesForMatchingFiles(@)                                     
 
   my  @extensions = grep {$_ and !-d $_ and !m([\/])} @_;                       # Extensions are not directories
   for(@extensions)                                                              # Prefix period to extension of not all ready there - however this can lead to errors if there happens to be a folder with the same name as an undotted extension.
-   {$_ = qq(\.$_) unless m(\A\.)s
+   {$_ = qq(\\.$_) unless m(\A\.)s
    }
 
   my $ext = @extensions ? join '|', @extensions : undef;                        # Extensions
